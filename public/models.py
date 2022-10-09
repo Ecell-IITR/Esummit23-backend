@@ -8,8 +8,8 @@ class Speakers(models.Model):
          verbose_name='Designation', max_length=1000, blank=True)
     profile_image = models.ImageField(
           upload_to='speakers/', verbose_name='Speaker Image',  blank=True, null=True)
-    date = models.DateField()
-    time = models.TimeField()
+    date_event = models.DateField()
+    time_event = models.TimeField()
     def __str__(self):
             return self.name
 
