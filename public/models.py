@@ -7,7 +7,7 @@ class Speakers(models.Model):
     designation = models.CharField(
          verbose_name='Designation', max_length=1000, blank=True)
     profile_image = models.ImageField(
-          upload_to='speakers/', verbose_name='Profile Image',  blank=True, null=True)
+          upload_to='speakers/', verbose_name='Speaker Image',  blank=True, null=True)
     date = models.DateField()
     time = models.TimeField()
     def __str__(self):
