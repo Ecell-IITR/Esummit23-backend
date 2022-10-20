@@ -20,5 +20,5 @@ import public.urls as Purls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('public/', include(Purls)),
-    path('events/',include('events.urls')),
+   
 ]
