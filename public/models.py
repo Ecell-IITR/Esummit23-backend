@@ -37,12 +37,12 @@ class Speakers(models.Model):
 
 
 
-class Team(models.Model):
+class team(models.Model):
     name = models.CharField(max_length=120)
     designation = models.CharField(
         verbose_name='Designation', max_length=1000, blank=True)
     profile_image = models.ImageField(
-        upload_to='Teams/', verbose_name='Team Image')
+        upload_to='teams/', verbose_name='Team Image')
     team_mail = models.EmailField(
         verbose_name='Team Email', max_length = 254)
     team_phone = models.CharField(
@@ -67,12 +67,12 @@ def save(self, *args, **kwargs):
             self.created = timezone.now()
 
         self.updated = timezone.now()
-        return super(Speakers, self).save(*args, **kwargs)
+        return super(team, self).save(*args, **kwargs)
 class Meta:
         """
         Meta class for Team
         """
-        verbose_name_plural = "Team" 
+        verbose_name_plural = "team" 
 
 def __str__(self):
         return self.name

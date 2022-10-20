@@ -1,16 +1,15 @@
 from rest_framework import serializers
-from . models import Speakers,Team
+from . models import Speakers, team
 
 
 class Speakerserializer(serializers.ModelSerializer):
     class Meta:
         model = Speakers
         exclude = ['created', 'updated']
-        
 
-class TeamSerializer(serializers.ModelSerializer):
 
+class teamSerializer(serializers.ModelSerializer):
     class Meta :
-        model = Team
+        model = team
         # fields= '__all__'
         exclude = ['created', 'updated']
