@@ -59,6 +59,20 @@ class Team(models.Model):
     # created = models.DateTimeField(default=timezone.now)
     # updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
+def __str__(self):
         return self.name
+        
+def save(self, *args, **kwargs):
+        if not self.created:
+            self.created = timezone.now()
 
+        self.updated = timezone.now()
+        return super(Speakers, self).save(*args, **kwargs)
+class Meta:
+        """
+        Meta class for Team
+        """
+        verbose_name_plural = "Team" 
+
+def __str__(self):
+        return self.name
