@@ -1,10 +1,8 @@
-from pyexpat import model
-from unicodedata import category
 from user.models.abstarct import AbstractProfile
 from events.models import Services
 from django.db import models
 
-class Startup(AbstractProfile):
+class StartupUser(AbstractProfile):
     startup_name = models.CharField(max_length=50, verbose_name="Startup Name")
     domain=models.CharField(max_length=50, verbose_name="Domain")
     category=models.CharField(max_length=50, verbose_name="Category")
@@ -16,7 +14,7 @@ class Startup(AbstractProfile):
 
         if not self.esummit_id:
             # getting a non-repeating number
-            unique_id = Startup.objects.last()
+            unique_id = StartupUser.objects.last()
             if unique_id:
                 unique_value = unique_id.id + 1
             else:

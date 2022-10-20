@@ -1,2 +1,5 @@
 from django.contrib import admin
-from models.role # Register your models here.
+from user.models.role.startup import StartupUser
+
+# Register your models here.
+admin.site.register(StartupUser)
