@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Speakers, team
+from .models import Speakers, Team
 from .serializer import Speakerserializer, teamSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework import status
@@ -12,4 +12,4 @@ class SpeakerEventView(ListAPIView):
 
 class teamEventView(ListAPIView):
     serializer_class = teamSerializer
-    queryset = team.objects.all()
+    queryset = Team.objects.all()
