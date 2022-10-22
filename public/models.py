@@ -9,7 +9,7 @@ class Speakers(models.Model):
     designation = models.CharField(
         verbose_name='Designation', max_length=1000, blank=True)
     profile_image = models.ImageField(
-        upload_to='speakers/', verbose_name='Speaker Image',  blank=True, null=True)
+        upload_to='speakers/', verbose_name='Speaker Image')
     date_event = models.DateField()
     time_event = models.TimeField()
     created = models.DateTimeField(default=timezone.now)

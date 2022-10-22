@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'public.apps.PublicConfig',
     'design.apps.DesignConfig',
     'events.apps.EventsConfig',
+    'CAP.apps.CapConfig',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
