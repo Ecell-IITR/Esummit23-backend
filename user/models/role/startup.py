@@ -10,7 +10,7 @@ class StartupUser(AbstractProfile):
     description=models.CharField(max_length=200, verbose_name="Description")
     esummit_id = models.CharField(max_length=20, unique=True, db_index=True)
     def save(self, *args, **kwargs):
-        professional_tag = "stup"
+        professional_tag = "stp"
 
         if not self.esummit_id:
             # getting a non-repeating number
@@ -19,6 +19,6 @@ class StartupUser(AbstractProfile):
                 unique_value = unique_id.id + 1
             else:
                 unique_value = 0
-            self.esummit_id = 'ES21'+professional_tag + \
+            self.esummit_id = 'ES23'+professional_tag + \
                 str((unique_value + 1) * 31)
     
