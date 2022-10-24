@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator
+import jwt
 
+SECRET_KEY = 'django-insecure-*+z5#+d&a@s^7)x^cez!r)mqq^iz8fld@rbo36nyke-%cp%o0i'
 
 class AbstractProfile(models.Model):
 
@@ -22,6 +24,9 @@ class AbstractProfile(models.Model):
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
     password = models.CharField(max_length=16)
+    jwt_secret = SECRET_KEY
+    jwt_algorithm = "HS256"
+    authToken = models.CharField(max_length=1000, blank=True, null=True)
     class Meta:
         abstract = True
 
@@ -30,6 +35,7 @@ class AbstractProfile(models.Model):
             self.created = timezone.now()
 
         self.updated = timezone.now()
+        self.authToken = jwt.encode({"email": self.email,"password":self.password}, self.jwt_secret, algorithm=self.jwt_algorithm)
         return super(AbstractProfile, self).save(*args, **kwargs)
 
     def __str__(self):
