@@ -1,7 +1,0 @@
-views 
-pyotp 
-class 
-pytop
-email
-otp
-return  status 200 message otp sent succesfully
