@@ -21,6 +21,9 @@ class Colors(models.Model):
 def __str__ (self):
     return self.colourName
 
+class meta():
+    verbose_name_plural = "Colors"
+
 def save(self, *args, **kwargs):
         if not self.created:
             self.created = timezone.now()
