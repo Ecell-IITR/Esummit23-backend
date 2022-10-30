@@ -1,8 +1,7 @@
-
-from msilib.schema import Class
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 
-# Create your models here.
+
 class Services(models.Model):
     name=models.CharField(max_length=50)
     price=models.IntegerField()
@@ -23,3 +22,20 @@ class EventCoordinator(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class EventsFAQ(models.Model):
+    question = models.TextField(
+        verbose_name='Question', default="", max_length=1000)
+   # answer = RichTextUploadingField(verbose_name='Answer')
+    answer = models.TextField(verbose_name="answer",
+                              default="", max_length=1000)
+
+    def __str__(self):
+        return self.question
+
+    class Meta:
+        """
+        Meta class for EventRounds
+        """
+        verbose_name_plural = 'FAQs'
