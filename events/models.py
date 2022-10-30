@@ -1,5 +1,9 @@
+
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
+from user.models.role.proff import ProffUser
+from user.models.role.student import StudentUser
+from user.models.role.startup import StartupUser
 
 
 class Services(models.Model):
@@ -83,3 +87,28 @@ class EventRules(models.Model):
 
     def __str__(self):
         return self.rule
+class EventRounds(models.Model):
+    round_name = models.CharField(max_length=100, verbose_name="Round Name")
+    start_date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
+    end_date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
+    max_points = models.IntegerField(verbose_name="Maximum Points", blank=True)
+    tasks = RichTextUploadingField(verbose_name="Tasks", blank=True)
+    round_eligibility = RichTextUploadingField(
+        verbose_name="Eligibility For Round", blank=True)
+    StudentUser = models.ManyToManyField(StudentUser, verbose_name="Student User", blank=True)
+    ProffUser = models.ManyToManyField(ProffUser, verbose_name="Proff User", blank=True)
+    StartupUser = models.ManyToManyField(StartupUser, verbose_name="Startup User", blank=True)
+    EmailMessage = RichTextUploadingField()
+    class Meta:
+      
+        verbose_name_plural = 'Event Round'
+
+    
+
+    def __str__(self):
+        return self.round_name
+
+
+
+
+        

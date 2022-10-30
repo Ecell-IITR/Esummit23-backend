@@ -1,5 +1,5 @@
 from user.models.abstarct import AbstractProfile
-from events.models import Services
+
 from django.db import models
 
 
@@ -16,7 +16,6 @@ class ProffUser(AbstractProfile):
                               null=True, verbose_name="Gender", choices=GENDER)
     industry = models.CharField(
         max_length=100, blank=True, null=True, verbose_name="Industry From")
-    services = models.ManyToManyField(Services, verbose_name="Services")
     esummit_id = models.CharField(max_length=20, unique=True, db_index=True)
     referred_by = models.CharField(max_length=20,null=True,blank=True,default="")
 

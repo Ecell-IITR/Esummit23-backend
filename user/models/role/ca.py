@@ -1,5 +1,5 @@
 from user.models.abstarct import AbstractProfile
-from events.models import Services
+
 from django.db import models
 from CAP.models import Task
 class CAUser(AbstractProfile):
