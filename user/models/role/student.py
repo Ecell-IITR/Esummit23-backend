@@ -1,5 +1,4 @@
 from user.models.abstarct import AbstractProfile
-from events.models import Services
 from django.db import models
 
 
@@ -24,7 +23,6 @@ class StudentUser(AbstractProfile):
     gender = models.CharField(max_length=1, blank=True,
                               null=True, verbose_name="Gender", choices=GENDER)
     city = models.CharField(max_length=50, null=True, blank=True)
-    services = models.ManyToManyField(Services, verbose_name="Services")
     state = models.CharField(max_length=50, null=True, blank=True)
     college = models.CharField(max_length=200, verbose_name="College Name")
     college_name = models.CharField(max_length=50, verbose_name="College Name")
@@ -43,3 +41,4 @@ class StudentUser(AbstractProfile):
                 unique_value = 0
             self.esummit_id = 'ES23'+professional_tag + \
                 str((unique_value + 1) * 31)
+        return super(StudentUser, self).save(*args, **kwargs)

@@ -1,10 +1,175 @@
 
+from pyexpat import model
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
+from user.models.role.proff import ProffUser
+from user.models.role.student import StudentUser
+from user.models.role.startup import StartupUser
 
-# Create your models here.
+
 class Services(models.Model):
-    name=models.CharField(max_length=50)
-    price=models.IntegerField()
-    desc=models.CharField(max_length=200)
-    image=models.ImageField(upload_to='services/')
+    name = models.CharField(max_length=50)
+    price = models.IntegerField()
+    desc = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='services/')
 
+class EventRules(models.Model):
+    rule = models.TextField(verbose_name="Event Rule")
+    class Meta:
+        """
+        Meta class for Event Rules
+        """
+        verbose_name_plural = 'Event Rules'
+        
+    def __str__(self):
+        return self.rule
+class EventCoordinator(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Coordinator Name")
+    email = models.EmailField(max_length=100, verbose_name="Email Id")
+    phone_number = models.IntegerField(verbose_name="Phone Number")
+
+    class Meta:
+        """
+        Meta class for EventCoordinator
+        """
+        verbose_name_plural = 'Event Coordinators'
+
+    def __str__(self):
+        return self.name
+
+
+class EventsFAQ(models.Model):
+    question = models.TextField(
+        verbose_name='Question', default="", max_length=1000)
+   # answer = RichTextUploadingField(verbose_name='Answer')
+    answer = models.TextField(verbose_name="answer",
+                              default="", max_length=1000)
+
+    def __str__(self):
+        return self.question
+
+    class Meta:
+        """
+        Meta class for EventRounds
+        """
+        verbose_name_plural = 'FAQs'
+
+
+class EventsPartners(models.Model):
+    title = models.CharField(verbose_name='Title', default="", max_length=100)
+    image = models.ImageField(
+        upload_to='event/partners/', verbose_name="Event Partner", blank=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        """
+        Meta class for Speaker
+        """
+        verbose_name_plural = 'Event Partners'
+
+
+class EventPerks(models.Model):
+    heading = models.CharField(default="", max_length=100)
+    image = models.ImageField(upload_to='event/perks/',
+                              verbose_name="Event's Perks image", blank=True)
+    description = RichTextUploadingField()
+
+    def __str__(self):
+        return self.heading
+
+    class Meta:
+        """
+        Meta class for Speaker
+        """
+        verbose_name_plural = 'Event Perks'
+
+
+class EventRules(models.Model):
+    rule = models.TextField(verbose_name="Event Rule")
+
+    class Meta:
+        """
+        Meta class for Event Rules
+        """
+        verbose_name_plural = 'Event Rules'
+
+    def __str__(self):
+        return self.rule
+class EventRounds(models.Model):
+    round_name = models.CharField(max_length=100, verbose_name="Round Name")
+    start_date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
+    end_date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
+    max_points = models.IntegerField(verbose_name="Maximum Points", blank=True)
+    tasks = RichTextUploadingField(verbose_name="Tasks", blank=True)
+    round_eligibility = RichTextUploadingField(
+        verbose_name="Eligibility For Round", blank=True)
+    StudentUser = models.ManyToManyField(StudentUser, verbose_name="Student User", blank=True)
+    ProffUser = models.ManyToManyField(ProffUser, verbose_name="Proff User", blank=True)
+    StartupUser = models.ManyToManyField(StartupUser, verbose_name="Startup User", blank=True)
+    EmailMessage = RichTextUploadingField()
+    class Meta:
+      
+        verbose_name_plural = 'Event Round'
+
+    
+
+    def __str__(self):
+        return self.round_name
+
+
+class AbstractEvent(models.Model):
+    EVENT_STATUS_TYPE = (
+        ('U', 'Upcoming'),
+        ('L', 'Live'),
+        ('O', 'Over'),
+
+    )
+    event_name = models.CharField(
+        max_length=100, verbose_name="Event Name", db_index=True, unique=True)
+    card_image = models.ImageField(
+        upload_to='event/main/card/', verbose_name="Event's Card image", blank=True)
+    background_image = models.ImageField(
+        upload_to='event/main/background/', verbose_name="Event's background image", blank=True)
+    tagline = models.CharField(max_length=255, verbose_name="Event Tagline")
+    description = RichTextUploadingField(
+        verbose_name="Event's Description", blank=True)
+    card_description = RichTextUploadingField(
+        verbose_name="Event's Card Description", blank=True)
+    google_form = models.URLField(
+        verbose_name="Event's Google Form", blank=True, null=True)
+    event_priority = models.IntegerField(
+        verbose_name="priority of event", default=1)
+    event_status = models.CharField(
+        max_length=1, choices=EVENT_STATUS_TYPE, default='U', verbose_name="Event Status")
+    event_faqs = models.ManyToManyField(
+        EventsFAQ, blank=True, related_name="%(app_label)s_%(class)s_faqs_of")
+    events_coordinators = models.ManyToManyField(
+        to=EventCoordinator, blank=True)
+    mobile_background_image = models.ImageField(
+        upload_to='event/main/background/', verbose_name="Event's Mobile background image", blank=True, null=True, default=None)
+    logo_image = models.ImageField(
+        upload_to='event/main/logo/', verbose_name="Event's logo image", blank=True, null=True, default=None)
+
+    class Meta:
+        """
+        Meta class for AbstractEvent
+        """
+        abstract = True
+
+    def __str__(self):
+        return self.event_name
+
+
+class Event(AbstractEvent):
+    """
+    This class implements Event
+    """
+    class Meta:
+        """
+        Meta class for Event
+        """
+        verbose_name_plural = 'Events'
+
+        
