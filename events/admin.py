@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Services,EventCoordinator,EventsFAQ,EventsPartners,EventRounds
+from .models import Services,EventCoordinator,EventsFAQ,EventsPartners,EventRounds,EventRules,Event
 
 from django.core.mail import send_mail
 class AdminRound(admin.ModelAdmin):
@@ -20,6 +20,11 @@ class AdminRound(admin.ModelAdmin):
     send_EMAIL.short_description = "Send an email to selected users"
 # Register your models here.
 
+
 admin.site.register(Services)
 admin.site.register(EventCoordinator)
+admin.site.register(EventsFAQ)
+admin.site.register(EventsPartners)
+admin.site.register(EventRules)
 admin.site.register(EventRounds,AdminRound)
+admin.site.register(Event)

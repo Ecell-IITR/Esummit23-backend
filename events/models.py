@@ -1,4 +1,5 @@
 
+from pyexpat import model
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from user.models.role.proff import ProffUser
@@ -12,7 +13,16 @@ class Services(models.Model):
     desc = models.CharField(max_length=200)
     image = models.ImageField(upload_to='services/')
 
-
+class EventRules(models.Model):
+    rule = models.TextField(verbose_name="Event Rule")
+    class Meta:
+        """
+        Meta class for Event Rules
+        """
+        verbose_name_plural = 'Event Rules'
+        
+    def __str__(self):
+        return self.rule
 class EventCoordinator(models.Model):
     name = models.CharField(max_length=100, verbose_name="Coordinator Name")
     email = models.EmailField(max_length=100, verbose_name="Email Id")
@@ -109,6 +119,57 @@ class EventRounds(models.Model):
         return self.round_name
 
 
+class AbstractEvent(models.Model):
+    EVENT_STATUS_TYPE = (
+        ('U', 'Upcoming'),
+        ('L', 'Live'),
+        ('O', 'Over'),
 
+    )
+    event_name = models.CharField(
+        max_length=100, verbose_name="Event Name", db_index=True, unique=True)
+    card_image = models.ImageField(
+        upload_to='event/main/card/', verbose_name="Event's Card image", blank=True)
+    background_image = models.ImageField(
+        upload_to='event/main/background/', verbose_name="Event's background image", blank=True)
+    tagline = models.CharField(max_length=255, verbose_name="Event Tagline")
+    description = RichTextUploadingField(
+        verbose_name="Event's Description", blank=True)
+    card_description = RichTextUploadingField(
+        verbose_name="Event's Card Description", blank=True)
+    google_form = models.URLField(
+        verbose_name="Event's Google Form", blank=True, null=True)
+    event_priority = models.IntegerField(
+        verbose_name="priority of event", default=1)
+    event_status = models.CharField(
+        max_length=1, choices=EVENT_STATUS_TYPE, default='U', verbose_name="Event Status")
+    event_faqs = models.ManyToManyField(
+        EventsFAQ, blank=True, related_name="%(app_label)s_%(class)s_faqs_of")
+    events_coordinators = models.ManyToManyField(
+        to=EventCoordinator, blank=True)
+    mobile_background_image = models.ImageField(
+        upload_to='event/main/background/', verbose_name="Event's Mobile background image", blank=True, null=True, default=None)
+    logo_image = models.ImageField(
+        upload_to='event/main/logo/', verbose_name="Event's logo image", blank=True, null=True, default=None)
+
+    class Meta:
+        """
+        Meta class for AbstractEvent
+        """
+        abstract = True
+
+    def __str__(self):
+        return self.event_name
+
+
+class Event(AbstractEvent):
+    """
+    This class implements Event
+    """
+    class Meta:
+        """
+        Meta class for Event
+        """
+        verbose_name_plural = 'Events'
 
         
