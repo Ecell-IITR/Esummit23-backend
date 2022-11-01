@@ -31,3 +31,4 @@ class ProffUser(AbstractProfile):
                 unique_value = 0
             self.esummit_id = 'ES23'+professional_tag + \
                 str((unique_value + 1) * 31)
+        return super(ProffUser, self).save(*args, **kwargs)

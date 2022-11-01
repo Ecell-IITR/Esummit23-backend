@@ -9,7 +9,7 @@ class AdminRound(admin.ModelAdmin):
 
     def send_EMAIL(self, request, queryset):
         for query in queryset:
-            stp = query.StudentUser
+            stp = query.StudentUser.all()
             for user in stp:
                 send_mail('Subject here', query.EmailMessage, 'from@example.com',[user.email], fail_silently=False)
         # for i in queryset:

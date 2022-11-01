@@ -23,3 +23,4 @@ class StartupUser(AbstractProfile):
                 unique_value = 0
             self.esummit_id = 'ES23'+professional_tag + \
                 str((unique_value + 1) * 31)
+        return super(StartupUser, self).save(*args, **kwargs)
