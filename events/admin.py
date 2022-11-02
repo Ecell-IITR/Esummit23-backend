@@ -2,22 +2,25 @@ from django.contrib import admin
 from .models import Services,EventCoordinator,EventsFAQ,EventsPartners,EventRounds,EventRules,Event
 
 from django.core.mail import send_mail
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 class AdminRound(admin.ModelAdmin):
     exclude = ('created', 'updated')
     actions = ['send_EMAIL']
 
 
     def send_EMAIL(self, request, queryset):
+        
         for query in queryset:
             stp = query.StudentUser.all()
             for user in stp:
-                send_mail('Subject here', query.EmailMessage, 'from@example.com',[user.email], fail_silently=False)
+                send_mail('Subject here',"", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
             prf = query.ProffUser.all()
             for user in prf:
-                send_mail('Subject here', query.EmailMessage, 'from@example.com',[user.email], fail_silently=False)
+                send_mail('Subject here', "", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
             stu = query.StudentUser.all()
             for user in stu:
-                send_mail('Subject here', query.EmailMessage, 'from@example.com',[user.email], fail_silently=False)
+                send_mail('Subject here', "", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
         
         # for i in queryset:
         #     if i.email:
