@@ -12,6 +12,13 @@ class AdminRound(admin.ModelAdmin):
             stp = query.StudentUser.all()
             for user in stp:
                 send_mail('Subject here', query.EmailMessage, 'from@example.com',[user.email], fail_silently=False)
+            prf = query.ProffUser.all()
+            for user in prf:
+                send_mail('Subject here', query.EmailMessage, 'from@example.com',[user.email], fail_silently=False)
+            stu = query.StudentUser.all()
+            for user in stu:
+                send_mail('Subject here', query.EmailMessage, 'from@example.com',[user.email], fail_silently=False)
+        
         # for i in queryset:
         #     if i.email:
         #         send_mail('Subject here', 'Here is the message.', 'from@example.com',[i.email], fail_silently=False)
