@@ -2,8 +2,7 @@ from django.contrib import admin
 from .models import Services,EventCoordinator,EventsFAQ,EventsPartners,EventRounds,EventRules,Event
 
 from django.core.mail import send_mail
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+
 class AdminRound(admin.ModelAdmin):
     exclude = ('created', 'updated')
     actions = ['send_EMAIL']
