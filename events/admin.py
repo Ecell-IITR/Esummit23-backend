@@ -3,8 +3,24 @@ from .models import Services,EventCoordinator,EventsFAQ,EventsPartners,EventRoun
 from .models import EventSeo
 from django.core.mail import send_mail
 
+
+class RoundStartupsInline(admin.TabularInline):
+    model = EventRounds.StartupUser.through
+    extra = 3
+
+class RoundStudentInline(admin.TabularInline):
+    model = EventRounds.StudentUser.through
+    extra = 3
+class RoundProffInline(admin.TabularInline):
+    model = EventRounds.ProffUser.through
+    extra = 3
+
 class AdminRound(admin.ModelAdmin):
-    exclude = ('created', 'updated')
+    exclude = ('created', 'updated',"ProffUser","StudentUser","StartupUser")
+  
+    
+    inlines = [RoundStartupsInline, RoundStudentInline, RoundProffInline]
+    
     actions = ['send_EMAIL']
 
 
@@ -63,11 +79,17 @@ class EventRoundInlines(admin.TabularInline):
     verbose_name_plural = "Event Rounds"
     extra = 2
 
+class EventPerksInlines(admin.TabularInline):
+    model = Event.event_perks.through
+    verbose_name_plural = "Event Perks"
+    extra = 2
+
+
 class EventAdmin(admin.ModelAdmin):
     list_display = ["event_name", "tagline", "event_priority"]
     search_fields = ["event_name", "tagline", ]
     list_filter = ["event_status", ]
-    inlines = [EventFAQInlines, EventCoordinatorInlines, EventRuleInlines,EventPartnerInlines,EventRoundInlines]
+    inlines = [EventFAQInlines, EventCoordinatorInlines, EventRuleInlines,EventPartnerInlines,EventRoundInlines,EventPerksInlines]
     exclude = ['event_faqs','event_rules', 'events_coordinators', 'event_partners' ,'event_perks',
                'event_rounds']
    
