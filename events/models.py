@@ -13,16 +13,7 @@ class Services(models.Model):
     desc = models.CharField(max_length=200)
     image = models.ImageField(upload_to='services/')
 
-class EventRules(models.Model):
-    rule = models.TextField(verbose_name="Event Rule")
-    class Meta:
-        """
-        Meta class for Event Rules
-        """
-        verbose_name_plural = 'Event Rules'
-        
-    def __str__(self):
-        return self.rule
+
 class EventCoordinator(models.Model):
     name = models.CharField(max_length=100, verbose_name="Coordinator Name")
     email = models.EmailField(max_length=100, verbose_name="Email Id")
@@ -118,6 +109,21 @@ class EventRounds(models.Model):
     def __str__(self):
         return self.round_name
 
+class EventSeo(models.Model):
+    name=models.CharField(max_length=100)
+    title = models.CharField(max_length=100, verbose_name="Title")
+    description = models.TextField(verbose_name="Description")
+    keywords = models.TextField(verbose_name="Keywords")
+    hashtags = models.TextField(verbose_name="Hashtags")
+
+    class Meta:
+        """
+        Meta class for Event Seo
+        """
+        verbose_name_plural = 'Event Seo'
+
+    def __str__(self):
+        return self.name
 
 class AbstractEvent(models.Model):
     EVENT_STATUS_TYPE = (
@@ -151,7 +157,8 @@ class AbstractEvent(models.Model):
         upload_to='event/main/background/', verbose_name="Event's Mobile background image", blank=True, null=True, default=None)
     logo_image = models.ImageField(
         upload_to='event/main/logo/', verbose_name="Event's logo image", blank=True, null=True, default=None)
-
+    seo = models.OneToOneField(
+        EventSeo, on_delete=models.CASCADE, blank=True, null=True, default=None)
     class Meta:
         """
         Meta class for AbstractEvent
@@ -166,6 +173,15 @@ class Event(AbstractEvent):
     """
     This class implements Event
     """
+    event_rounds = models.ManyToManyField(
+        EventRounds, blank=True, related_name="%(app_label)s_%(class)s_rounds_of", verbose_name="Event Rounds")
+    event_perks = models.ManyToManyField(
+        EventPerks, blank=True, related_name="%(app_label)s_%(class)s_perks_of", verbose_name="Event Perks")
+    event_rules = models.ManyToManyField(
+        EventRules, blank=True, related_name="%(app_label)s_%(class)s_rule_of", verbose_name="Event Rules")
+    event_partners = models.ManyToManyField(
+        EventsPartners, related_name="%(app_label)s_%(class)s_partners_of", verbose_name="Partners/Sponsors Of Events")
+
     class Meta:
         """
         Meta class for Event
