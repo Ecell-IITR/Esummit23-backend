@@ -32,33 +32,25 @@ This is the backend of E-summit 2023
 **Server:** Django
 
 
-## Documentation
+## API Reference
 
-[Documentation](https://linktodocumentation)
+#### Get all items
 
-
-## Deployment
-
-To deploy this project run
-
-WINDOWS Users
-
-to download required directories
-```bash
-  yarn
+```http
+  GET http://127.0.0.1:8000/design/colors/
 ```
-to start development server
-```bash
-  yarn run
-```
-MAC Users
 
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `NONE` | `string` | **Required**. NA |
 
-to download required directories
-```bash
-  yarn
+#### Get item
+
+```http
+  GET http://127.0.0.1:8000/public/team
 ```
-to start development server
-```bash
-  yarn run
-```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `NONE`      | `string` | **Required**. NA |
+
