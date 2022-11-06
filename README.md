@@ -3,9 +3,6 @@
 # Usage
 run ```pip install -r requirements.txt ``` before using the project
 
-## Screenshots
-
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
 E-summit Backend
 
