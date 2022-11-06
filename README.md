@@ -15,7 +15,6 @@ This is the backend of E-summit 2023
 ## Acknowledgements
 
 - [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
--
 
 ## Authors
 
@@ -34,7 +33,7 @@ This is the backend of E-summit 2023
 
 ## API Reference
 
-#### Get all items
+#### Get Color
 
 ```http
   GET http://127.0.0.1:8000/design/colors/
@@ -44,13 +43,28 @@ This is the backend of E-summit 2023
 | :-------- | :------- | :------------------------- |
 | `NONE` | `string` | **Required**. NA |
 
-#### Get item
+#### Get Team
 
 ```http
-  GET http://127.0.0.1:8000/public/team
+  GET http://127.0.0.1:8000/public/team/
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `NONE`      | `string` | **Required**. NA |
+
+
+
+#### Get Speakers
+```http
+  GET http://127.0.0.1:8000/public/Speakers/
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `NONE`      | `string` | **Required**. NA |
+
+
+```
+
 
