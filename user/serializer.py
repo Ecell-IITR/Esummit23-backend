@@ -1,11 +1,9 @@
 from rest_framework import serializers
 
-from .models import querry 
+from .models.querry  import Querry
 
-class QuerrySerializer(serializers.Serializer):
+class QuerrySerializer(serializers.ModelSerializer):
     class Meta:
-        model = querry.Querry
-        execlude=["name","email","phone_number","message"]
-    def create(self,validated_data):
-            return querry.Querry.objects.create(**validated_data)
-        
+        model = Querry
+        fields = ["name","email","phone_number","message"]
+      
