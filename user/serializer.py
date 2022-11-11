@@ -30,7 +30,22 @@ class EventProffUser(serializers.ModelSerializer):
         fields = ["name", "email", "phone_number", "esummit_id"]
 
 
-class EventCAUser(serializers.ModelSerializer):
+class CAUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CAUser
-        fields = ["name", "email", "phone_number", "esummit_id"]
+        exclude=['payment','taskAssigned','taskCompleted','esummit_id','created','updated','authToken','points']
+
+class StudentUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentUser
+        exclude=['payment','esummit_id','created','updated','authToken']
+
+class ProffUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProffUser
+        exclude=['payment','esummit_id','created','updated','authToken']
+
+class StartupUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StartupUser
+        exclude=['payment','esummit_id','created','updated','authToken']
