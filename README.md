@@ -30,10 +30,36 @@ This is the backend of E-summit 2023
 
 ## API Reference
 
+
+#### Login
+
+##### ca
+```http
+  POST /user/login
+```
+##### json querry 
+```
+{
+    "UserType":"ca",
+    "user":{
+        "full_name":"pranav arya",
+        "email":"pranavleo22@gmail.com",
+        "phone_number":"9833290022",
+        "collage":"iit r",
+        "branch":"ece",
+        "year":"3rd",
+        "city":"bom",
+        "state":"UK",
+        "password":"xxxxxx"
+    }
+    
+}
+```
+
 #### Get Color
 
 ```http
-  GET http://127.0.0.1:8000/design/colors/
+  GET /design/colors/
 ```
 
 | Parameter | Type     | Description                |
@@ -43,7 +69,7 @@ This is the backend of E-summit 2023
 #### Get Team
 
 ```http
-  GET http://127.0.0.1:8000/public/team/
+  GET /public/team/
 ```
 
 | Parameter | Type     | Description                       |
@@ -54,7 +80,7 @@ This is the backend of E-summit 2023
 
 #### Get Speakers
 ```http
-  GET http://127.0.0.1:8000/public/Speakers/
+  GET /public/Speakers/
 ```
 
 | Parameter | Type     | Description                       |
