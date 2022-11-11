@@ -6,6 +6,7 @@ from rest_framework import status
 from .models import querry 
 from rest_framework.decorators import api_view
 from .models.role.ca import CAUser
+from django.core.mail import send_mail
 class QuerryView(generics.GenericAPIView):
     serializer_class=QuerrySerializer
     def post(self,request):
@@ -25,7 +26,7 @@ def loginView(request):
     if request.method == 'GET':
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        try:
+            db_entry=""
             data = request.data["user"]
             if request.data.get('UserType') == 'ca':
                 
@@ -50,15 +51,20 @@ def loginView(request):
                     db_entry=StartupUserSerializer(data=data)
                                 
                 db_entry.is_valid(raise_exception=False)
+                
         
                 db_entry.save()
                 try:
-                    user=CAUser.objects.get(esummit_id=data["referred_by"])
-                    user.points+=50
+                    print("hello")
+                    user=CAUser.objects.filter(esummit_id=data["referred_by"])[0]
+                    
+                   
+                    user.points=50+user.points
+                    print(user.points)
                     user.save()
                 except:
                     pass
             return Response(status=status.HTTP_201_CREATED)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+            # return Response(status=status.HTTP_400_BAD_REQUEST)
         
