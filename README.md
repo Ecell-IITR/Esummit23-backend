@@ -4,9 +4,14 @@
 run ```pip install -r requirements.txt ``` before using the project
 
 
-
-
 This is the backend of E-summit 2023
+
+
+
+## Work to be done
+
+Integrate Queing
+Integrate catching
 
 
 ## Acknowledgements
