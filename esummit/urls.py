@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 import public.urls as Purls
 import design.urls as Durls
+import user.urls as Uurls
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('public/', include(Purls)),
     path('design/', include(Durls)),
+    path('user/', include(Uurls)),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]
