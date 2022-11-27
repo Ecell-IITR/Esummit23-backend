@@ -1,4 +1,5 @@
 from django.contrib import admin
+from .models.querry import Querry
 from user.models.role.startup import StartupUser
 from user.models.role.ca import CAUser
 from user.models.role.student import StudentUser
@@ -23,3 +24,4 @@ admin.site.register(CAUser, CAUserAdmin)
 admin.site.register(StudentUser, StudentUserAdmin)
 admin.site.register(ProffUser, ProffUserAdmin)
 admin.site.register(OTP)
+admin.site.register(Querry)

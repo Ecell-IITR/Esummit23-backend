@@ -15,15 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-import public.urls as Purls
-import design.urls as Durls
-import user.urls as Uurls
-
+import public.urls as publicUrls
+import design.urls as designUrls
+import user.urls as userUrls
+import events.urls as eventsUrls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('public/', include(Purls)),
-    path('design/', include(Durls)),
-    path('user/', include(Uurls)),
+    path('public/', include(publicUrls)),
+    path('design/', include(designUrls)),
+    path('user/', include(userUrls)),
+    path('events/', include(eventsUrls)),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]

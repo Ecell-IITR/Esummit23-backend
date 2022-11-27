@@ -8,6 +8,14 @@ from rest_framework.generics import GenericAPIView
 from .serializer import otpSerializer
 from time import time
 from datetime import datetime
+from .serializer import QuerrySerializer,CAUserSerializer,StudentUserSerializer,ProffUserSerializer,StartupUserSerializer
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
+from .models import querry 
+from rest_framework.decorators import api_view
+from .models.role.ca import CAUser
+from django.core.mail import send_mail
 
 class OtpView(GenericAPIView):
     serializer_class = otpSerializer
@@ -58,3 +66,66 @@ class OtpView(GenericAPIView):
                     print("fhff")
                 return Response("Successful", status=200)
             return Response("unsuccessful", status=400)
+
+
+
+class QuerryView(generics.GenericAPIView):
+    serializer_class=QuerrySerializer
+    def post(self,request):
+        
+            
+            data={"name":request.data.get("name"),"email":request.data.get("email"),"phone_number":request.data.get("phone_number"),"message":request.data.get("message")  }
+          
+            db_entry=QuerrySerializer(data=data)
+  
+            if db_entry.is_valid():
+        
+                db_entry.save()
+                return Response( status=status.HTTP_201_CREATED);
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+@api_view(('GET','POST'))
+def loginView(request):
+    if request.method == 'GET':
+        return Response(status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+            db_entry=""
+            data = request.data["user"]
+            if request.data.get('UserType') == 'ca':
+                
+                data["referred_by"] = ""
+                db_entry = CAUserSerializer(data=data)
+                db_entry.is_valid(raise_exception=True)
+                db_entry.save()
+            if request.data.get('UserType') in ('student',"proff","stp"):
+        
+                try:
+                    data["referred_by"] = request.data["referred_by"]
+                    
+                except:
+                    data["referred_by"] = " "
+                
+                db_entry = StudentUserSerializer(data=data)
+                
+                if request.data.get('UserType') == 'proff':
+                    db_entry=ProffUserSerializer(data=data)
+                if request.data.get('UserType') == 'stp':
+                    
+                    db_entry=StartupUserSerializer(data=data)
+                                
+                db_entry.is_valid(raise_exception=False)
+                
+        
+                db_entry.save()
+                try:
+                    print("hello")
+                    user=CAUser.objects.filter(esummit_id=data["referred_by"])[0]
+                    
+                   
+                    user.points=50+user.points
+                    print(user.points)
+                    user.save()
+                except:
+                    pass
+            return Response(status=status.HTTP_201_CREATED)
+        
+            # return Response(status=status.HTTP_400_BAD_REQUEST)
