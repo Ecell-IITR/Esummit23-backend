@@ -1,6 +1,4 @@
-from django.shortcuts import render
 from rest_framework.response import Response
-from django.core.exceptions import ObjectDoesNotExist
 from user.models.otp import OTP
 import pyotp
 import smtplib
@@ -12,17 +10,14 @@ from .serializer import QuerrySerializer,CAUserSerializer,StudentUserSerializer,
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from .models import querry 
 from rest_framework.decorators import api_view
 from .models.role.ca import CAUser
-from django.core.mail import send_mail
 
 class OtpView(GenericAPIView):
     serializer_class = otpSerializer
     def post(self,request):
             totp=pyotp.TOTP('base32secret3232')
-            otp=totp.now()
-            now = datetime.now()    
+            otp=totp.now()   
             key = "123"  # Generating Key
             server = smtplib.SMTP('smtp.gmail.com',587)
             server.starttls()
@@ -35,10 +30,7 @@ class OtpView(GenericAPIView):
             print(db_entry)
             detail=OTP.objects.filter(Email=request.data['Email'],Esummit_Id=request.data['Esummit_Id']).values()
             print(detail)
-            # d= (now.strftime("%m/%d/%Y, %H:%M:%S"))
-
             req=OTP.objects.get()
-            
             d=int(time()*1000)
             print(d)
             d1=req.date_expired
