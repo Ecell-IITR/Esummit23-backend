@@ -4,6 +4,7 @@ from user.models.role.startup import StartupUser
 from user.models.role.ca import CAUser
 from user.models.role.student import StudentUser
 from user.models.role.proff import ProffUser
+from user.models.otp import OTP
 
 # Register your models here.
 class UserAdmin(admin.ModelAdmin):
@@ -22,4 +23,5 @@ admin.site.register(StartupUser, StartupUserAdmin)
 admin.site.register(CAUser, CAUserAdmin)
 admin.site.register(StudentUser, StudentUserAdmin)
 admin.site.register(ProffUser, ProffUserAdmin)
+admin.site.register(OTP)
 admin.site.register(Querry)

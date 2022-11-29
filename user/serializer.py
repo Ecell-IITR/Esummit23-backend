@@ -1,9 +1,16 @@
 from rest_framework import serializers
+from .models.otp import OTP
 from .models.role.startup import StartupUser
 from .models.role.student import StudentUser
 from .models.role.proff import ProffUser
 from .models.role.ca import CAUser
 from .models.querry import Querry
+
+
+class otpSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OTP
+        exclude = ["id","date_created" ,"date_expired"]
 
 
 class QuerrySerializer(serializers.ModelSerializer):
