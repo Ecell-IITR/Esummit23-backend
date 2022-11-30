@@ -33,10 +33,11 @@ class AbstractProfile(models.Model):
     def save(self, *args, **kwargs):
         if not self.created:
             self.created = timezone.now()
-
+        
         self.updated = timezone.now()
         self.authToken = jwt.encode({"email": self.email,"password":self.password}, self.jwt_secret, algorithm=self.jwt_algorithm)
         return super(AbstractProfile, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.full_name
+        

@@ -6,7 +6,7 @@ from user.models.role.proff import ProffUser
 
 # Register your models here.
 class UserAdmin(admin.ModelAdmin):
-    exclude = ('created', 'updated', 'password','authToken',"esummit_id")
+    exclude = ('created', 'updated','authToken')
     list_filter = ('email',"esummit_id")
 class StartupUserAdmin(UserAdmin):
     pass
