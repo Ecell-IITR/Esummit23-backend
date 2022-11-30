@@ -7,6 +7,32 @@ from .models.role.ca import CAUser
 from .models.querry import Querry
 
 
+class ProffUserLoginSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+       model = ProffUser
+       fields = ['email', 'password', 'esummit_id']
+
+class CAUserLoginSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+       model = CAUser
+       fields = ['email', 'password', 'esummit_id' ]
+
+class StudentUserLoginSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+       model = StudentUser
+       fields = ['email', 'password','esummit_id' ]
+
+class StartupUserLoginSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+       model = StartupUser
+       fields = ['email', 'password', 'esummit_id' ]
+
+
+
 class otpSerializer(serializers.ModelSerializer):
     class Meta:
         model = OTP
@@ -56,3 +82,4 @@ class StartupUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = StartupUser
         exclude=['payment','esummit_id','created','updated','authToken']
+

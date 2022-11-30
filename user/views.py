@@ -1,3 +1,4 @@
+
 from rest_framework.response import Response
 from user.models.otp import OTP
 import pyotp
@@ -13,6 +14,68 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from .models.role.ca import CAUser
 
+from django.shortcuts import render
+from .serializer import StartupUser, ProffUser, StudentUser, CAUser
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate
+from rest_framework import generics
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.hashers import check_password, make_password
+# Create your views here.
+
+class LoginApiView(APIView):
+  # def get_serializer_class(self):
+  #   if self.request.esummit_id=='stp':
+  #     return StartupUser
+  #   if self.request.esummit_id=='stu':
+  #     return StudentUser
+  #   if self.request.esummit_id=='CAP':
+  #     return CAUser
+  #   if self.request.esummit_id=='prf':
+  #     return ProffUser
+     
+  
+  def post(self, request):
+    data = request.data
+  
+    password = data.get('password', None)
+    esummit_id = data.get('esummit_id', None)
+    professional_tag=''
+    student= "" 
+    print(student)
+    
+    if not esummit_id:
+        return Response('Esummit_id cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+    if not password:
+        return Response('Password cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+    print(esummit_id.find("stu"))
+    if esummit_id:
+      if (esummit_id.find("stp")!=-1):
+         student = StartupUser.objects.all().filter(esummit_id=esummit_id)
+         professional_tag='stp'    
+      elif(esummit_id.find("CAP")!=-1):
+         student = CAUser.objects.all().filter(esummit_id=esummit_id)
+         professional_tag='CAP'
+      elif(esummit_id.find("stu")!=-1):
+          student = StudentUser.objects.all().filter(esummit_id=esummit_id)
+          professional_tag='stu'
+      elif(esummit_id.find("prf")):
+          student = ProffUser.objects.all().filter(esummit_id=esummit_id)
+          professional_tag='prf'
+    print("trys",student[0].password)
+    print(check_password(password,student[0].password),password,student[0].password)
+    if student:
+        if check_password(password,student[0].password):
+          print("uo")
+
+          r=str(student[0].authToken) 
+          print(r,"")
+          return Response({'token': r , 'role': professional_tag}, status=status.HTTP_200_OK)
+    
+    return Response({'error_msg: Username or password not found!'}, status=status.HTTP_404_NOT_FOUND) 
+          
 class OtpView(GenericAPIView):
     serializer_class = otpSerializer
     def post(self,request):
@@ -76,7 +139,7 @@ class QuerryView(generics.GenericAPIView):
                 return Response( status=status.HTTP_201_CREATED);
             return Response(status=status.HTTP_400_BAD_REQUEST)
 @api_view(('GET','POST'))
-def loginView(request):
+def SignupView(request):
     if request.method == 'GET':
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
@@ -121,3 +184,4 @@ def loginView(request):
             return Response(status=status.HTTP_201_CREATED)
         
             # return Response(status=status.HTTP_400_BAD_REQUEST)
+

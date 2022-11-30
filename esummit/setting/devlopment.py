@@ -96,7 +96,16 @@ CKEDITOR_CONFIGS = {
         'toolbar': None,
     },
 }
-
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT-TIMEOUT': 360,
+    }
+}
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

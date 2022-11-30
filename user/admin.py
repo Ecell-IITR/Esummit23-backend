@@ -8,7 +8,7 @@ from user.models.otp import OTP
 
 # Register your models here.
 class UserAdmin(admin.ModelAdmin):
-    exclude = ('created', 'updated', 'password','authToken',"esummit_id")
+    exclude = ('created', 'updated','authToken')
     list_filter = ('email',"esummit_id")
 class StartupUserAdmin(UserAdmin):
     pass
@@ -25,3 +25,4 @@ admin.site.register(StudentUser, StudentUserAdmin)
 admin.site.register(ProffUser, ProffUserAdmin)
 admin.site.register(OTP)
 admin.site.register(Querry)
+
