@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator
 import jwt
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import make_password
 
 
 SECRET_KEY = 'django-insecure-*+z5#+d&a@s^7)x^cez!r)mqq^iz8fld@rbo36nyke-%cp%o0i'

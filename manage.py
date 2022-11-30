@@ -9,7 +9,7 @@ load_dotenv()
 def main():
     """Run administrative tasks."""
     if os.environ.get('ENVIRONMENT') == 'production':
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'esummit.setting.production')
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', './esummit.setting.production')
     else:
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'esummit.setting.devlopment')
     try:
