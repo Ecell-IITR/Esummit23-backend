@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'CAP.apps.CapConfig',
     'rest_framework',
     'ckeditor',
+    'django_rq',
     'ckeditor_uploader',
     'django.contrib.admin',
     'django.contrib.auth',
