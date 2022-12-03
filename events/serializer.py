@@ -44,6 +44,14 @@ class EventRoundsSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventRounds
         exclude = ['StudentUser',"StartupUser","ProffUser"]
+class EventMiniSerializer(serializers.Serializer):
+    event_name=serializers.CharField(max_length=100)
+    card_image=serializers.ImageField()
+    card_description=serializers.CharField(max_length=1000)
+    class Meta:
+        model = Event
+        fields = '__all__'
+
 class EventSerializer(serializers.Serializer):
     events_coordinators=EventCoordinatorSerializer(many=True)
     event_faqs=EventFAQSerializer(many=True)

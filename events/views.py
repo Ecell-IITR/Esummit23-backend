@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView,GenericAPIView
-from .serializer import EventSerializer
+from .serializer import EventMiniSerializer,EventSerializer
 from .models import Event
 from rest_framework import status
 
 # Create your views here.
 class EventListView(ListAPIView):
-    serializer_class = EventSerializer
+    serializer_class = EventMiniSerializer
     queryset = Event.objects.all()
 class EventSingleView(GenericAPIView):
     serializer_class = EventSerializer
