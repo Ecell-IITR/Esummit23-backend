@@ -45,13 +45,13 @@ class EventRoundsSerializer(serializers.ModelSerializer):
         model = EventRounds
         exclude = ['StudentUser',"StartupUser","ProffUser"]
 class EventSerializer(serializers.Serializer):
-    EventCoordinator=EventCoordinatorSerializer(many=True)
-    EventsFAQ=EventFAQSerializer(many=True)
-    EventsPartners=EventPartnersSerializer(many=True)
-    EventPerks=EventPerksSerializer(many=True)
-    EventRules=EventRulesSerializer(many=True)
-    EventRounds=EventRoundsSerializer(many=True)
-    EventSeo=EventSeoSerializer(many=True)
+    events_coordinators=EventCoordinatorSerializer(many=True)
+    event_faqs=EventFAQSerializer(many=True)
+    event_partners=EventPartnersSerializer(many=True)
+    event_perks=EventPerksSerializer(many=True)
+    event_rules=EventRulesSerializer(many=True)
+    event_rounds=EventRoundsSerializer(many=True)
+    seo=EventSeoSerializer(many=True)
     class Meta:
         model = Event
         fields = '__all__'
