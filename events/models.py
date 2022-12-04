@@ -88,6 +88,8 @@ class EventRules(models.Model):
 
     def __str__(self):
         return self.rule
+
+
 class EventRounds(models.Model):
     round_name = models.CharField(max_length=100, verbose_name="Round Name")
     start_date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
@@ -96,21 +98,23 @@ class EventRounds(models.Model):
     tasks = RichTextUploadingField(verbose_name="Tasks", blank=True)
     round_eligibility = RichTextUploadingField(
         verbose_name="Eligibility For Round", blank=True)
-    StudentUser = models.ManyToManyField(StudentUser, verbose_name="Student User", blank=True)
-    ProffUser = models.ManyToManyField(ProffUser, verbose_name="Proff User", blank=True)
-    StartupUser = models.ManyToManyField(StartupUser, verbose_name="Startup User", blank=True)
+    StudentUser = models.ManyToManyField(
+        StudentUser, verbose_name="Student User", blank=True)
+    ProffUser = models.ManyToManyField(
+        ProffUser, verbose_name="Proff User", blank=True)
+    StartupUser = models.ManyToManyField(
+        StartupUser, verbose_name="Startup User", blank=True)
     EmailMessage = RichTextUploadingField()
     class Meta:
-      
-        verbose_name_plural = 'Event Round'
 
-    
+        verbose_name_plural = 'Event Round'
 
     def __str__(self):
         return self.round_name
 
+
 class EventSeo(models.Model):
-    name=models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     title = models.CharField(max_length=100, verbose_name="Title")
     description = models.TextField(verbose_name="Description")
     keywords = models.TextField(verbose_name="Keywords")
@@ -124,6 +128,7 @@ class EventSeo(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class AbstractEvent(models.Model):
     EVENT_STATUS_TYPE = (
@@ -159,6 +164,7 @@ class AbstractEvent(models.Model):
         upload_to='event/main/logo/', verbose_name="Event's logo image", blank=True, null=True, default=None)
     seo = models.OneToOneField(
         EventSeo, on_delete=models.CASCADE, blank=True, null=True, default=None)
+
     class Meta:
         """
         Meta class for AbstractEvent
@@ -187,5 +193,3 @@ class Event(AbstractEvent):
         Meta class for Event
         """
         verbose_name_plural = 'Events'
-
-        
