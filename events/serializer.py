@@ -53,6 +53,9 @@ class EventMiniSerializer(serializers.Serializer):
         fields = '__all__'
 
 class EventSerializer(serializers.Serializer):
+    event_name=serializers.CharField(max_length=100)
+    card_image=serializers.ImageField()
+    description=serializers.CharField(max_length=1000)
     events_coordinators=EventCoordinatorSerializer(many=True)
     event_faqs=EventFAQSerializer(many=True)
     event_partners=EventPartnersSerializer(many=True)
