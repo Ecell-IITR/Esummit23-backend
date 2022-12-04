@@ -46,7 +46,7 @@ class EventRoundsSerializer(serializers.ModelSerializer):
         exclude = ['StudentUser',"StartupUser","ProffUser"]
 class EventMiniSerializer(serializers.Serializer):
     event_name=serializers.CharField(max_length=100)
-    card_image=serializers.ImageField()
+    logo_image=serializers.ImageField()
     card_description=serializers.CharField(max_length=1000)
     class Meta:
         model = Event
@@ -55,6 +55,7 @@ class EventMiniSerializer(serializers.Serializer):
 class EventSerializer(serializers.Serializer):
     event_name=serializers.CharField(max_length=100)
     card_image=serializers.ImageField()
+    mobile_background_image=serializers.ImageField()
     description=serializers.CharField(max_length=1000)
     events_coordinators=EventCoordinatorSerializer(many=True)
     event_faqs=EventFAQSerializer(many=True)
