@@ -3,37 +3,27 @@
 ## Usage
 run ```pip install -r requirements.txt ``` before using the project
 
+Intilize reddis 
 
-This is the backend of E-summit 2023
-
-
-
-## Work to be done
-
-Integrate Queing
-Integrate catching
-
-
-## Acknowledgements
-
-- [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
-
-## Authors
-
-- Ishika
-- Divya
-- Kiran
-- Vinay
-- Divyanshu
-
-## Tech Stack
-
-**Client:** React, TailwindCSS,Bootstrap
-
-**Server:** Django
-
+run ``` python manage.py runserver ```
 
 ## API Reference
+
+
+#### Events
+
+##### list 
+```http
+  GET /events/all
+```
+##### json Response
+``` 
+    {
+        "event_name": "ns",
+        "logo_image": null,
+        "card_description": ""
+    }
+```
 
 
 #### Login
@@ -60,39 +50,4 @@ Integrate catching
     
 }
 ```
-
-#### Get Color
-
-```http
-  GET /design/colors/
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `NONE` | `string` | **Required**. NA |
-
-#### Get Team
-
-```http
-  GET /public/team/
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `NONE`      | `string` | **Required**. NA |
-
-
-
-#### Get Speakers
-```http
-  GET /public/Speakers/
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `NONE`      | `string` | **Required**. NA |
-
-
-```
-
 
