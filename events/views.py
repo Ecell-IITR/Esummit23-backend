@@ -6,10 +6,24 @@ from .serializer import EventMiniSerializer,EventSerializer
 from .models import Event
 from rest_framework import status
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
+
+
+
+
 # Create your views here.
-class EventListView(ListAPIView):
-    serializer_class = EventMiniSerializer
-    queryset = Event.objects.all()
+class EventListView(APIView):
+
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60*60))
+    def get(self,request):
+        serializer = EventMiniSerializer(
+                    Event.objects.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+
 class EventSingleView(APIView):
         serializer_class = EventSerializer
         def get(self, request, event_name):
