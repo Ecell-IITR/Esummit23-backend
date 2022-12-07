@@ -40,6 +40,10 @@ class otpSerializer(serializers.ModelSerializer):
 
 
 class QuerrySerializer(serializers.ModelSerializer):
+    name=serializers.CharField(max_length=100)
+    email=serializers.EmailField(max_length=100)
+    phone_number=serializers.CharField(max_length=10)
+    message=serializers.CharField(max_length=1000)
     class Meta:
         model = Querry
         fields = ["name", "email", "phone_number", "message"]
