@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'ckeditor',
     'django_rq',
+    "corsheaders",
     'ckeditor_uploader',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -97,6 +99,9 @@ CKEDITOR_CONFIGS = {
         'toolbar': None,
     },
 }
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = ('http://localhost:3000',)
 
 # Reddis and caching 
 
