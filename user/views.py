@@ -149,6 +149,7 @@ def SignupView(request):
     if request.method == 'GET':
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
+        saver=False
         db_entry = ""
         data = request.data["user"]
         if request.data.get('UserType') == 'ca':
@@ -156,7 +157,7 @@ def SignupView(request):
             data["referred_by"] = ""
             db_entry = CAUserSerializer(data=data)
             db_entry.is_valid(raise_exception=True)
-            db_entry.save()
+            saver=db_entry.save()
         if request.data.get('UserType') in ('student', "proff", "stp"):
 
             try:
@@ -172,19 +173,20 @@ def SignupView(request):
             if request.data.get('UserType') == 'stp':
 
                 db_entry = StartupUserSerializer(data=data)
-
-            db_entry.is_valid(raise_exception=False)
-
-            db_entry.save()
+            
+            if db_entry.is_valid():
+                saver=db_entry.save()
+                print(saver)
+            else:
+                return Response({"Faliure":str(db_entry.errors)},status=status.HTTP_400_BAD_REQUEST)
             try:
-                print("hello")
+            
                 user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
 
-                user.points = 50+user.points
-                print(user.points)
                 user.save()
             except:
                 pass
-        return Response(status=status.HTTP_201_CREATED)
+        print(saver.authToken)
+        return Response({"name":saver.full_name,"e_id":saver.esummit_id,"at":saver.authToken},status=status.HTTP_201_CREATED)
 
         # return Response(status=status.HTTP_400_BAD_REQUEST)
