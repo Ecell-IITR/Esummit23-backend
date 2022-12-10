@@ -13,6 +13,7 @@ class Services(models.Model):
     fixed_cost = models.IntegerField(default=0)
     varaible_cost = models.IntegerField(default=0)
     add_details =RichTextUploadingField(default="")
+    
     @classmethod
     def create(cls, name,desc,fixed_cost=0,varaible_cost=0,add_details=""):
         services = cls(name=name,desc=desc,fixed_cost=fixed_cost,varaible_cost=varaible_cost,add_details=add_details)
