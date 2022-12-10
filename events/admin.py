@@ -4,6 +4,8 @@ from .models import EventSeo
 from django.core.mail import send_mail
 
 
+
+
 class RoundStartupsInline(admin.TabularInline):
     model = EventRounds.StartupUser.through
     extra = 3
@@ -48,6 +50,10 @@ class AdminRound(admin.ModelAdmin):
 @admin.register(EventCoordinator)
 class CoordinatorList(admin.ModelAdmin):
     list_display = ["name", "email", "phone_number"]
+
+@admin.register(Services)
+class ServicesList(admin.ModelAdmin):
+    list_display = ["name", "desc", "fixed_cost", "varaible_cost"]
 
 
 class EventFAQInlines(admin.TabularInline):

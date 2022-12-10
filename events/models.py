@@ -1,5 +1,3 @@
-
-
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from user.models.role.proff import ProffUser
@@ -9,10 +7,25 @@ from user.models.role.startup import StartupUser
 
 class Services(models.Model):
     name = models.CharField(max_length=50)
-    price = models.IntegerField()
     desc = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='services/')
+    #default cost 0
 
+    fixed_cost = models.IntegerField(default=0)
+    varaible_cost = models.IntegerField(default=0)
+    add_details =RichTextUploadingField(default="")
+    @classmethod
+    def create(cls, name,desc,fixed_cost=0,varaible_cost=0,add_details=""):
+        services = cls(name=name,desc=desc,fixed_cost=fixed_cost,varaible_cost=varaible_cost,add_details=add_details)
+        # do something with the book
+        return services
+    class Meta:
+        """
+        Meta class for Services
+        """
+        verbose_name_plural = 'Services'
+
+    def __str__(self):
+        return self.name
 
 class EventCoordinator(models.Model):
     name = models.CharField(max_length=100, verbose_name="Coordinator Name")
@@ -187,6 +200,11 @@ class Event(AbstractEvent):
         EventRules, blank=True, related_name="%(app_label)s_%(class)s_rule_of", verbose_name="Event Rules")
     event_partners = models.ManyToManyField(
         EventsPartners, related_name="%(app_label)s_%(class)s_partners_of", verbose_name="Partners/Sponsors Of Events")
+
+    def save(self, *args, **kwargs):
+        ser = Services.create(self.event_name, self.card_description)
+        ser.save()
+        return super(Event, self).save(*args, **kwargs)
 
     class Meta:
         """
