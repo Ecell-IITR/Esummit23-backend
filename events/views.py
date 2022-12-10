@@ -1,11 +1,8 @@
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView,GenericAPIView
 from .serializer import EventMiniSerializer,EventSerializer
 from .models import Event
 from rest_framework import status
-
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie

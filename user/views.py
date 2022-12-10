@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
+from django.core.mail import send_mail
 # Create your views here.
 
 
@@ -156,7 +157,7 @@ def SignupView(request):
             
             if db_entry.is_valid():
                 saver=db_entry.save()
-                print(saver)
+                
             else:
                 return Response({"Faliure":str(db_entry.errors)},status=status.HTTP_400_BAD_REQUEST)
             try:
@@ -166,7 +167,8 @@ def SignupView(request):
                 user.save()
             except:
                 pass
-        print(saver.authToken)
+        message="Dear "+"<b>"+saver.full_name+"</b>"+" account created your esummit id is "+"<b>"+saver.esummit_id+"</b>"
+        send_mail('esummit account created',"", 'from@example.com',[saver.email], fail_silently=False,html_message=message)
         return Response({"name":saver.full_name,"e_id":saver.esummit_id,"at":saver.authToken},status=status.HTTP_201_CREATED)
 
         # return Response(status=status.HTTP_400_BAD_REQUEST)
