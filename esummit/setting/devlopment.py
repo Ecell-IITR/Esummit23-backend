@@ -106,11 +106,17 @@ CORS_ORIGIN_WHITELIST = ('http://localhost:3000',)
 # Reddis and caching 
 
 RQ_QUEUES = {
-    'default': {
+    'fast': {
         'HOST': 'localhost',
         'PORT': 6379,
         'DB': 0,
-        'DEFAULT-TIMEOUT': 360,
+        'DEFAULT-TIMEOUT': 500,
+    },
+    'bulky': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT-TIMEOUT': 4000,
     }
 }
 REDIS_HOST = 'localhost'
