@@ -25,14 +25,15 @@ class LoginApiView(APIView):
         password = data.get('password', None)
         esummit_id = data.get('esummit_id', None)
         professional_tag = ''
-        user = ""
+        user = False
     
 
-        if not esummit_id:
-            return Response('Esummit_id cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+        
         if not password:
             return Response('Password cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
-        if esummit_id:
+        if not esummit_id:
+            return Response('Esummit_id cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+        else:
             if (esummit_id.find("stp") != -1):
                 user = StartupUser.objects.all().filter(esummit_id=esummit_id)
                 professional_tag = 'stp'
