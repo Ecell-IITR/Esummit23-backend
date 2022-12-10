@@ -18,15 +18,6 @@ from django.contrib.auth.hashers import check_password
 
 
 class LoginApiView(APIView):
-    # def get_serializer_class(self):
-    #   if self.request.esummit_id=='stp':
-    #     return StartupUser
-    #   if self.request.esummit_id=='stu':
-    #     return StudentUser
-    #   if self.request.esummit_id=='CAP':
-    #     return CAUser
-    #   if self.request.esummit_id=='prf':
-    #     return ProffUser
 
     def post(self, request):
         data = request.data
@@ -59,9 +50,9 @@ class LoginApiView(APIView):
         if user:
             if check_password(password, user[0].password):
             
-                r = str(user[0].authToken)
-                print(r, "")
-                return Response({'at': r, 'role': professional_tag}, status=status.HTTP_200_OK)
+                at = str(user[0].authToken)
+                
+                return Response({"n":user[0].full_name,'at': at, 'role': professional_tag}, status=status.HTTP_200_OK)
 
         return Response({'error_msg':'check the credentials'}, status=status.HTTP_404_NOT_FOUND)
 
