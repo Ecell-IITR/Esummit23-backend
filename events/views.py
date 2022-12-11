@@ -1,12 +1,12 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializer import EventMiniSerializer,EventSerializer
-from .models import Event
+from .models import Event , Services
 from rest_framework import status
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie
-
+from user.utils.auth import auth
 
 
 
@@ -36,6 +36,30 @@ class EventSingleView(APIView):
                 final_data = eventSerializer.data
                 final_status = status.HTTP_200_OK
             return Response(data=final_data, status=final_status)
+
+class Register(APIView):
+    def post(self, request):
+        data = request.data
+        headers = request.headers
+        auth_token=headers['Authorization'].split(' ')[1]
+        auth_token=auth_token[2:]
+        auth_token=auth_token[:-1]
+        
+        print(auth_token)
+        user = auth(auth_token)
+        try:
+            if user:
+                user.Services.add(Services.objects.get(service_name=data['service_name']))
+                user.payment=int(data['payment'])+user.payment
+                user.save()
+                event= Event.objects.get(event_name=data['event_name'])
+                round = event.event_rounds.objects.all()
+                print(round)
+                return Response(data=data, status=status.HTTP_200_OK)
+            else:
+                return Response(data={"error":"Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+        except:
+            return Response(data={"error":"Service not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
