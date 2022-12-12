@@ -3,7 +3,15 @@
 ## Usage
 run ```pip install -r requirements.txt ``` before using the project
 
-Intilize reddis 
+### Intilize reddis 
+
+https://redis.io/docs/getting-started/installation/install-redis-on-windows/
+
+### Create superuser
+
+run ```python manage.py createsuperuser```
+
+### run server
 
 run ``` python manage.py runserver ```
 
