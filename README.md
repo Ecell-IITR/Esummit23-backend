@@ -51,9 +51,7 @@ run ``` python manage.py runserver ```
 ```
 {
     "esummit_id":"xxxxxxxx",
-    "password":"xxxxxxxxxx"
-    
-    
+    "password":"xxxxxxxxxx"   
 }
 ```
 
@@ -78,6 +76,20 @@ run ``` python manage.py runserver ```
   GET /events/<str:event_name>
 ```
 
+##### Register
+
+###### headers will have the auth token
 
 
+```http
+  POST /event/register
+```
+##### json querry 
+
+```
+{
+    "event_name": "xxxxxx",
+    "payment": "0",
+}
+```
 
