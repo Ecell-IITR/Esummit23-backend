@@ -72,7 +72,7 @@ class Register(APIView):
                     add_round.StudentUser.add(user)
                 elif "stup" in str(type(user)):
                     add_round.StartupUser.add(user)
-                return Response(data={"success":"Registered for the evnt sucessfully"}, status=status.HTTP_200_OK)
+                return Response(data={"success":"Registered for the event sucessfully"}, status=status.HTTP_200_OK)
             else:
                 return Response(data={"error":"Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
         except:

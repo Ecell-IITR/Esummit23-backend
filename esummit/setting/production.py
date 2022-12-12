@@ -14,7 +14,7 @@ from pathlib import Path
 
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -139,7 +139,7 @@ CACHES = {
     }
 }
 
-CACHE_TTL = 60 * 15
+CACHE_TTL = 60 * 15 * 24
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
@@ -180,7 +180,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/statics/'
+STATIC_ROOT=os.path.join(BASE_DIR,'statics')
+# For uploading images
+MEDIA_URL = '/media_files/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media_files')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -194,3 +199,6 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "no.reply.esummit@gmail.com"
 EMAIL_HOST_PASSWORD = "dekhptoevnbyzssy"
+
+
+DEFAULT_FILE_STORAGE = 'esummit.storage_backends.MediaStorage'
