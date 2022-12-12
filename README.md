@@ -3,34 +3,25 @@
 ## Usage
 run ```pip install -r requirements.txt ``` before using the project
 
-Intilize reddis 
+### Intilize reddis 
+
+https://redis.io/docs/getting-started/installation/install-redis-on-windows/
+
+### Create superuser
+
+run ```python manage.py createsuperuser```
+
+### run server
 
 run ``` python manage.py runserver ```
 
 ## API Reference
 
-
-#### Events
-
-##### list 
-```http
-  GET /events/all
-```
-##### json Response
-``` 
-    {
-        "event_name": "ns",
-        "logo_image": null,
-        "card_description": ""
-    }
-```
-
-
-#### Login
+#### signup
 
 ##### ca
 ```http
-  POST /user/login
+  POST /user/signup
 ```
 ##### json querry 
 ```
@@ -50,4 +41,43 @@ run ``` python manage.py runserver ```
     
 }
 ```
+
+#### Login
+
+```http
+  POST /user/login
+```
+##### json querry 
+```
+{
+    "esummit_id":"xxxxxxxx",
+    "password":"xxxxxxxxxx"
+    
+    
+}
+```
+
+
+#### Events
+
+##### list 
+```http
+  GET /events/all
+```
+##### json Response
+``` 
+    {
+        "event_name": "ns",
+        "logo_image": null,
+        "card_description": ""
+    }
+```
+
+##### single detail
+```http
+  GET /events/<str:event_name>
+```
+
+
+
 
