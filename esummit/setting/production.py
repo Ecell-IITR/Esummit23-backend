@@ -106,8 +106,7 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = ('http://localhost:3000',)
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Reddis and caching 
 
@@ -203,8 +202,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "no.reply.esummit@gmail.com"
-EMAIL_HOST_PASSWORD = "dekhptoevnbyzssy"
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY =  os.environ.get('AWS_SECRET_ACCESS_KEY')
