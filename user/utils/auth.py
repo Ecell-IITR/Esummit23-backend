@@ -13,14 +13,14 @@ def auth(token):
         print(decoded)
         email = decoded['email']
         password = decoded['password']
-        if CAUser.objects.filter(email=email,password=password).exists():
-            return CAUser.objects.get(email=email,password=password)
-        elif StartupUser.objects.filter(email=email,password=password).exists():
-            return StartupUser.objects.get(email=email,password=password)
-        elif StudentUser.objects.filter(email=email,password=password).exists():
-            return StudentUser.objects.get(email=email,password=password)
-        elif ProffUser.objects.filter(email=email,password=password).exists():
-            return ProffUser.objects.get(email=email,password=password)
+        if CAUser.objects.filter(email=email ).exists():
+            return CAUser.objects.get(email=email )
+        elif StartupUser.objects.filter(email=email ).exists():
+            return StartupUser.objects.get(email=email )
+        elif StudentUser.objects.filter(email=email ).exists():
+            return StudentUser.objects.get(email=email )
+        elif ProffUser.objects.filter(email=email ).exists():
+            return ProffUser.objects.get(email=email )
 
     except:
         return False

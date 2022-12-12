@@ -45,16 +45,33 @@ class Register(APIView):
         auth_token=auth_token[2:]
         auth_token=auth_token[:-1]
         
-        print(auth_token)
+        
         user = auth(auth_token)
+        
         try:
             if user:
-                user.Services.add(Services.objects.get(service_name=data['service_name']))
+                
+                user.Services.add(Services.objects.get(name=data['event_name']))
+            
                 user.payment=int(data['payment'])+user.payment
                 user.save()
                 event= Event.objects.get(event_name=data['event_name'])
-                round = event.event_rounds.objects.all()
-                print(round)
+                round = event.event_rounds.all()
+                add_round=""
+                for i in round:
+                    r=str(i)
+                    
+                    if r.find("1")>-1:
+                        print(r)
+                        add_round=i
+                if "ca" in str(type(user)):
+                    add_round.CAUser.add(user)
+                elif "prf" in str(type(user)):
+                    add_round.ProffUser.add(user)
+                elif "std" in str(type(user)):
+                    add_round.StudentUser.add(user)
+                elif "stup" in str(type(user)):
+                    add_round.StartupUser.add(user)
                 return Response(data=data, status=status.HTTP_200_OK)
             else:
                 return Response(data={"error":"Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)

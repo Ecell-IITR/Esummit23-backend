@@ -3,7 +3,7 @@ from django.db import models
 from user.models.role.proff import ProffUser
 from user.models.role.student import StudentUser
 from user.models.role.startup import StartupUser
-
+from user.models.role.ca import CAUser
 
 class Services(models.Model):
     name = models.CharField(max_length=50)
@@ -118,6 +118,9 @@ class EventRounds(models.Model):
         ProffUser, verbose_name="Proff User", blank=True)
     StartupUser = models.ManyToManyField(
         StartupUser, verbose_name="Startup User", blank=True)
+    CAUser = models.ManyToManyField(
+        CAUser, verbose_name="CA User", blank=True)
+    
     EmailMessage = RichTextUploadingField()
     class Meta:
 

@@ -16,12 +16,15 @@ class RoundStudentInline(admin.TabularInline):
 class RoundProffInline(admin.TabularInline):
     model = EventRounds.ProffUser.through
     extra = 3
+class RoundCAInline(admin.TabularInline):
+    model = EventRounds.CAUser.through
+    extra = 3
 
 class AdminRound(admin.ModelAdmin):
-    exclude = ('created', 'updated',"ProffUser","StudentUser","StartupUser")
+    exclude = ('created', 'updated',"ProffUser","StudentUser","StartupUser","CAUser")
   
     
-    inlines = [RoundStartupsInline, RoundStudentInline, RoundProffInline]
+    inlines = [RoundStartupsInline, RoundStudentInline, RoundProffInline, RoundCAInline]
     
     actions = ['send_EMAIL']
 
@@ -38,7 +41,9 @@ class AdminRound(admin.ModelAdmin):
             stu = query.StudentUser.all()
             for user in stu:
                 send_mail('message from esummit', "", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
-        
+            ca = query.CAUser.all()
+            for user in ca:
+                send_mail('message from esummit', "", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
         # for i in queryset:
         #     if i.email:
         #         send_mail('message from esummit', 'Here is the message.', 'from@example.com',[i.email], fail_silently=False)
