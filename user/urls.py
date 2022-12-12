@@ -1,8 +1,6 @@
   
-from django.urls import path, include
+from django.urls import path
 from .views import QuerryView 
-
-from django.urls import path,include
 from .views import LoginApiView , SignupView
 from user.views import OtpView
 
