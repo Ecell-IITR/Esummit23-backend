@@ -9,28 +9,11 @@ run ``` python manage.py runserver ```
 
 ## API Reference
 
-
-#### Events
-
-##### list 
-```http
-  GET /events/all
-```
-##### json Response
-``` 
-    {
-        "event_name": "ns",
-        "logo_image": null,
-        "card_description": ""
-    }
-```
-
-
-#### Login
+#### signup
 
 ##### ca
 ```http
-  POST /user/login
+  POST /user/signup
 ```
 ##### json querry 
 ```
@@ -50,4 +33,43 @@ run ``` python manage.py runserver ```
     
 }
 ```
+
+#### Login
+
+```http
+  POST /user/login
+```
+##### json querry 
+```
+{
+    "esummit_id":"xxxxxxxx",
+    "password":"xxxxxxxxxx"
+    
+    
+}
+```
+
+
+#### Events
+
+##### list 
+```http
+  GET /events/all
+```
+##### json Response
+``` 
+    {
+        "event_name": "ns",
+        "logo_image": null,
+        "card_description": ""
+    }
+```
+
+##### single detail
+```http
+  GET /events/<str:event_name>
+```
+
+
+
 
