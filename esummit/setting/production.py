@@ -11,10 +11,16 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 
 import os
+
+from dotenv import load_dotenv
+
+load_dotenv(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+print(os.environ.get('ENVIRONMENT'))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -200,5 +206,15 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "no.reply.esummit@gmail.com"
 EMAIL_HOST_PASSWORD = "dekhptoevnbyzssy"
 
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY =  os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME+os.environ.get('AWS_S3_CUSTOM_DOMAIN')
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+print(os.environ.get('AWS_ACCESS_KEY_ID'))
 
 DEFAULT_FILE_STORAGE = 'esummit.storage_backends.MediaStorage'
