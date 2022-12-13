@@ -1,7 +1,13 @@
-from django.urls import path, include
-from .views import QuerryView ,loginView
+  
+from django.urls import path
+from .views import QuerryView 
+from .views import LoginApiView , SignupView
+from user.views import OtpView
 
 urlpatterns = [
-    path('querry', QuerryView.as_view()),
-    path('login',loginView)
-]
+  path('login', LoginApiView.as_view(), name='Loginview'),
+  path("signup",SignupView,name="SignupView"),
+  path('otp', OtpView.as_view()),
+  path('querry', QuerryView.as_view()),]
+
+# ,loginView

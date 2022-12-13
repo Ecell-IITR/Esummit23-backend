@@ -4,6 +4,8 @@ from .models import EventSeo
 from django.core.mail import send_mail
 
 
+
+
 class RoundStartupsInline(admin.TabularInline):
     model = EventRounds.StartupUser.through
     extra = 3
@@ -14,12 +16,15 @@ class RoundStudentInline(admin.TabularInline):
 class RoundProffInline(admin.TabularInline):
     model = EventRounds.ProffUser.through
     extra = 3
+class RoundCAInline(admin.TabularInline):
+    model = EventRounds.CAUser.through
+    extra = 3
 
 class AdminRound(admin.ModelAdmin):
-    exclude = ('created', 'updated',"ProffUser","StudentUser","StartupUser")
+    exclude = ('created', 'updated',"ProffUser","StudentUser","StartupUser","CAUser")
   
     
-    inlines = [RoundStartupsInline, RoundStudentInline, RoundProffInline]
+    inlines = [RoundStartupsInline, RoundStudentInline, RoundProffInline, RoundCAInline]
     
     actions = ['send_EMAIL']
 
@@ -29,17 +34,19 @@ class AdminRound(admin.ModelAdmin):
         for query in queryset:
             stp = query.StudentUser.all()
             for user in stp:
-                send_mail('Subject here',"", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
+                send_mail('message from esummit',"", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
             prf = query.ProffUser.all()
             for user in prf:
-                send_mail('Subject here', "", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
+                send_mail('message from esummit', "", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
             stu = query.StudentUser.all()
             for user in stu:
-                send_mail('Subject here', "", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
-        
+                send_mail('message from esummit', "", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
+            ca = query.CAUser.all()
+            for user in ca:
+                send_mail('message from esummit', "", 'from@example.com',[user.email], fail_silently=False,html_message= query.EmailMessage)
         # for i in queryset:
         #     if i.email:
-        #         send_mail('Subject here', 'Here is the message.', 'from@example.com',[i.email], fail_silently=False)
+        #         send_mail('message from esummit', 'Here is the message.', 'from@example.com',[i.email], fail_silently=False)
             
         
     
@@ -48,6 +55,10 @@ class AdminRound(admin.ModelAdmin):
 @admin.register(EventCoordinator)
 class CoordinatorList(admin.ModelAdmin):
     list_display = ["name", "email", "phone_number"]
+
+@admin.register(Services)
+class ServicesList(admin.ModelAdmin):
+    list_display = ["name", "desc", "fixed_cost", "varaible_cost"]
 
 
 class EventFAQInlines(admin.TabularInline):

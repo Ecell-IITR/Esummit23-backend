@@ -3,14 +3,30 @@ from django.db import models
 from user.models.role.proff import ProffUser
 from user.models.role.student import StudentUser
 from user.models.role.startup import StartupUser
-
+from user.models.role.ca import CAUser
 
 class Services(models.Model):
     name = models.CharField(max_length=50)
-    price = models.IntegerField()
     desc = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='services/')
+    #default cost 0
 
+    fixed_cost = models.IntegerField(default=0)
+    varaible_cost = models.IntegerField(default=0)
+    add_details =RichTextUploadingField(default="")
+    
+    @classmethod
+    def create(cls, name,desc,fixed_cost=0,varaible_cost=0,add_details=""):
+        services = cls(name=name,desc=desc,fixed_cost=fixed_cost,varaible_cost=varaible_cost,add_details=add_details)
+        # do something with the book
+        return services
+    class Meta:
+        """
+        Meta class for Services
+        """
+        verbose_name_plural = 'Services'
+
+    def __str__(self):
+        return self.name
 
 class EventCoordinator(models.Model):
     name = models.CharField(max_length=100, verbose_name="Coordinator Name")
@@ -86,6 +102,8 @@ class EventRules(models.Model):
 
     def __str__(self):
         return self.rule
+
+
 class EventRounds(models.Model):
     round_name = models.CharField(max_length=100, verbose_name="Round Name")
     start_date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
@@ -94,21 +112,26 @@ class EventRounds(models.Model):
     tasks = RichTextUploadingField(verbose_name="Tasks", blank=True)
     round_eligibility = RichTextUploadingField(
         verbose_name="Eligibility For Round", blank=True)
-    StudentUser = models.ManyToManyField(StudentUser, verbose_name="Student User", blank=True)
-    ProffUser = models.ManyToManyField(ProffUser, verbose_name="Proff User", blank=True)
-    StartupUser = models.ManyToManyField(StartupUser, verbose_name="Startup User", blank=True)
+    StudentUser = models.ManyToManyField(
+        StudentUser, verbose_name="Student User", blank=True)
+    ProffUser = models.ManyToManyField(
+        ProffUser, verbose_name="Proff User", blank=True)
+    StartupUser = models.ManyToManyField(
+        StartupUser, verbose_name="Startup User", blank=True)
+    CAUser = models.ManyToManyField(
+        CAUser, verbose_name="CA User", blank=True)
+    
     EmailMessage = RichTextUploadingField()
     class Meta:
-      
-        verbose_name_plural = 'Event Round'
 
-    
+        verbose_name_plural = 'Event Round'
 
     def __str__(self):
         return self.round_name
 
+
 class EventSeo(models.Model):
-    name=models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     title = models.CharField(max_length=100, verbose_name="Title")
     description = models.TextField(verbose_name="Description")
     keywords = models.TextField(verbose_name="Keywords")
@@ -122,6 +145,7 @@ class EventSeo(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class AbstractEvent(models.Model):
     EVENT_STATUS_TYPE = (
@@ -157,6 +181,7 @@ class AbstractEvent(models.Model):
         upload_to='event/main/logo/', verbose_name="Event's logo image", blank=True, null=True, default=None)
     seo = models.OneToOneField(
         EventSeo, on_delete=models.CASCADE, blank=True, null=True, default=None)
+
     class Meta:
         """
         Meta class for AbstractEvent
@@ -180,10 +205,13 @@ class Event(AbstractEvent):
     event_partners = models.ManyToManyField(
         EventsPartners, related_name="%(app_label)s_%(class)s_partners_of", verbose_name="Partners/Sponsors Of Events")
 
+    def save(self, *args, **kwargs):
+        ser = Services.create(self.event_name, self.card_description)
+        ser.save()
+        return super(Event, self).save(*args, **kwargs)
+
     class Meta:
         """
         Meta class for Event
         """
         verbose_name_plural = 'Events'
-
-        

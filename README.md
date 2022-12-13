@@ -3,44 +3,25 @@
 ## Usage
 run ```pip install -r requirements.txt ``` before using the project
 
+### Intilize reddis 
 
-This is the backend of E-summit 2023
+https://redis.io/docs/getting-started/installation/install-redis-on-windows/
 
+### Create superuser
 
+run ```python manage.py createsuperuser```
 
-## Work to be done
+### run server
 
-Integrate Queing
-Integrate catching
-
-
-## Acknowledgements
-
-- [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
-
-## Authors
-
-- Ishika
-- Divya
-- Kiran
-- Vinay
-- Divyanshu
-
-## Tech Stack
-
-**Client:** React, TailwindCSS,Bootstrap
-
-**Server:** Django
-
+run ``` python manage.py runserver ```
 
 ## API Reference
 
-
-#### Login
+#### signup
 
 ##### ca
 ```http
-  POST /user/login
+  POST /user/signup
 ```
 ##### json querry 
 ```
@@ -61,38 +42,54 @@ Integrate catching
 }
 ```
 
-#### Get Color
+#### Login
 
 ```http
-  GET /design/colors/
+  POST /user/login
+```
+##### json querry 
+```
+{
+    "esummit_id":"xxxxxxxx",
+    "password":"xxxxxxxxxx"   
+}
 ```
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `NONE` | `string` | **Required**. NA |
 
-#### Get Team
+#### Events
+
+##### list 
+```http
+  GET /events/all
+```
+##### json Response
+``` 
+    {
+        "event_name": "ns",
+        "logo_image": null,
+        "card_description": ""
+    }
+```
+
+##### single detail
+```http
+  GET /events/<str:event_name>
+```
+
+##### Register
+
+###### headers will have the auth token
+
 
 ```http
-  GET /public/team/
+  POST /event/register
 ```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `NONE`      | `string` | **Required**. NA |
-
-
-
-#### Get Speakers
-```http
-  GET /public/Speakers/
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `NONE`      | `string` | **Required**. NA |
-
+##### json querry 
 
 ```
-
+{
+    "event_name": "xxxxxx",
+    "payment": "0",
+}
+```
 

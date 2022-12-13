@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator
 import jwt
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import make_password
 
 
 SECRET_KEY = 'django-insecure-*+z5#+d&a@s^7)x^cez!r)mqq^iz8fld@rbo36nyke-%cp%o0i'
@@ -26,6 +26,7 @@ class AbstractProfile(models.Model):
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
     password = models.TextField()
+    Services = models.ManyToManyField("events.Services", blank=True)
     jwt_secret = SECRET_KEY
     jwt_algorithm = "HS256"
     authToken = models.CharField(max_length=1000, blank=True, null=True)
@@ -35,7 +36,7 @@ class AbstractProfile(models.Model):
     def save(self, *args, **kwargs):
         if not self.created:
             self.created = timezone.now()
-
+        
         self.updated = timezone.now()
         self.password=make_password(self.password)
         self.authToken = jwt.encode({"email": self.email,"password":self.password}, self.jwt_secret, algorithm=self.jwt_algorithm)
@@ -45,3 +46,4 @@ class AbstractProfile(models.Model):
 
     def __str__(self):
         return self.full_name
+        

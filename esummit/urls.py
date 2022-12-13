@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
+
 import public.urls as publicUrls
 import design.urls as designUrls
 import user.urls as userUrls
@@ -25,6 +26,8 @@ urlpatterns = [
     path('public/', include(publicUrls)),
     path('design/', include(designUrls)),
     path('user/', include(userUrls)),
+    path("rq/", include('django_rq.urls')),
     path('events/', include(eventsUrls)),
+
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]
