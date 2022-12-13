@@ -1,5 +1,3 @@
-
-
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from user.models.role.proff import ProffUser
