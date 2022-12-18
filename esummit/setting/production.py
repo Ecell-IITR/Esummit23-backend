@@ -12,10 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
-
 import os
 
-from dotenv import load_dotenv
 
 load_dotenv(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
@@ -207,12 +205,12 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY =  os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME+os.environ.get('AWS_S3_CUSTOM_DOMAIN')
+AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME+str(os.environ.get('AWS_S3_CUSTOM_DOMAIN'))
 
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 
-
+print(AWS_S3_CUSTOM_DOMAIN)
 
 DEFAULT_FILE_STORAGE = 'esummit.storage_backends.MediaStorage'
