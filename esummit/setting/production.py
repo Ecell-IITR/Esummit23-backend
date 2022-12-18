@@ -18,7 +18,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-print(os.environ.get('ENVIRONMENT'))
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,12 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*+z5#+d&a@s^7)x^cez!r)mqq^iz8fld@rbo36nyke-%cp%o0i'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -184,9 +184,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_URL = '/statics/'
-STATIC_ROOT=os.path.join(BASE_DIR,'statics')
+STATIC_URL = '/static/'
+# STATIC_URL = '/statics/'
 # For uploading images
 MEDIA_URL = '/media_files/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_files')
@@ -214,6 +213,6 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 
-print(os.environ.get('AWS_ACCESS_KEY_ID'))
+
 
 DEFAULT_FILE_STORAGE = 'esummit.storage_backends.MediaStorage'

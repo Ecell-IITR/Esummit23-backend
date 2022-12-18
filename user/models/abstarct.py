@@ -3,9 +3,12 @@ from django.utils import timezone
 from django.core.validators import RegexValidator
 import jwt
 from django.contrib.auth.hashers import make_password
-
+import os
 
 SECRET_KEY = 'django-insecure-*+z5#+d&a@s^7)x^cez!r)mqq^iz8fld@rbo36nyke-%cp%o0i'
+
+if os.environ.get('ENVIRONMENT') == 'production':
+    SECRET_KEY = os.environ.get('SECRET_KEY_2')
 
 class AbstractProfile(models.Model):
 

@@ -25,7 +25,6 @@ class StudentUser(AbstractProfile):
     city = models.CharField(max_length=50, null=True, blank=True)
     state = models.CharField(max_length=50, null=True, blank=True)
     college = models.CharField(max_length=200, verbose_name="College Name")
-    college_name = models.CharField(max_length=50, verbose_name="College Name")
     esummit_id = models.CharField(max_length=20, unique=True, db_index=True)
     referred_by = models.CharField(max_length=20,null=True,blank=True,default="")
 
