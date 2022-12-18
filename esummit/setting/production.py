@@ -184,7 +184,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 
 # STATIC_URL = '/statics/'
 # For uploading images
@@ -214,6 +214,5 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 
-print(AWS_S3_CUSTOM_DOMAIN)
 
 DEFAULT_FILE_STORAGE = 'esummit.storage_backends.MediaStorage'
