@@ -29,6 +29,5 @@ urlpatterns = [
     path('user/', include(userUrls)),
     path("rq/", include('django_rq.urls')),
     path('events/', include(eventsUrls)),
-
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
