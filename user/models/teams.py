@@ -1,7 +1,7 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils import timezone
-from .person  import person
+from .person import person
 
 
 class teams(models.Model):
@@ -23,6 +23,7 @@ class teams(models.Model):
     total_payment = models.IntegerField(default=0)
     razorpay_payment_id = RichTextUploadingField(default=" ")
     question = models.TextField(default="")
+
     def save(self, *args, **kwargs):
         if not self.created:
             self.created = timezone.now()

@@ -24,6 +24,7 @@ class CAUser(AbstractProfile):
                 unique_value = 0
             self.esummit_id = 'ES23'+ca_tag + \
                 str((unique_value + 1) * 31)
+        
         return super(CAUser, self).save(*args, **kwargs)
         # if self.esummit_id.find("CAP"):
         #     pass

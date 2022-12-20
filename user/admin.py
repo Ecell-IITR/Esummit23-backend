@@ -9,20 +9,41 @@ from user.models.person import person
 from user.models.teams import teams
 
 # Register your models here.
+
+
+class Members(admin.TabularInline):
+    model = teams.members.through
+    extra = 3
+
+
 class UserAdmin(admin.ModelAdmin):
-    exclude = ('created', 'updated','authToken')
-    list_filter = ('email',"esummit_id")
-class TeeamAdmin(admin.ModelAdmin):
-    exclude = ('created', 'updated')
-    list_filter = ('name','event')
+    exclude = ('created', 'updated', 'authToken')
+    list_filter = ('email', "esummit_id")
+
+
+class TeamAdmin(admin.ModelAdmin):
+    exclude = ('created', 'updated',"members")
+    list_filter = ('name', 'event')
+    inlines = [Members]
+
+
 class StartupUserAdmin(UserAdmin):
     pass
+
+
 class CAUserAdmin(UserAdmin):
-    pass  
+    pass
+
+
 class StudentUserAdmin(UserAdmin):
     pass
+
+
 class ProffUserAdmin(UserAdmin):
     pass
+
+
+
 
 admin.site.register(StartupUser, StartupUserAdmin)
 admin.site.register(CAUser, CAUserAdmin)
@@ -31,5 +52,4 @@ admin.site.register(ProffUser, ProffUserAdmin)
 admin.site.register(OTP)
 admin.site.register(Querry)
 admin.site.register(person)
-admin.site.register(teams)
-
+admin.site.register(teams,TeamAdmin)

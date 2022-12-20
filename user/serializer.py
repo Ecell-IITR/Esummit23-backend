@@ -5,6 +5,7 @@ from .models.role.student import StudentUser
 from .models.role.proff import ProffUser
 from .models.role.ca import CAUser
 from .models.querry import Querry
+from .models.person import person
 
 
 class ProffUserLoginSerializer(serializers.ModelSerializer):
@@ -87,3 +88,12 @@ class StartupUserSerializer(serializers.ModelSerializer):
         model = StartupUser
         exclude=['payment','esummit_id','created','updated','authToken']
 
+class PearsonSerializer(serializers.ModelSerializer):
+    name=serializers.CharField(max_length=100)
+    email=serializers.EmailField(max_length=100)
+    student=StudentUserSerializer()
+    ca=CAUserSerializer()
+    proff=ProffUserSerializer()
+    class Meta:
+        model = person
+        
