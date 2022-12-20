@@ -215,3 +215,7 @@ class Event(AbstractEvent):
         Meta class for Event
         """
         verbose_name_plural = 'Events'
+
+
+
+
