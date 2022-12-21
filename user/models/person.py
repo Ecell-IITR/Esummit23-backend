@@ -5,6 +5,7 @@ from .role.student import StudentUser
 from django.utils import timezone
 
 class person(models.Model):
+    leader_status=models.BooleanField(default=False)
     name=models.CharField(max_length=50,verbose_name="Name")
     email=models.EmailField(db_index=True,max_length=100,verbose_name="EMail Id")
     student=models.ForeignKey(StudentUser,on_delete=models.CASCADE,blank=True,null=True)

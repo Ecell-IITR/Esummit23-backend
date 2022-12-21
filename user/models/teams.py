@@ -9,8 +9,8 @@ class teams(models.Model):
     number_of_members = models.IntegerField(default=1)
     members = models.ManyToManyField(person, verbose_name="Members")
     leader = models.ForeignKey(
-        person, on_delete=models.CASCADE, verbose_name="Leader", related_name="leader")
-    event = models.ManyToManyField("events.Event", verbose_name="Event")
+        person, on_delete=models.CASCADE, verbose_name="Leader", related_name="leader",null=True)
+    event = models.CharField(max_length=50, verbose_name="Event",null=True)
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
     round_1 = models.BooleanField(default=True)
@@ -22,7 +22,6 @@ class teams(models.Model):
     submission_link = models.URLField(default="")
     total_payment = models.IntegerField(default=0)
     razorpay_payment_id = RichTextUploadingField(default=" ")
-    question = models.TextField(default="")
 
     def save(self, *args, **kwargs):
         if not self.created:

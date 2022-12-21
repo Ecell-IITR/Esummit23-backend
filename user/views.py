@@ -5,7 +5,7 @@ import smtplib
 from rest_framework.generics import GenericAPIView
 from .serializer import otpSerializer
 from time import time
-from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer
+from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -16,7 +16,8 @@ from rest_framework import status
 from django.contrib.auth.hashers import check_password
 from django.core.mail import send_mail
 from .models.person import person
-
+from .utils.auth import auth
+from events.models import Services, EventRounds
 # Create your views here.
 
 
@@ -189,9 +190,151 @@ def SignupView(request):
             except:
                 pass
         message = "Dear "+"<b>"+saver.full_name+"</b>" + \
-            " account created your esummit id is "+"<b>"+saver.esummit_id+"</b>"
+            " account created your esummit id is "+"<b> "+saver.esummit_id+"</b>"
         send_mail('esummit account created', "", 'from@example.com', [
                   saver.email], fail_silently=False, html_message=message)
         return Response({"name": saver.full_name, "e_id": saver.esummit_id, "at": saver.authToken}, status=status.HTTP_201_CREATED)
 
         # return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(('GET', 'POST'))
+def TeamSignupView(request):
+    if request.method == 'GET':
+        return Response(status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        """d = {
+        "a_t": "xxxxxx",
+        "no_user": "2",
+            "users": {
+                {
+                    "full_name": "pranav arya",
+                    "email": "pranavleo22@gmail.com",
+                    "phone_number": "9833290022",
+                    "collage": "iit r",
+                    "branch": "ece",
+                    "year": "3rd",
+                    "city": "bom",
+                    "state": "UK",
+
+                },
+                {
+                    "full_name": "pranav arya",
+                    "email": "pranavleo22@gmail.com",
+                    "phone_number": "9833290022",
+                    "collage": "iit r",
+                    "branch": "ece",
+                    "year": "3rd",
+                    "city": "bom",
+                    "state": "UK",
+
+                }
+            },
+            "team_name": "team name",
+            "event": "event name",
+            "submission_text": "submission text",
+            "submission_link": "submission link",}"""
+        
+        # email = request.data["user"]['email']
+        # name = request.data["user"]['name']
+        Leader = auth(request.headers['Authorization'].split(' ')[1])
+        if Leader == None:
+            return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
+        no = request.data["no_user"]
+        no=int(no)
+        if no > 4:
+            return Response({"error": "Maximum 5 members allowed"}, status=status.HTTP_400_BAD_REQUEST)
+        person_array = []
+        for i in range(no):
+            if person.objects.filter(email=request.data["users"][i]['email']).exists():
+                person_array.append(person.objects.filter(
+                    email=request.data["users"][i]['email'])[0])
+                print(person_array)
+            else:
+                email=request.data["users"][i]['email']
+                name=request.data["users"][i]['full_name']
+                saver = False
+                db_entry = ""
+                db_entry_person = PearsonSerializer
+                data = request.data["users"][i]
+
+                data["referred_by"] = ""
+                data["password"] = "esummit23"
+                db_entry = StudentUserSerializer(data=data)
+                print("saved")
+                if db_entry.is_valid():
+                    saver = db_entry.save()
+                    data2 = {"email": email, "name": name}
+                    data2["student"] = saver.pk
+                    db_entry_person = PearsonSerializer(data=data2)
+                    if db_entry_person.is_valid():
+                        db_entry_person.save()
+                    else:
+                        return Response({"Faliure": str(db_entry_person.errors)}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
+
+                message = "Dear "+"<b>"+saver.full_name+"</b>" + \
+                    " account created your esummit id is "+"<b> "+saver.esummit_id+"</b>"
+                send_mail('esummit account created', "", 'from@example.com', [
+                    saver.email], fail_silently=False, html_message=message)
+                person_array.append(person.objects.filter(
+                    email=request.data["users"][i]['email'])[0])
+        person_array_pk=[]
+        for i in person_array:
+            person_array_pk.append(i.pk)
+        print(person_array_pk)
+        lser = person.objects.filter(email=Leader.email)[0]
+        data3 = {"name": request.data["team_name"],
+                 "event": request.data["event"],
+                 "submission_text": request.data["submission_text"],
+                 "submission_link": request.data["submission_link"],
+                 "leader": lser.pk,
+                 "members": person_array_pk,
+                 "number_of_members":no+1}
+        print(data3)
+
+
+
+
+
+        db_entry_team = TeamSerializer(data=data3)
+
+        if db_entry_team.is_valid():
+            
+            db_entry_team.save()
+            
+            sevice = Services.objects.filter(name=request.data["event"])[0]
+            print(sevice)
+            
+            EVround = EventRounds.objects.filter(
+                round_name=request.data["event"]+" 1")[0]
+            
+            
+            for i in person_array:
+                print(type(i))
+                # i.service.add(sevice.pk)
+                # print("added")
+                # user = i.esummit_id
+                if i.ca :
+                    i.ca.Services.add(sevice.pk)
+                    EVround.CAUser.add(i.ca.pk)
+                if i.student:
+                    i.student.Services.add(sevice.pk)
+                    EVround.StudentUser.add(i.student.pk)
+                if i.proff:
+                    i.proff.Services.add(sevice.pk)
+                    EVround.ProffUser.add(i.proff.pk)
+            if "ca" in Leader.esummit_id:
+                Leader.ca.Services.add(sevice.pk)
+                EVround.CAUser.add(Leader.ca.pk)
+            if "stu" in Leader.esummit_id:
+                Leader.student.Services.add(sevice.pk)
+                EVround.StudentUser.add(Leader.student.pk)
+            if "pro" in Leader.esummit_id:
+                Leader.proff.Services.add(sevice.pk)
+                EVround.ProffUser.add(Leader.proff.pk)
+            return Response({"success": "team created"}, status=status.HTTP_201_CREATED)
+
+        else:
+            return Response({"Faliure": str(db_entry_team.errors)}, status=status.HTTP_400_BAD_REQUEST)

@@ -24,7 +24,7 @@ class StudentUser(AbstractProfile):
                               null=True, verbose_name="Gender", choices=GENDER)
     city = models.CharField(max_length=50, null=True, blank=True)
     state = models.CharField(max_length=50, null=True, blank=True)
-    college = models.CharField(max_length=200, verbose_name="College Name")
+    collage = models.CharField(max_length=200, verbose_name="Collage Name",default="IIT Roorkee")
     esummit_id = models.CharField(max_length=20, unique=True, db_index=True)
     referred_by = models.CharField(max_length=20,null=True,blank=True,default="")
 
@@ -41,3 +41,4 @@ class StudentUser(AbstractProfile):
             self.esummit_id = 'ES23'+professional_tag + \
                 str((unique_value + 1) * 31)
         return super(StudentUser, self).save(*args, **kwargs)
+    

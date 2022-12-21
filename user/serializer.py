@@ -6,6 +6,7 @@ from .models.role.proff import ProffUser
 from .models.role.ca import CAUser
 from .models.querry import Querry
 from .models.person import person
+from .models.teams import teams
 
 
 class ProffUserLoginSerializer(serializers.ModelSerializer):
@@ -76,7 +77,7 @@ class CAUserSerializer(serializers.ModelSerializer):
 class StudentUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentUser
-        exclude=['payment','esummit_id','created','updated','authToken']
+        exclude=['student_type','payment','esummit_id','created','updated','authToken']
 
 class ProffUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,12 +89,22 @@ class StartupUserSerializer(serializers.ModelSerializer):
         model = StartupUser
         exclude=['payment','esummit_id','created','updated','authToken']
 
+
+
 class PearsonSerializer(serializers.ModelSerializer):
-    name=serializers.CharField(max_length=100)
-    email=serializers.EmailField(max_length=100)
-    student=StudentUserSerializer()
-    ca=CAUserSerializer()
-    proff=ProffUserSerializer()
+    
     class Meta:
         model = person
+        fields = ["name", "email", "student"]
+
+class TeamSerializer(serializers.ModelSerializer):
+    name=serializers.CharField(max_length=100)
+    event=serializers.CharField(max_length=100)
+    number_of_members=serializers.IntegerField()
+    submission_text = serializers.CharField(max_length=1000)
+    submission_link = serializers.URLField(max_length=1000)
+    class Meta:
+        model = teams
+        fields = ["name", "event", "members", "number_of_members", "submission_text", "submission_link"]
+    
         

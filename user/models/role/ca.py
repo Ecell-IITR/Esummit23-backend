@@ -3,7 +3,7 @@ from user.models.abstarct import AbstractProfile
 from django.db import models
 from CAP.models import Task
 class CAUser(AbstractProfile):
-    college = models.CharField(max_length=50, verbose_name="College", default="IIT Roorkee")
+    collage = models.CharField(max_length=50, verbose_name="Collage", default="IIT Roorkee")
     points = models.IntegerField(default=0)
 
     year = models.CharField(max_length=10, verbose_name="Year")
