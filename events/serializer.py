@@ -1,5 +1,6 @@
-from .models import EventCoordinator, EventsFAQ, EventsPartners, EventPerks, EventRules, EventRounds, EventSeo, Event
+from .models import EventCoordinator, EventsFAQ, EventsPartners, EventPerks, EventRules, EventRounds, EventSeo, Event,Services
 from rest_framework import serializers
+
 
 class EventCoordinatorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,35 +36,51 @@ class EventRoundsSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventRounds
         fields = '__all__'
+
+
 class EventSeoSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventSeo
         fields = '__all__'
+
+
 class EventRoundsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EventRounds
-        exclude = ['StudentUser',"StartupUser","ProffUser"]
+        exclude = ['StudentUser', "StartupUser", "ProffUser"]
+
+
 class EventMiniSerializer(serializers.Serializer):
-    event_name=serializers.CharField(max_length=100)
-    logo_image=serializers.ImageField()
-    card_description=serializers.CharField(max_length=1000)
+    event_name = serializers.CharField(max_length=100)
+    logo_image = serializers.ImageField()
+    card_description = serializers.CharField(max_length=1000)
+
     class Meta:
         model = Event
         fields = '__all__'
 
+
 class EventSerializer(serializers.Serializer):
-    event_name=serializers.CharField(max_length=100)
-    card_image=serializers.ImageField()
-    mobile_background_image=serializers.ImageField()
-    description=serializers.CharField(max_length=1000)
-    events_coordinators=EventCoordinatorSerializer(many=True)
-    event_faqs=EventFAQSerializer(many=True)
-    event_partners=EventPartnersSerializer(many=True)
-    event_perks=EventPerksSerializer(many=True)
-    event_rules=EventRulesSerializer(many=True)
-    event_rounds=EventRoundsSerializer(many=True)
-    seo=EventSeoSerializer(many=True)
+    event_name = serializers.CharField(max_length=100)
+    card_image = serializers.ImageField()
+    mobile_background_image = serializers.ImageField()
+    description = serializers.CharField(max_length=1000)
+    events_coordinators = EventCoordinatorSerializer(many=True)
+    event_faqs = EventFAQSerializer(many=True)
+    event_partners = EventPartnersSerializer(many=True)
+    event_perks = EventPerksSerializer(many=True)
+    event_rules = EventRulesSerializer(many=True)
+    event_rounds = EventRoundsSerializer(many=True)
+    seo = EventSeoSerializer(many=True)
+
     class Meta:
         model = Event
+        fields = '__all__'
+
+
+class ServiceSerilizer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Services
         fields = '__all__'

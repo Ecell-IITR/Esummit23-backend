@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializer import EventMiniSerializer,EventSerializer
+from .serializer import EventMiniSerializer,EventSerializer,ServiceSerilizer
 from .models import Event , Services
 from rest_framework import status
 from django.utils.decorators import method_decorator
@@ -78,7 +78,11 @@ class Register(APIView):
         except:
             return Response(data={"error":"Service not found"}, status=status.HTTP_404_NOT_FOUND)
 
-
+class ServiceView(APIView):
+    def get(self,request):
+        data = Services.objects.all()
+        serializer = ServiceSerilizer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
