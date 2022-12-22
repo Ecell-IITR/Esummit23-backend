@@ -203,37 +203,7 @@ def TeamSignupView(request):
     if request.method == 'GET':
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        """d = {
-        "a_t": "xxxxxx",
-        "no_user": "2",
-            "users": {
-                {
-                    "full_name": "pranav arya",
-                    "email": "pranavleo22@gmail.com",
-                    "phone_number": "9833290022",
-                    "collage": "iit r",
-                    "branch": "ece",
-                    "year": "3rd",
-                    "city": "bom",
-                    "state": "UK",
-
-                },
-                {
-                    "full_name": "pranav arya",
-                    "email": "pranavleo22@gmail.com",
-                    "phone_number": "9833290022",
-                    "collage": "iit r",
-                    "branch": "ece",
-                    "year": "3rd",
-                    "city": "bom",
-                    "state": "UK",
-
-                }
-            },
-            "team_name": "team name",
-            "event": "event name",
-            "submission_text": "submission text",
-            "submission_link": "submission link",}"""
+       
         
         # email = request.data["user"]['email']
         # name = request.data["user"]['name']
@@ -335,6 +305,5 @@ def TeamSignupView(request):
                 Leader.proff.Services.add(sevice.pk)
                 EVround.ProffUser.add(Leader.proff.pk)
             return Response({"success": "team created"}, status=status.HTTP_201_CREATED)
-
         else:
             return Response({"Faliure": str(db_entry_team.errors)}, status=status.HTTP_400_BAD_REQUEST)
