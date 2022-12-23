@@ -105,6 +105,6 @@ class TeamSerializer(serializers.ModelSerializer):
     submission_link = serializers.URLField(max_length=1000)
     class Meta:
         model = teams
-        fields = ["name", "event", "members", "number_of_members", "submission_text", "submission_link"]
+        fields = ["name","leader", "event", "members", "number_of_members", "submission_text", "submission_link"]
     
         

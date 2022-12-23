@@ -245,7 +245,7 @@ def TeamSignupView(request):
                     return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
 
                 message = "Dear "+"<b>"+saver.full_name+"</b>" + \
-                    " account created your esummit id is "+"<b> "+saver.esummit_id+"</b>"
+                    " account created your esummit id is "+"<b> "+saver.esummit_id+"</b> and your password is esummit23"
                 send_mail('esummit account created', "", 'from@example.com', [
                     saver.email], fail_silently=False, html_message=message)
                 person_array.append(person.objects.filter(
