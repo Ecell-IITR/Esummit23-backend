@@ -131,7 +131,7 @@ def SignupView(request):
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
         email = request.data["user"]['email']
-        name = request.data["user"]['name']
+        name = request.data["user"]['full_name']
 
         if person.objects.filter(email=email).exists():
             return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
