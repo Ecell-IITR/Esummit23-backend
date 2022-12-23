@@ -18,6 +18,7 @@ from django.core.mail import send_mail
 from .models.person import person
 from .utils.auth import auth
 from events.models import Services, EventRounds
+from events.serializer import ServiceSerilizer
 # Create your views here.
 
 
@@ -145,7 +146,7 @@ def SignupView(request):
                 db_entry = CAUserSerializer(data=data)
                 db_entry.is_valid(raise_exception=True)
                 saver = db_entry.save()
-                data2 = {"email": email, "name": name, "ca": saver}
+                data2 = {"email": email, "name": name, "ca": saver.pk}
                 db_entry_person = PearsonSerializer(data=data2)
                 db_entry_person.is_valid(raise_exception=True)
                 db_entry_person.save()
@@ -172,9 +173,9 @@ def SignupView(request):
                 saver = db_entry.save()
                 data2 = {"email": email, "name": name}
                 if userType == 'student':
-                    data2["student"] = saver
+                    data2["student"] = saver.pk
                 if userType == 'proff':
-                    data2["proff"] = saver
+                    data2["proff"] = saver.pk
                 db_entry_person = PearsonSerializer(data=data2)
                 db_entry_person.is_valid(raise_exception=True)
                 db_entry_person.save()
@@ -279,13 +280,14 @@ def TeamSignupView(request):
             EVround = EventRounds.objects.filter(
                 round_name=request.data["event"]+" 1")[0]
             
-            
+            person_array.append(lser)
             for i in person_array:
-        
+                
                 # i.service.add(sevice.pk)
                 # print("added")
                 # user = i.esummit_id
                 if i.ca :
+                    print(i)
                     i.ca.Services.add(sevice.pk)
                     EVround.CAUser.add(i.ca.pk)
                 if i.student:
@@ -294,15 +296,25 @@ def TeamSignupView(request):
                 if i.proff:
                     i.proff.Services.add(sevice.pk)
                     EVround.ProffUser.add(i.proff.pk)
-            if "ca" in Leader.esummit_id:
-                Leader.ca.Services.add(sevice.pk)
-                EVround.CAUser.add(Leader.ca.pk)
-            if "stu" in Leader.esummit_id:
-                Leader.student.Services.add(sevice.pk)
-                EVround.StudentUser.add(Leader.student.pk)
-            if "pro" in Leader.esummit_id:
-                Leader.proff.Services.add(sevice.pk)
-                EVround.ProffUser.add(Leader.proff.pk)
+            
             return Response({"success": "team created"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"Faliure": str(db_entry_team.errors)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(('GET', 'POST'))
+def UserServices(request):
+    if request.method == 'GET':
+        user = auth(request.headers['Authorization'].split(' ')[1])
+        if user == None:
+            return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            services =  user.Services.all()
+            print(services)
+            data = ServiceSerilizer(services, many=True)
+            return Response(data.data, status=status.HTTP_200_OK)
+
+            
+        
+
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
