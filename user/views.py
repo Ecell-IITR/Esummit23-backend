@@ -75,23 +75,23 @@ class OtpView(GenericAPIView):
         data = {"Email": request.data['Email'],
                 "Esummit_Id": request.data['Esummit_Id'], "Otp": otp}
         db_entry = otpSerializer(data=data)
-        print(db_entry)
+        
         detail = OTP.objects.filter(
             Email=request.data['Email'], Esummit_Id=request.data['Esummit_Id']).values()
-        print(detail)
+
         req = OTP.objects.get()
         d = int(time()*1000)
-        print(d)
+        
         d1 = req.date_expired
         d1 = (d1.timestamp()*1000)
-        print(d1)
+        
         hours = abs((d-d1)/(1000*60*60))
-        print(hours)
+        
         if len(detail) == 0:
             detail.is_vaild()
             detail.save()
             server.sendmail(sender_email, receiver_email, message)
-            print("errrttt")
+    
         elif len(detail) == 1:
             if hours > 1:
                 req.delete()
@@ -99,12 +99,11 @@ class OtpView(GenericAPIView):
                 db_entry.is_valid()
                 db_entry.save()
                 server.sendmail(sender_email, receiver_email, message)
-                print("vhfjferir")
             elif hours < 1:
                 otp = req.Otp
                 message = 'Your Otp is ' + str(otp)
                 server.sendmail(sender_email, receiver_email, message)
-                print("fhff")
+            
             return Response("Successful", status=200)
         return Response("unsuccessful", status=400)
 
@@ -112,12 +111,12 @@ class OtpView(GenericAPIView):
 class QuerryView(APIView):
 
     def post(self, request):
-        print(request.data)
+
         data = {"name": request.data.get("name"), "email": request.data.get(
             "email"), "phone_number": request.data.get("phone_number"), "message": request.data.get("message")}
 
         db_entry = QuerrySerializer(data=data)
-        print(db_entry.is_valid(), db_entry.errors)
+    
         if db_entry.is_valid():
 
             db_entry.save()
@@ -219,7 +218,7 @@ def TeamSignupView(request):
             if person.objects.filter(email=request.data["users"][i]['email']).exists():
                 person_array.append(person.objects.filter(
                     email=request.data["users"][i]['email'])[0])
-                print(person_array)
+                
             else:
                 email=request.data["users"][i]['email']
                 name=request.data["users"][i]['full_name']
@@ -231,7 +230,7 @@ def TeamSignupView(request):
                 data["referred_by"] = ""
                 data["password"] = "esummit23"
                 db_entry = StudentUserSerializer(data=data)
-                print("saved")
+                
                 if db_entry.is_valid():
                     saver = db_entry.save()
                     data2 = {"email": email, "name": name}
@@ -253,7 +252,7 @@ def TeamSignupView(request):
         person_array_pk=[]
         for i in person_array:
             person_array_pk.append(i.pk)
-        print(person_array_pk)
+    
         lser = person.objects.filter(email=Leader.email)[0]
         data3 = {"name": request.data["team_name"],
                  "event": request.data["event"],
@@ -262,7 +261,7 @@ def TeamSignupView(request):
                  "leader": lser.pk,
                  "members": person_array_pk,
                  "number_of_members":no+1}
-        print(data3)
+    
 
 
 
@@ -275,14 +274,14 @@ def TeamSignupView(request):
             db_entry_team.save()
             
             sevice = Services.objects.filter(name=request.data["event"])[0]
-            print(sevice)
+    
             
             EVround = EventRounds.objects.filter(
                 round_name=request.data["event"]+" 1")[0]
             
             
             for i in person_array:
-                print(type(i))
+        
                 # i.service.add(sevice.pk)
                 # print("added")
                 # user = i.esummit_id

@@ -10,7 +10,6 @@ def auth(token):
     secret = 'django-insecure-*+z5#+d&a@s^7)x^cez!r)mqq^iz8fld@rbo36nyke-%cp%o0i'
     try:
         decoded = jwt.decode(token, secret, algorithms=['HS256'])
-        print(decoded)
         email = decoded['email']
         password = decoded['password']
         if CAUser.objects.filter(email=email ).exists():
