@@ -308,10 +308,13 @@ def UserServices(request):
         if user == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            services =  user.Services.all()
-            print(services)
-            data = ServiceSerilizer(services, many=True)
-            return Response(data.data, status=status.HTTP_200_OK)
+            servicesOpted =  user.Services.all()
+            allServices = list(Services.objects.all())
+            restServiceList=[i for i in allServices if i not in servicesOpted]
+
+            data1 = ServiceSerilizer(restServiceList, many=True)
+            data2 = ServiceSerilizer(servicesOpted, many=True)
+            return Response({"opt":data2.data,"rest":data1.data}, status=status.HTTP_200_OK)
 
             
         
