@@ -19,6 +19,7 @@ from .models.person import person
 from .utils.auth import auth
 from events.models import Services, EventRounds
 from events.serializer import ServiceSerilizer
+from user.tasks import send_feedback_email_task
 # Create your views here.
 
 
@@ -76,23 +77,23 @@ class OtpView(GenericAPIView):
         data = {"Email": request.data['Email'],
                 "Esummit_Id": request.data['Esummit_Id'], "Otp": otp}
         db_entry = otpSerializer(data=data)
-        
+
         detail = OTP.objects.filter(
             Email=request.data['Email'], Esummit_Id=request.data['Esummit_Id']).values()
 
         req = OTP.objects.get()
         d = int(time()*1000)
-        
+
         d1 = req.date_expired
         d1 = (d1.timestamp()*1000)
-        
+
         hours = abs((d-d1)/(1000*60*60))
-        
+
         if len(detail) == 0:
             detail.is_vaild()
             detail.save()
             server.sendmail(sender_email, receiver_email, message)
-    
+
         elif len(detail) == 1:
             if hours > 1:
                 req.delete()
@@ -104,7 +105,7 @@ class OtpView(GenericAPIView):
                 otp = req.Otp
                 message = 'Your Otp is ' + str(otp)
                 server.sendmail(sender_email, receiver_email, message)
-            
+
             return Response("Successful", status=200)
         return Response("unsuccessful", status=400)
 
@@ -117,7 +118,7 @@ class QuerryView(APIView):
             "email"), "phone_number": request.data.get("phone_number"), "message": request.data.get("message")}
 
         db_entry = QuerrySerializer(data=data)
-    
+
         if db_entry.is_valid():
 
             db_entry.save()
@@ -191,8 +192,13 @@ def SignupView(request):
                 pass
         message = "Dear "+"<b>"+saver.full_name+"</b>" + \
             " account created your esummit id is "+"<b> "+saver.esummit_id+"</b>"
-        send_mail('esummit account created', "", 'from@example.com', [
-                  saver.email], fail_silently=False, html_message=message)
+        # send_mail('esummit account created', "", 'from@example.com', [
+        #           saver.email], fail_silently=False, html_message=message)
+        mail = saver.email
+
+        send_feedback_email_task.delay(
+            mail, message, 'esummit account created'
+        )
         return Response({"name": saver.full_name, "e_id": saver.esummit_id, "at": saver.authToken}, status=status.HTTP_201_CREATED)
 
         # return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -203,15 +209,14 @@ def TeamSignupView(request):
     if request.method == 'GET':
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
-       
-        
+
         # email = request.data["user"]['email']
         # name = request.data["user"]['name']
         Leader = auth(request.headers['Authorization'].split(' ')[1])
         if Leader == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
         no = request.data["no_user"]
-        no=int(no)
+        no = int(no)
         if no > 4:
             return Response({"error": "Maximum 5 members allowed"}, status=status.HTTP_400_BAD_REQUEST)
         person_array = []
@@ -219,10 +224,10 @@ def TeamSignupView(request):
             if person.objects.filter(email=request.data["users"][i]['email']).exists():
                 person_array.append(person.objects.filter(
                     email=request.data["users"][i]['email'])[0])
-                
+
             else:
-                email=request.data["users"][i]['email']
-                name=request.data["users"][i]['full_name']
+                email = request.data["users"][i]['email']
+                name = request.data["users"][i]['full_name']
                 saver = False
                 db_entry = ""
                 db_entry_person = PearsonSerializer
@@ -231,7 +236,7 @@ def TeamSignupView(request):
                 data["referred_by"] = ""
                 data["password"] = "esummit23"
                 db_entry = StudentUserSerializer(data=data)
-                
+
                 if db_entry.is_valid():
                     saver = db_entry.save()
                     data2 = {"email": email, "name": name}
@@ -245,15 +250,20 @@ def TeamSignupView(request):
                     return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
 
                 message = "Dear "+"<b>"+saver.full_name+"</b>" + \
-                    " account created your esummit id is "+"<b> "+saver.esummit_id+"</b> and your password is esummit23"
-                send_mail('esummit account created', "", 'from@example.com', [
-                    saver.email], fail_silently=False, html_message=message)
+                    " account created your esummit id is "+"<b> "+saver.esummit_id+"</b>"
+        # send_mail('esummit account created', "", 'from@example.com', [
+        #           saver.email], fail_silently=False, html_message=message)
+                mail = saver.email
+
+                send_feedback_email_task.delay(
+                    mail, message, 'esummit account created'
+                )
                 person_array.append(person.objects.filter(
                     email=request.data["users"][i]['email'])[0])
-        person_array_pk=[]
+        person_array_pk = []
         for i in person_array:
             person_array_pk.append(i.pk)
-    
+
         lser = person.objects.filter(email=Leader.email)[0]
         data3 = {"name": request.data["team_name"],
                  "event": request.data["event"],
@@ -261,32 +271,26 @@ def TeamSignupView(request):
                  "submission_link": request.data["submission_link"],
                  "leader": lser.pk,
                  "members": person_array_pk,
-                 "number_of_members":no+1}
-    
-
-
-
-
+                 "number_of_members": no+1}
 
         db_entry_team = TeamSerializer(data=data3)
 
         if db_entry_team.is_valid():
-            
+
             db_entry_team.save()
-            
+
             sevice = Services.objects.filter(name=request.data["event"])[0]
-    
-            
+
             EVround = EventRounds.objects.filter(
                 round_name=request.data["event"]+" 1")[0]
-            
+
             person_array.append(lser)
             for i in person_array:
-                
+
                 # i.service.add(sevice.pk)
                 # print("added")
                 # user = i.esummit_id
-                if i.ca :
+                if i.ca:
                     print(i)
                     i.ca.Services.add(sevice.pk)
                     EVround.CAUser.add(i.ca.pk)
@@ -296,10 +300,11 @@ def TeamSignupView(request):
                 if i.proff:
                     i.proff.Services.add(sevice.pk)
                     EVround.ProffUser.add(i.proff.pk)
-            
+
             return Response({"success": "team created"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"Faliure": str(db_entry_team.errors)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(('GET', 'POST'))
 def UserServices(request):
@@ -308,16 +313,14 @@ def UserServices(request):
         if user == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            servicesOpted =  user.Services.all()
+            servicesOpted = user.Services.all()
             allServices = list(Services.objects.all())
-            restServiceList=[i for i in allServices if i not in servicesOpted]
+            restServiceList = [
+                i for i in allServices if i not in servicesOpted]
 
             data1 = ServiceSerilizer(restServiceList, many=True)
             data2 = ServiceSerilizer(servicesOpted, many=True)
-            return Response({"opt":data2.data,"rest":data1.data}, status=status.HTTP_200_OK)
-
-            
-        
+            return Response({"opt": data2.data, "rest": data1.data}, status=status.HTTP_200_OK)
 
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)

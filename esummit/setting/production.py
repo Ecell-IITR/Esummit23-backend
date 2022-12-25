@@ -217,3 +217,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 
 
 DEFAULT_FILE_STORAGE = 'esummit.storage_backends.MediaStorage'
+
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"

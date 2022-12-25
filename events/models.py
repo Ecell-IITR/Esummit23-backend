@@ -5,20 +5,23 @@ from user.models.role.student import StudentUser
 from user.models.role.startup import StartupUser
 from user.models.role.ca import CAUser
 
+
 class Services(models.Model):
     name = models.CharField(max_length=50)
     desc = models.CharField(max_length=200)
-    #default cost 0
-
+    # default cost 0
+    img = models.ImageField(upload_to='services/', blank=True)
     fixed_cost = models.IntegerField(default=0)
     varaible_cost = models.IntegerField(default=0)
-    add_details =RichTextUploadingField(default="")
-    
+    add_details = RichTextUploadingField(default="")
+
     @classmethod
-    def create(cls, name,desc,fixed_cost=0,varaible_cost=0,add_details=""):
-        services = cls(name=name,desc=desc,fixed_cost=fixed_cost,varaible_cost=varaible_cost,add_details=add_details)
+    def create(cls, name, desc, img, fixed_cost=0, varaible_cost=0, add_details=""):
+        services = cls(name=name, desc=desc, fixed_cost=fixed_cost,
+                       varaible_cost=varaible_cost, add_details=add_details, img=img)
         # do something with the book
         return services
+
     class Meta:
         """
         Meta class for Services
@@ -27,6 +30,7 @@ class Services(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class EventCoordinator(models.Model):
     name = models.CharField(max_length=100, verbose_name="Coordinator Name")
@@ -120,7 +124,7 @@ class EventRounds(models.Model):
         StartupUser, verbose_name="Startup User", blank=True)
     CAUser = models.ManyToManyField(
         CAUser, verbose_name="CA User", blank=True)
-    
+
     EmailMessage = RichTextUploadingField()
     class Meta:
 
@@ -191,6 +195,8 @@ class AbstractEvent(models.Model):
     def __str__(self):
         return self.event_name
 
+class EventRegistraionDetails(models.Model):
+    pass
 
 class Event(AbstractEvent):
     """
@@ -206,7 +212,8 @@ class Event(AbstractEvent):
         EventsPartners, related_name="%(app_label)s_%(class)s_partners_of", verbose_name="Partners/Sponsors Of Events")
 
     def save(self, *args, **kwargs):
-        ser = Services.create(self.event_name, self.card_description)
+        ser = Services.create(
+            self.event_name, self.card_description, img=self.card_image)
         ser.save()
         return super(Event, self).save(*args, **kwargs)
 
@@ -215,7 +222,3 @@ class Event(AbstractEvent):
         Meta class for Event
         """
         verbose_name_plural = 'Events'
-
-
-
-
