@@ -14,6 +14,8 @@ class Services(models.Model):
     fixed_cost = models.IntegerField(default=0)
     varaible_cost = models.IntegerField(default=0)
     add_details = RichTextUploadingField(default="")
+    questions = RichTextUploadingField(default="")
+    is_verified = models.BooleanField(default=False) 
 
     @classmethod
     def create(cls, name, desc, img, fixed_cost=0, varaible_cost=0, add_details=""):
@@ -195,8 +197,7 @@ class AbstractEvent(models.Model):
     def __str__(self):
         return self.event_name
 
-class EventRegistraionDetails(models.Model):
-    pass
+
 
 class Event(AbstractEvent):
     """

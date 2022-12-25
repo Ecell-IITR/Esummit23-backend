@@ -9,5 +9,3 @@ urlpatterns = [
   path('querry', QuerryView.as_view()),
   path('team_signup', TeamSignupView),
   path('services', UserServices)]
-
-# ,loginView

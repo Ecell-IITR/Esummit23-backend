@@ -314,7 +314,7 @@ def UserServices(request):
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             servicesOpted = user.Services.all()
-            allServices = list(Services.objects.all())
+            allServices = list(Services.objects.filter(is_verified=True))
             restServiceList = [
                 i for i in allServices if i not in servicesOpted]
 
