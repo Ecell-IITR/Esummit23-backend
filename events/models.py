@@ -165,9 +165,9 @@ class AbstractEvent(models.Model):
     event_name = models.CharField(
         max_length=100, verbose_name="Event Name", db_index=True, unique=True)
     card_image = models.ImageField(
-        upload_to='event/main/card/', verbose_name="Event's Card image", blank=True)
+        upload_to='card/', verbose_name="Event's Card image", blank=True)
     background_image = models.ImageField(
-        upload_to='event/main/background/', verbose_name="Event's background image", blank=True)
+        upload_to='background/', verbose_name="Event's background image", blank=True)
     tagline = models.CharField(max_length=255, verbose_name="Event Tagline")
     description = RichTextUploadingField(
         verbose_name="Event's Description", blank=True)
