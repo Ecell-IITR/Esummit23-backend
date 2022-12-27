@@ -38,7 +38,8 @@ class EventCoordinator(models.Model):
     name = models.CharField(max_length=100, verbose_name="Coordinator Name")
     email = models.EmailField(max_length=100, verbose_name="Email Id")
     phone_number = models.IntegerField(verbose_name="Phone Number")
-
+    image = models.ImageField(
+        upload_to='event/coordinator/', verbose_name="Event Coordinator", blank=True)
     class Meta:
         """
         Meta class for EventCoordinator
@@ -160,6 +161,7 @@ class AbstractEvent(models.Model):
         ('O', 'Over'),
 
     )
+    
     event_name = models.CharField(
         max_length=100, verbose_name="Event Name", db_index=True, unique=True)
     card_image = models.ImageField(
@@ -187,7 +189,9 @@ class AbstractEvent(models.Model):
         upload_to='event/main/logo/', verbose_name="Event's logo image", blank=True, null=True, default=None)
     seo = models.OneToOneField(
         EventSeo, on_delete=models.CASCADE, blank=True, null=True, default=None)
-
+    Type = models.CharField(max_length=100, verbose_name="Event Type",default="")
+    registraion_start_date=models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True)
+    registraion_end_date=models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True)
     class Meta:
         """
         Meta class for AbstractEvent
@@ -203,6 +207,8 @@ class Event(AbstractEvent):
     """
     This class implements Event
     """
+    event_eligibility = models.ManyToManyField(
+        EventRules, blank=True, related_name="%(app_label)s_%(class)s_elgiblty_of", verbose_name="Elegiblity Rules")
     event_rounds = models.ManyToManyField(
         EventRounds, blank=True, related_name="%(app_label)s_%(class)s_rounds_of", verbose_name="Event Rounds")
     event_perks = models.ManyToManyField(

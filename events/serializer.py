@@ -35,7 +35,7 @@ class EventRulesSerializer(serializers.ModelSerializer):
 class EventRoundsSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventRounds
-        fields = '__all__'
+        exclude = ['StudentUser', "StartupUser", "ProffUser"]
 
 
 class EventSeoSerializer(serializers.ModelSerializer):
@@ -48,7 +48,7 @@ class EventRoundsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EventRounds
-        exclude = ['StudentUser', "StartupUser", "ProffUser"]
+        exclude = ['StudentUser', "StartupUser", "ProffUser","CAUser"]
 
 
 class EventMiniSerializer(serializers.Serializer):
@@ -62,7 +62,12 @@ class EventMiniSerializer(serializers.Serializer):
 
 
 class EventSerializer(serializers.Serializer):
+
     event_name = serializers.CharField(max_length=100)
+    tagline = serializers.CharField(max_length=100)
+    Type = serializers.CharField(max_length=100)
+    registraion_start_date = serializers.DateField()
+    registraion_end_date = serializers.DateField()
     card_image = serializers.ImageField()
     mobile_background_image = serializers.ImageField()
     description = serializers.CharField(max_length=1000)
@@ -72,7 +77,9 @@ class EventSerializer(serializers.Serializer):
     event_perks = EventPerksSerializer(many=True)
     event_rules = EventRulesSerializer(many=True)
     event_rounds = EventRoundsSerializer(many=True)
+    event_eligibility = EventRulesSerializer(many=True)
     seo = EventSeoSerializer(many=True)
+
 
     class Meta:
         model = Event
