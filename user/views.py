@@ -153,7 +153,7 @@ def SignupView(request):
                 db_entry_person.save()
             except:
                 return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
-        if userType in ('student', "proff", "stp"):
+        if userType in ('stu', "proff", "stp"):
 
             try:
                 data["referred_by"] = request.data["referred_by"]
@@ -173,12 +173,13 @@ def SignupView(request):
             if db_entry.is_valid(raise_exception=True):
                 saver = db_entry.save()
                 data2 = {"email": email, "name": name}
-                if userType == 'student':
+                if userType == 'stu':
                     data2["student"] = saver.pk
                 if userType == 'proff':
                     data2["proff"] = saver.pk
                 db_entry_person = PearsonSerializer(data=data2)
-                db_entry_person.is_valid(raise_exception=True)
+               
+                db_entry_person.is_valid()
                 db_entry_person.save()
 
             else:

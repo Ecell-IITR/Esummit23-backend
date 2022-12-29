@@ -39,9 +39,10 @@ class AbstractProfile(models.Model):
     def save(self, *args, **kwargs):
         if not self.created:
             self.created = timezone.now()
+            self.password=make_password(self.password)
         
         self.updated = timezone.now()
-        self.password=make_password(self.password)
+        
         self.authToken = jwt.encode({"email": self.email,"password":self.password}, self.jwt_secret, algorithm=self.jwt_algorithm)
         
         return super(AbstractProfile, self).save(*args, **kwargs)

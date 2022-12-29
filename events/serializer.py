@@ -70,7 +70,6 @@ class EventSerializer(serializers.Serializer):
     registraion_end_date = serializers.DateField()
     card_image = serializers.ImageField()
     background_image = serializers.ImageField()
-
     description = serializers.CharField(max_length=1000)
     events_coordinators = EventCoordinatorSerializer(many=True)
     event_faqs = EventFAQSerializer(many=True)
