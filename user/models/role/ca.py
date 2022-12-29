@@ -26,6 +26,3 @@ class CAUser(AbstractProfile):
                 str((unique_value + 1) * 31)
         
         return super(CAUser, self).save(*args, **kwargs)
-        # if self.esummit_id.find("CAP"):
-        #     pass
-        # elif 

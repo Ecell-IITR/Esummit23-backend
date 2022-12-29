@@ -178,7 +178,7 @@ def SignupView(request):
                 if userType == 'proff':
                     data2["proff"] = saver.pk
                 db_entry_person = PearsonSerializer(data=data2)
-               
+
                 db_entry_person.is_valid()
                 db_entry_person.save()
 
@@ -187,6 +187,7 @@ def SignupView(request):
             try:
 
                 user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
+                user.points=50+user.points
 
                 user.save()
             except:
