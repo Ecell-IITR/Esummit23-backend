@@ -15,6 +15,9 @@ run ```python manage.py createsuperuser```
 
 run ``` python manage.py runserver ```
 
+### start Celery
+run ```  celery -A esummit worker -l info -P gevent```
+
 ## API Reference
 
 #### signup
