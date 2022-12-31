@@ -5,7 +5,6 @@ from CAP.models import Task
 class CAUser(AbstractProfile):
     collage = models.CharField(max_length=50, verbose_name="Collage", default="IIT Roorkee")
     points = models.IntegerField(default=0)
-
     year = models.CharField(max_length=10, verbose_name="Year")
     city = models.CharField(max_length=50, verbose_name="City")
     state = models.CharField(max_length=50, verbose_name="State")
@@ -26,3 +25,12 @@ class CAUser(AbstractProfile):
                 str((unique_value + 1) * 31)
         
         return super(CAUser, self).save(*args, **kwargs)
+"""
+caUser     TASKS
+task =>     id
+  (2,3)      1
+             2
+             3                   
+
+
+"""
