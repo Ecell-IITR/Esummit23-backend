@@ -138,9 +138,11 @@ def SignupView(request):
             return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         saver = False
         db_entry = ""
+
         db_entry_person = PearsonSerializer
         data = request.data["user"]
         userType = request.data.get('UserType')
+
         if userType == 'ca':
             try:
                 data["referred_by"] = ""
@@ -151,6 +153,7 @@ def SignupView(request):
                 db_entry_person = PearsonSerializer(data=data2)
                 db_entry_person.is_valid(raise_exception=True)
                 db_entry_person.save()
+
             except:
                 return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
         if userType in ('stu', "proff", "stp"):
@@ -187,7 +190,7 @@ def SignupView(request):
             try:
 
                 user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
-                user.points=50+user.points
+                user.points = 50+user.points
 
                 user.save()
             except:
@@ -289,11 +292,8 @@ def TeamSignupView(request):
             person_array.append(lser)
             for i in person_array:
 
-                # i.service.add(sevice.pk)
-                # print("added")
-                # user = i.esummit_id
                 if i.ca:
-                    print(i)
+
                     i.ca.Services.add(sevice.pk)
                     EVround.CAUser.add(i.ca.pk)
                 if i.student:

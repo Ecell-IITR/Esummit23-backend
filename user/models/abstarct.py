@@ -27,7 +27,7 @@ class AbstractProfile(models.Model):
         verbose_name="Phone Number")
     payment = models.IntegerField(default=0)
     referred_by = models.CharField(max_length=20, null=True, blank=True)
-    created = models.DateTimeField(default=timezone.now)
+    created = models.DateTimeField()
     updated = models.DateTimeField(auto_now=True)
     password = models.TextField()
     Services = models.ManyToManyField("events.Services", blank=True)
@@ -42,11 +42,11 @@ class AbstractProfile(models.Model):
         if not self.created:
             self.created = timezone.now()
             self.password = make_password(self.password)
-        print(self.created, self._state.adding)
+
         self.updated = timezone.now()
 
         self.authToken = jwt.encode({"email": self.email, "password": self.password,
-                                    "updated": self.updated}, self.jwt_secret, algorithm=self.jwt_algorithm)
+                                    "updated": str(self.updated)}, self.jwt_secret, algorithm=self.jwt_algorithm)
 
         return super(AbstractProfile, self).save(*args, **kwargs)
 
