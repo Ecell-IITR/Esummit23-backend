@@ -27,7 +27,7 @@ class AbstractProfile(models.Model):
         verbose_name="Phone Number")
     payment = models.IntegerField(default=0)
     referred_by = models.CharField(max_length=20, null=True, blank=True)
-    created = models.DateTimeField()
+    created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
     password = models.TextField()
     Services = models.ManyToManyField("events.Services", blank=True)
