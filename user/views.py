@@ -56,7 +56,7 @@ class LoginApiView(APIView):
 
                 at = str(user[0].authToken)
 
-                return Response({"n": user[0].full_name, 'at': at, 'role': professional_tag}, status=status.HTTP_200_OK)
+                return Response({"n": user[0].full_name, 'at': user[0].authToken, 'role': professional_tag}, status=status.HTTP_200_OK)
 
         return Response({'error_msg': 'check the credentials'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -225,6 +225,7 @@ def TeamSignupView(request):
         if no > 4:
             return Response({"error": "Maximum 5 members allowed"}, status=status.HTTP_400_BAD_REQUEST)
         person_array = []
+        
         for i in range(no):
             if person.objects.filter(email=request.data["users"][i]['email']).exists():
                 person_array.append(person.objects.filter(
