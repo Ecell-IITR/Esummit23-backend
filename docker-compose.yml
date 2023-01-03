@@ -1,0 +1,15 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    working_dir: /backend
+    volumes:
+      - ./:/backend
+    expose:
+      - 8000
+  
+volumes:
+  # static-ui-content:
+  static-ui-content:
