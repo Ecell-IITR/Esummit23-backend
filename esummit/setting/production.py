@@ -31,7 +31,7 @@ SECRET_KEY = str(os.environ.get('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','api.esummit.in','https://api.esummit.in','api.esummit.in/']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
