@@ -7,7 +7,7 @@ ENV PYTHONBUFFERED 1
 
 # install psycopg2 dependencies for postgres
 RUN apk update \
-  && apk add postgresql-dev gcc python3-dev musl-dev build-base py-pip jpeg-dev zlib-dev wkhtmltopdf xvfb fontconfig ttf-freefont ttf-ubuntu-font-family ffmpeg libwebp libwebp-tools libwebp-dev
+  && apk add postgresql-dev gcc python3-dev musl-dev build-base py-pip jpeg-dev zlib-dev xvfb fontconfig ttf-freefont ffmpeg libwebp libwebp-tools libwebp-dev
 
 RUN pip install --upgrade pip \
   && pip install --upgrade setuptools \
