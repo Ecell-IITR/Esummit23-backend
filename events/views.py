@@ -84,7 +84,20 @@ class ServiceView(APIView):
         serializer = ServiceSerilizer(data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+class RegisterDetail(APIView):
+    def get(self,request):
+        data = request.data
+        headers = request.headers
+        auth_token=headers['Authorization'].split(' ')[1]
+        auth_token=auth_token[2:]
+        auth_token=auth_token[:-1]
+        user = auth(auth_token)
+        if user:
+            data = user.Services.all()
+            serializer = ServiceSerilizer(data, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(data={"error":"Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 

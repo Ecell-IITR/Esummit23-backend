@@ -95,7 +95,7 @@ class PearsonSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = person
-        fields = ["name", "email", "student"]
+        fields = ["name", "email", "student" , "ca","proff"]
 
 class TeamSerializer(serializers.ModelSerializer):
     name=serializers.CharField(max_length=100)

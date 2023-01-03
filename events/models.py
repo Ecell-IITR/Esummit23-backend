@@ -1,24 +1,30 @@
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
+from django.utils import timezone
 from user.models.role.proff import ProffUser
 from user.models.role.student import StudentUser
 from user.models.role.startup import StartupUser
 from user.models.role.ca import CAUser
 
+
 class Services(models.Model):
     name = models.CharField(max_length=50)
     desc = models.CharField(max_length=200)
-    #default cost 0
-
+    # default cost 0
+    img = models.ImageField(upload_to='services/', blank=True)
     fixed_cost = models.IntegerField(default=0)
     varaible_cost = models.IntegerField(default=0)
-    add_details =RichTextUploadingField(default="")
-    
+    add_details = RichTextUploadingField(default="")
+    questions = models.TextField(default=r"{}", max_length=1000)
+    is_verified = models.BooleanField(default=False) 
+
     @classmethod
-    def create(cls, name,desc,fixed_cost=0,varaible_cost=0,add_details=""):
-        services = cls(name=name,desc=desc,fixed_cost=fixed_cost,varaible_cost=varaible_cost,add_details=add_details)
+    def create(cls, name, desc, img, fixed_cost=0, varaible_cost=0, add_details=""):
+        services = cls(name=name, desc=desc, fixed_cost=fixed_cost,
+                       varaible_cost=varaible_cost, add_details=add_details, img=img)
         # do something with the book
         return services
+
     class Meta:
         """
         Meta class for Services
@@ -28,11 +34,13 @@ class Services(models.Model):
     def __str__(self):
         return self.name
 
+
 class EventCoordinator(models.Model):
     name = models.CharField(max_length=100, verbose_name="Coordinator Name")
     email = models.EmailField(max_length=100, verbose_name="Email Id")
     phone_number = models.IntegerField(verbose_name="Phone Number")
-
+    image = models.ImageField(
+        upload_to='event/coordinator/', verbose_name="Event Coordinator", blank=True)
     class Meta:
         """
         Meta class for EventCoordinator
@@ -120,7 +128,7 @@ class EventRounds(models.Model):
         StartupUser, verbose_name="Startup User", blank=True)
     CAUser = models.ManyToManyField(
         CAUser, verbose_name="CA User", blank=True)
-    
+
     EmailMessage = RichTextUploadingField()
     class Meta:
 
@@ -154,12 +162,13 @@ class AbstractEvent(models.Model):
         ('O', 'Over'),
 
     )
+    
     event_name = models.CharField(
         max_length=100, verbose_name="Event Name", db_index=True, unique=True)
     card_image = models.ImageField(
-        upload_to='event/main/card/', verbose_name="Event's Card image", blank=True)
+        upload_to='card/', verbose_name="Event's Card image", blank=True)
     background_image = models.ImageField(
-        upload_to='event/main/background/', verbose_name="Event's background image", blank=True)
+        upload_to='background/', verbose_name="Event's background image", blank=True)
     tagline = models.CharField(max_length=255, verbose_name="Event Tagline")
     description = RichTextUploadingField(
         verbose_name="Event's Description", blank=True)
@@ -181,7 +190,9 @@ class AbstractEvent(models.Model):
         upload_to='event/main/logo/', verbose_name="Event's logo image", blank=True, null=True, default=None)
     seo = models.OneToOneField(
         EventSeo, on_delete=models.CASCADE, blank=True, null=True, default=None)
-
+    Type = models.CharField(max_length=100, verbose_name="Event Type",default="")
+    registraion_start_date=models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True)
+    registraion_end_date=models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True)
     class Meta:
         """
         Meta class for AbstractEvent
@@ -192,10 +203,13 @@ class AbstractEvent(models.Model):
         return self.event_name
 
 
+
 class Event(AbstractEvent):
     """
     This class implements Event
     """
+    event_eligibility = models.ManyToManyField(
+        EventRules, blank=True, related_name="%(app_label)s_%(class)s_elgiblty_of", verbose_name="Elegiblity Rules")
     event_rounds = models.ManyToManyField(
         EventRounds, blank=True, related_name="%(app_label)s_%(class)s_rounds_of", verbose_name="Event Rounds")
     event_perks = models.ManyToManyField(
@@ -204,10 +218,13 @@ class Event(AbstractEvent):
         EventRules, blank=True, related_name="%(app_label)s_%(class)s_rule_of", verbose_name="Event Rules")
     event_partners = models.ManyToManyField(
         EventsPartners, related_name="%(app_label)s_%(class)s_partners_of", verbose_name="Partners/Sponsors Of Events")
-
+    created_at = models.DateTimeField(default=timezone.now, editable=True)
     def save(self, *args, **kwargs):
-        ser = Services.create(self.event_name, self.card_description)
-        ser.save()
+        if not self.created_at:
+            self.created_at = timezone.now()
+            ser = Services.create(
+                self.event_name, self.card_description, img=self.card_image)
+            ser.save()
         return super(Event, self).save(*args, **kwargs)
 
     class Meta:
@@ -215,7 +232,3 @@ class Event(AbstractEvent):
         Meta class for Event
         """
         verbose_name_plural = 'Events'
-
-
-
-
