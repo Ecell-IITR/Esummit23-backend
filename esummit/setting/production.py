@@ -128,7 +128,7 @@ RQ_QUEUES = {
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
 
-REDIS_HOST = "redis://redis:"
+REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
 REDIS_PORT = 6379
 DATABASES = {
     'default': {
