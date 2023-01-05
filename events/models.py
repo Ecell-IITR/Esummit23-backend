@@ -17,6 +17,7 @@ class Services(models.Model):
     add_details = RichTextUploadingField(default="")
     questions = models.TextField(default=r"{}", max_length=1000)
     is_verified = models.BooleanField(default=False) 
+    no_of_QA = models.IntegerField(default=0)
 
     @classmethod
     def create(cls, name, desc, img, fixed_cost=0, varaible_cost=0, add_details=""):
