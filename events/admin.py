@@ -76,7 +76,6 @@ class ServicesList(admin.ModelAdmin):
 class EventPerksList(admin.ModelAdmin):
     list_display = ["heading", "description", "image"]
 
-
 class EventFAQInlines(admin.TabularInline):
     model = Event.event_faqs.through
     verbose_name_plural = "FAQS"

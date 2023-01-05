@@ -140,6 +140,7 @@ def SignupView(request):
         saver = False
         db_entry = ""
 
+
         db_entry_person = PearsonSerializer
         data = request.data["user"]
         userType = request.data.get('UserType')
@@ -191,7 +192,8 @@ def SignupView(request):
             try:
 
                 user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
-                user.points = 50+user.points
+                user.points=50+user.points
+
 
                 user.save()
             except:
@@ -294,8 +296,9 @@ def TeamSignupView(request):
             person_array.append(lser)
             for i in person_array:
 
-                if i.ca:
 
+                if i.ca:
+                    print(i)
                     i.ca.Services.add(sevice.pk)
                     EVround.CAUser.add(i.ca.pk)
                 if i.student:
