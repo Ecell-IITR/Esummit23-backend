@@ -210,7 +210,7 @@ class Event(AbstractEvent):
     This class implements Event
     """
     event_eligibility = models.ManyToManyField(
-        EventRules, blank=True, related_name="%(app_label)s_%(class)s_elgiblty_of", verbose_name="Eligiblity Rules")
+        EventRules, blank=True, related_name="%(app_label)s_%(class)s_elgiblty_of", verbose_name="Elegiblity Rules")
     event_rounds = models.ManyToManyField(
         EventRounds, blank=True, related_name="%(app_label)s_%(class)s_rounds_of", verbose_name="Event Rounds")
     event_perks = models.ManyToManyField(

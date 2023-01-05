@@ -75,8 +75,6 @@ class ServicesList(admin.ModelAdmin):
 @admin.register(EventPerks)
 class EventPerksList(admin.ModelAdmin):
     list_display = ["heading", "description", "image"]
- 
-    
 
 
 class EventFAQInlines(admin.TabularInline):
@@ -114,19 +112,14 @@ class EventPerksInlines(admin.TabularInline):
     verbose_name_plural = "Event Perks"
     extra = 2
 
-class EventEligibilityInlines(admin.TabularInline):
-    model = Event.event_eligibility.through   
-    verbose_name_plural = "Eligibilty Rules"
-    extra=2 
-
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ["event_name", "tagline", "event_priority"]
     search_fields = ["event_name", "tagline", ]
     list_filter = ["event_status", ]
-    inlines = [EventEligibilityInlines,EventFAQInlines, EventCoordinatorInlines, EventRuleInlines,
+    inlines = [EventFAQInlines, EventCoordinatorInlines, EventRuleInlines,
                EventPartnerInlines, EventRoundInlines, EventPerksInlines]
-    exclude = ['event_eligibility','event_faqs', 'event_rules', 'events_coordinators', 'event_partners', 'event_perks',
+    exclude = ['event_faqs', 'event_rules', 'events_coordinators', 'event_partners', 'event_perks',
                'event_rounds']
 
 
