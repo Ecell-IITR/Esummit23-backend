@@ -1,5 +1,6 @@
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
+from django.utils import timezone
 from user.models.role.proff import ProffUser
 from user.models.role.student import StudentUser
 from user.models.role.startup import StartupUser
@@ -14,8 +15,9 @@ class Services(models.Model):
     fixed_cost = models.IntegerField(default=0)
     varaible_cost = models.IntegerField(default=0)
     add_details = RichTextUploadingField(default="")
-    questions = RichTextUploadingField(default="")
+    questions = models.TextField(default=r"{}", max_length=1000)
     is_verified = models.BooleanField(default=False) 
+    no_of_QA = models.IntegerField(default=0)
 
     @classmethod
     def create(cls, name, desc, img, fixed_cost=0, varaible_cost=0, add_details=""):
@@ -217,11 +219,13 @@ class Event(AbstractEvent):
         EventRules, blank=True, related_name="%(app_label)s_%(class)s_rule_of", verbose_name="Event Rules")
     event_partners = models.ManyToManyField(
         EventsPartners, related_name="%(app_label)s_%(class)s_partners_of", verbose_name="Partners/Sponsors Of Events")
-
+    created_at = models.DateTimeField(default=timezone.now, editable=True)
     def save(self, *args, **kwargs):
-        ser = Services.create(
-            self.event_name, self.card_description, img=self.card_image)
-        ser.save()
+        if not self.created_at:
+            self.created_at = timezone.now()
+            ser = Services.create(
+                self.event_name, self.card_description, img=self.card_image)
+            ser.save()
         return super(Event, self).save(*args, **kwargs)
 
     class Meta:
