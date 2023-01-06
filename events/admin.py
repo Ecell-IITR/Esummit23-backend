@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Services, EventCoordinator, EventsFAQ, EventsPartners, EventRounds, EventRules, Event, EventPerks
 from .models import EventSeo
-from django.core.mail import send_mail
+
 from user.tasks import send_feedback_email_task
 
 
