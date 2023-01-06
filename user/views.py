@@ -277,7 +277,6 @@ def TeamSignupView(request):
         data3 = {"name": request.data["team_name"],
                  "event": request.data["event"],
                  "submission_text": request.data["submission_text"],
-                 "submission_link": request.data["submission_link"],
                  "leader": lser.pk,
                  "members": person_array_pk,
                  "number_of_members": no+1}
@@ -315,7 +314,8 @@ def TeamSignupView(request):
 
 @api_view(('GET', 'POST'))
 def UserServices(request):
-    if request.method == 'GET':
+    if request.method == 'GET' and request.headers['Authorization']: 
+        
         user = auth(request.headers['Authorization'].split(' ')[1])
         if user == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
