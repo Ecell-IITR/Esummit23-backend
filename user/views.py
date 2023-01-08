@@ -56,7 +56,13 @@ class LoginApiView(APIView):
 
                 at = str(user[0].authToken)
 
+
                 return Response({"n": user[0].full_name, 'at': at, 'role': professional_tag}, status=status.HTTP_200_OK)
+
+                print(at[2:-1])
+
+                return Response({"n": user[0].full_name, 'at': at[2:-1], 'role': professional_tag, "e_id": user[0].esummit_id}, status=status.HTTP_200_OK)
+
 
         return Response({'error_msg': 'check the credentials'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -138,9 +144,18 @@ def SignupView(request):
             return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         saver = False
         db_entry = ""
+
         db_entry_person = PearsonSerializer
         data = request.data["user"]
         userType = request.data.get('UserType')
+
+
+
+        db_entry_person = PearsonSerializer
+        data = request.data["user"]
+        userType = request.data.get('UserType')
+
+
         if userType == 'ca':
             try:
                 data["referred_by"] = ""
@@ -151,6 +166,7 @@ def SignupView(request):
                 db_entry_person = PearsonSerializer(data=data2)
                 db_entry_person.is_valid(raise_exception=True)
                 db_entry_person.save()
+
             except:
                 return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
         if userType in ('stu', "proff", "stp"):
@@ -189,6 +205,7 @@ def SignupView(request):
                 user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
                 user.points=50+user.points
 
+
                 user.save()
             except:
                 pass
@@ -222,6 +239,7 @@ def TeamSignupView(request):
         if no > 4:
             return Response({"error": "Maximum 5 members allowed"}, status=status.HTTP_400_BAD_REQUEST)
         person_array = []
+
         for i in range(no):
             if person.objects.filter(email=request.data["users"][i]['email']).exists():
                 person_array.append(person.objects.filter(
@@ -270,7 +288,9 @@ def TeamSignupView(request):
         data3 = {"name": request.data["team_name"],
                  "event": request.data["event"],
                  "submission_text": request.data["submission_text"],
+
                  "submission_link": request.data["submission_link"],
+
                  "leader": lser.pk,
                  "members": person_array_pk,
                  "number_of_members": no+1}
@@ -289,9 +309,11 @@ def TeamSignupView(request):
             person_array.append(lser)
             for i in person_array:
 
+
                 # i.service.add(sevice.pk)
                 # print("added")
                 # user = i.esummit_id
+
                 if i.ca:
                     print(i)
                     i.ca.Services.add(sevice.pk)
@@ -310,7 +332,11 @@ def TeamSignupView(request):
 
 @api_view(('GET', 'POST'))
 def UserServices(request):
+
     if request.method == 'GET':
+
+    if request.method == 'GET' and request.headers['Authorization']: 
+
         user = auth(request.headers['Authorization'].split(' ')[1])
         if user == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)

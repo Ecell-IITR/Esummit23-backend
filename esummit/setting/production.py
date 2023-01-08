@@ -26,10 +26,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = str(os.environ.get('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+
+
+SECRET_KEY = str(os.environ.get('SECRET_KEY'))
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
 
 ALLOWED_HOSTS = ["*"]
 
@@ -124,8 +133,18 @@ RQ_QUEUES = {
         'DEFAULT-TIMEOUT': 4000,
     }
 }
+
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
+
+
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+
+REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
+REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -136,7 +155,12 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
+
         "LOCATION": "redis://127.0.0.1:6379/1",
+
+
+        "LOCATION": "redis://{}:{}/1".format(REDIS_HOST, REDIS_PORT),
+
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         },
@@ -200,6 +224,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media_files')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
@@ -219,6 +245,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 
 
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_FILE_STORAGE = 'esummit.storage_backends.MediaStorage'
@@ -226,3 +253,7 @@ DEFAULT_FILE_STORAGE = 'esummit.storage_backends.MediaStorage'
 # Celery settings
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+DEFAULT_FILE_STORAGE = 'esummit.storage_backends.MediaStorage'
+

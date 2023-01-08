@@ -249,7 +249,7 @@ server {
 
 
 
-
+}}
 
 
 upstream esummit-django{
@@ -400,4 +400,77 @@ server {
         proxy_pass http://esummit22-frontend;
     }
 
-}
+
+
+start worker script
+
+until cd /usr/esummit23-backend
+do
+    echo "Waiting for server volume..."
+done
+
+# run a worker :)
+celery -A esummit worker -l info -P gevent
+
+
+start server script
+
+until cd /usr/esummit23-backend
+do
+    echo "Waiting for server volume..."
+done
+
+until python manage.py migrate
+do
+    echo "Waiting for db to be ready..."
+    sleep 2
+done
+
+
+python manage.py collectstatic --noinput
+
+
+gunicorn esummit.wsgi:application -b 0.0.0.0:9000
+
+worker-entrypoint.sh
+
+
+RUN chmod +x /usr/esummit23-backend/server-entrypoint.sh
+RUN chmod +x /usr/esummit23-backend/worker-entrypoint.sh
+
+
+
+FROM python:3.8-alpine
+
+WORKDIR /usr/Esummit23-backend
+
+ENV PYTHONBUFFERED 1
+
+
+RUN pip install --upgrade pip \
+  && pip install --upgrade setuptools \
+  && pip install --upgrade pipenv  \
+  && pip install --upgrade boto3 \
+  && pip install --upgrade django-storages
+
+
+COPY ./requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt
+
+
+COPY . .
+
+
+RUN pip install -r requirements.txt
+
+
+
+worker:
+  restart: always
+  build:
+    context: ./codebase/Esummit23-backend
+    dockerfile: ./codebase/Esummit23-backend/worker/Dockerfile
+  command: ./codebase/Esummit23-backend/celery-entrypoint.sh
+  links:
+    - redis
+
