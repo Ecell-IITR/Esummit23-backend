@@ -19,11 +19,7 @@ class teams(models.Model):
     submission_text = RichTextUploadingField(default="")
     submission_file = models.FileField(
         upload_to='event/submission/', verbose_name="Submission File", blank=True)
-
-    submission_link = models.URLField(default="")
-
     submission_link = models.URLField(default="",null=True)
-
     total_payment = models.IntegerField(default=0)
     razorpay_payment_id = RichTextUploadingField(default=" ")
 
