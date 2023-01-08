@@ -207,7 +207,7 @@ def SignupView(request):
         send_feedback_email_task.delay(
             mail, message, 'esummit account created'
         )
-        return Response({"name": saver.full_name, "e_id": saver.esummit_id, "at": saver.authToken}, status=status.HTTP_201_CREATED)
+        return Response({"n": saver.full_name, "e_id": saver.esummit_id, "at": saver.authToken}, status=status.HTTP_201_CREATED)
 
         # return Response(status=status.HTTP_400_BAD_REQUEST)
 
