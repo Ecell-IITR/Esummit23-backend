@@ -12,6 +12,10 @@ class OTP(models.Model):
     Otp = models.CharField(max_length=15)
     date_created = models.DateTimeField(default=timezone.now)
 
+    date_expired = models.DateTimeField(default=timezone.now()+timedelta(minutes=30))
+
+
     date_expired = models.DateTimeField()
+
 
          

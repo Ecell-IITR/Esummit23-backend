@@ -88,7 +88,7 @@ WORKDIR /usr/esummit23-backend
 
 COPY . .
 
-CMD ["sh", "-c", "python manage.py collectstatic --no-input; python manage.py migrate;gunicorn esummit.wsgi:application -b 0.0.0.0:9000"]
+CMD ["sh", "-c", "python manage.py collectstatic --no-input; python manage.py migrate; python manage.py createsuperuser ;gunicorn esummit.wsgi:application -b 0.0.0.0:8000"]
 
 
 nginx
@@ -249,7 +249,7 @@ server {
 
 
 
-
+}}
 
 
 upstream esummit-django{
@@ -400,8 +400,6 @@ server {
         proxy_pass http://esummit22-frontend;
     }
 
-}
-
 
 
 start worker script
@@ -475,3 +473,4 @@ worker:
   command: ./codebase/Esummit23-backend/celery-entrypoint.sh
   links:
     - redis
+

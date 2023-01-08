@@ -55,9 +55,14 @@ class LoginApiView(APIView):
             if check_password(password, user[0].password):
 
                 at = str(user[0].authToken)
+
+
+                return Response({"n": user[0].full_name, 'at': at, 'role': professional_tag}, status=status.HTTP_200_OK)
+
                 print(at[2:-1])
 
                 return Response({"n": user[0].full_name, 'at': at[2:-1], 'role': professional_tag, "e_id": user[0].esummit_id}, status=status.HTTP_200_OK)
+
 
         return Response({'error_msg': 'check the credentials'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -140,10 +145,16 @@ def SignupView(request):
         saver = False
         db_entry = ""
 
+        db_entry_person = PearsonSerializer
+        data = request.data["user"]
+        userType = request.data.get('UserType')
+
+
 
         db_entry_person = PearsonSerializer
         data = request.data["user"]
         userType = request.data.get('UserType')
+
 
         if userType == 'ca':
             try:
@@ -277,6 +288,9 @@ def TeamSignupView(request):
         data3 = {"name": request.data["team_name"],
                  "event": request.data["event"],
                  "submission_text": request.data["submission_text"],
+
+                 "submission_link": request.data["submission_link"],
+
                  "leader": lser.pk,
                  "members": person_array_pk,
                  "number_of_members": no+1}
@@ -296,6 +310,10 @@ def TeamSignupView(request):
             for i in person_array:
 
 
+                # i.service.add(sevice.pk)
+                # print("added")
+                # user = i.esummit_id
+
                 if i.ca:
                     print(i)
                     i.ca.Services.add(sevice.pk)
@@ -314,8 +332,11 @@ def TeamSignupView(request):
 
 @api_view(('GET', 'POST'))
 def UserServices(request):
+
+    if request.method == 'GET':
+
     if request.method == 'GET' and request.headers['Authorization']: 
-        
+
         user = auth(request.headers['Authorization'].split(' ')[1])
         if user == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
