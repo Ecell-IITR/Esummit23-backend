@@ -111,13 +111,17 @@ class EventPerksInlines(admin.TabularInline):
     verbose_name_plural = "Event Perks"
     extra = 2
 
+class EligibilityInline(admin.TabularInline):
+    model = Event.event_eligibility.through
+    verbose_name_plural = "Eligibility"
+    extra = 2
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ["event_name", "tagline", "event_priority"]
     search_fields = ["event_name", "tagline", ]
     list_filter = ["event_status", ]
     inlines = [EventFAQInlines, EventCoordinatorInlines, EventRuleInlines,
-               EventPartnerInlines, EventRoundInlines, EventPerksInlines]
+               EventPartnerInlines, EventRoundInlines, EventPerksInlines,EligibilityInline]
     exclude = ['event_faqs', 'event_rules', 'events_coordinators', 'event_partners', 'event_perks',
                'event_rounds']
 
