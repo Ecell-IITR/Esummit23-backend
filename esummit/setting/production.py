@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 import os
 
 
+
 load_dotenv(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,12 +26,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 
 
-SECRET_KEY = str(os.environ.get('SECRET_KEY'))
+
+# SECURITY WARNING: don't run with debug turned on in production!
+SECRET_KEY = "ltx_c@+)ak_@6l8&r1g78&y*=-^#_(ts&=3^9rzibepdnrt&f3"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
