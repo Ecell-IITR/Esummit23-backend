@@ -211,18 +211,24 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-AWS_STORAGE_BUCKET_NAME = str(os.environ.get('AWS_STORAGE_BUCKET_NAME',"e-cell-server-bucket"))
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', None)
-AWS_SECRET_ACCESS_KEY =  os.environ.get('AWS_SECRET_ACCESS_KEY')
-print(AWS_STORAGE_BUCKET_NAME)
-AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME+'.s3.amazonaws.com'  
-AWS_S3_SIGNATURE_VERSION = 's3v4'
-AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', None)
+
+AWS_ACCESS_KEY_ID = "AKIAT4QCDQEC2VEPQUMK"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_STORAGE_BUCKET_NAME = "e-cell-server-bucket"
+
+EMAIL_HOST_USER = "no.reply.esummit@gmail.com"
+EMAIL_HOST_PASSWORD = "dekhptoevnbyzssy"
+
+########S3 Bucket
+AWS_ACCESS_KEY_ID = 'AKIAT4QCDQEC2VEPQUMK'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'e-cell-server-bucket'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
+
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_FILE_STORAGE = 'esummit.storage_backends.MediaStorage'
