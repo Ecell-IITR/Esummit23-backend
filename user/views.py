@@ -141,7 +141,6 @@ def SignupView(request):
         saver = False
         db_entry = ""
 
-
         db_entry_person = PearsonSerializer
         data = request.data["user"]
         userType = request.data.get('UserType')
@@ -193,8 +192,7 @@ def SignupView(request):
             try:
 
                 user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
-                user.points=50+user.points
-
+                user.points = 50+user.points
 
                 user.save()
             except:
@@ -289,24 +287,16 @@ def TeamSignupView(request):
             db_entry_team.save()
 
             sevice = Services.objects.filter(name=request.data["event"])[0]
-
-            EVround = EventRounds.objects.filter(
-                round_name=request.data["event"]+" 1")[0]
-
             person_array.append(lser)
             for i in person_array:
-
 
                 if i.ca:
                     print(i)
                     i.ca.Services.add(sevice.pk)
-                    EVround.CAUser.add(i.ca.pk)
                 if i.student:
                     i.student.Services.add(sevice.pk)
-                    EVround.StudentUser.add(i.student.pk)
                 if i.proff:
                     i.proff.Services.add(sevice.pk)
-                    EVround.ProffUser.add(i.proff.pk)
 
             return Response({"success": "team created"}, status=status.HTTP_201_CREATED)
         else:
@@ -315,8 +305,8 @@ def TeamSignupView(request):
 
 @api_view(('GET', 'POST'))
 def UserServices(request):
-    if request.method == 'GET' and request.headers['Authorization']: 
-        
+    if request.method == 'GET' and request.headers['Authorization']:
+
         user = auth(request.headers['Authorization'].split(' ')[1])
         if user == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
