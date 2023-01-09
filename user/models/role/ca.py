@@ -6,9 +6,9 @@ class CAUser(AbstractProfile):
     collage = models.CharField(max_length=50, verbose_name="Collage", default="IIT Roorkee")
     points = models.IntegerField(default=0)
 
-    year = models.CharField(max_length=10, verbose_name="Year")
-    city = models.CharField(max_length=50, verbose_name="City")
-    state = models.CharField(max_length=50, verbose_name="State")
+    year = models.CharField(max_length=10, verbose_name="Year",blank=True,null=True)
+    city = models.CharField(max_length=50, verbose_name="City",blank=True,null=True)
+    state = models.CharField(max_length=50, verbose_name="State",blank=True,null=True)
     gender = models.CharField(max_length=10, blank=True,
                               null=True, verbose_name="Gender")
 

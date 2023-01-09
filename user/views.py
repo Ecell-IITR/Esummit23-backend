@@ -56,6 +56,7 @@ class LoginApiView(APIView):
 
                 at = str(user[0].authToken)
                 print(at[2:-1])
+                print(at)
 
                 return Response({"n": user[0].full_name, 'at': at[2:-1], 'role': professional_tag, "e_id": user[0].esummit_id}, status=status.HTTP_200_OK)
 

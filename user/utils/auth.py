@@ -7,9 +7,11 @@ from user.models.role.proff import ProffUser
 secret = 'django-insecure-*+z5#+d&a@s^7)x^cez!r)mqq^iz8fld@rbo36nyke-%cp%o0i'
 
 def auth(token):
-    secret = 'django-insecure-*+z5#+d&a@s^7)x^cez!r)mqq^iz8fld@rbo36nyke-%cp%o0i'
+    secret = '7o9d=)+(f-chzvhcr#*(dc6k!#8&q2=)w5m4a+d$-$m&)hr4gh'
     try:
+        print(token)
         decoded = jwt.decode(token, secret, algorithms=['HS256'])
+
         email = decoded['email']
         password = decoded['password']
         if CAUser.objects.filter(email=email ).exists():
@@ -22,4 +24,4 @@ def auth(token):
             return ProffUser.objects.get(email=email )
 
     except:
-        return False
+        return None
