@@ -20,8 +20,8 @@ class StudentUser(AbstractProfile):
         blank=True,
         verbose_name="Enrollment Number(If IITR Student)"
     )
-    gender = models.CharField(max_length=1, blank=True,
-                              null=True, verbose_name="Gender", choices=GENDER)
+    gender = models.CharField(max_length=10, blank=True,
+                              null=True, verbose_name="Gender")
     city = models.CharField(max_length=50, null=True, blank=True)
     state = models.CharField(max_length=50, null=True, blank=True)
     collage = models.CharField(max_length=200, verbose_name="Collage Name",default="IIT Roorkee")

@@ -9,7 +9,8 @@ class CAUser(AbstractProfile):
     year = models.CharField(max_length=10, verbose_name="Year")
     city = models.CharField(max_length=50, verbose_name="City")
     state = models.CharField(max_length=50, verbose_name="State")
-    test = models.CharField(max_length=50, verbose_name="Test",default="Test")
+    gender = models.CharField(max_length=10, blank=True,
+                              null=True, verbose_name="Gender")
 
     taskAssigned = models.ManyToManyField(Task, verbose_name="Task Assigned", related_name='task_assigned',blank=True)
     taskCompleted = models.ManyToManyField(Task, verbose_name="Task Completed", related_name='task_cmpleted',blank=True)
