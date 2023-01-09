@@ -17,7 +17,7 @@ from django.contrib.auth.hashers import check_password
 from django.core.mail import send_mail
 from .models.person import person
 from .utils.auth import auth
-from events.models import Services, EventRounds
+from events.models import Services, Event
 from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
 # Create your views here.
@@ -38,16 +38,16 @@ class LoginApiView(APIView):
         if not esummit_id:
             return Response('Esummit_id cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
         else:
-            if (esummit_id.find("stp") != -1):
+            if (esummit_id.find("STP") != -1):
                 user = StartupUser.objects.all().filter(esummit_id=esummit_id)
                 professional_tag = 'stp'
             elif(esummit_id.find("CAP") != -1):
                 user = CAUser.objects.all().filter(esummit_id=esummit_id)
                 professional_tag = 'ca'
-            elif(esummit_id.find("stu") != -1):
+            elif(esummit_id.find("STU") != -1):
                 user = StudentUser.objects.all().filter(esummit_id=esummit_id)
                 professional_tag = 'stu'
-            elif(esummit_id.find("prf")):
+            elif(esummit_id.find("PRF") != -1):
                 user = ProffUser.objects.all().filter(esummit_id=esummit_id)
                 professional_tag = 'prf'
 
@@ -164,7 +164,7 @@ def SignupView(request):
                 data["referred_by"] = request.data["referred_by"]
 
             except:
-                data["referred_by"] = " "
+                data["referred_by"] = ""
 
             db_entry = StudentUserSerializer(data=data)
 
@@ -258,7 +258,7 @@ def TeamSignupView(request):
                     return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
 
                 message = "Dear "+"<b>"+saver.full_name+"</b>" + \
-                    " account created your esummit id is "+"<b> "+saver.esummit_id+"</b>"
+                    " account created your esummit id is "+"<b> "+saver.esummit_id+"</b> password is <b>esummit23</b>"
         # send_mail('esummit account created', "", 'from@example.com', [
         #           saver.email], fail_silently=False, html_message=message)
                 mail = saver.email
@@ -281,6 +281,8 @@ def TeamSignupView(request):
                  "number_of_members": no+1}
 
         db_entry_team = TeamSerializer(data=data3)
+        ev=Event.objects.filter(name=request.data["event"])[0]
+        
 
         if db_entry_team.is_valid():
 
