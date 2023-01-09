@@ -89,7 +89,7 @@ class EventPerks(models.Model):
     heading = models.CharField(default="", max_length=100)
     image = models.ImageField(upload_to='event/perks/',
                               verbose_name="Event's Perks image", blank=True)
-    description = RichTextUploadingField()
+    description = models.TextField(default="", max_length=100)
 
     def __str__(self):
         return self.heading
