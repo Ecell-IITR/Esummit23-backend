@@ -220,7 +220,7 @@ class Event(AbstractEvent):
         EventRules, blank=True, related_name="%(app_label)s_%(class)s_rule_of", verbose_name="Event Rules")
     event_partners = models.ManyToManyField(
         EventsPartners, related_name="%(app_label)s_%(class)s_partners_of", verbose_name="Partners/Sponsors Of Events")
-    created_at = models.DateTimeField(default=timezone.now, editable=True)
+    created_at = models.DateTimeField()
     def save(self, *args, **kwargs):
         if not self.created_at:
             self.created_at = timezone.now()

@@ -122,8 +122,8 @@ class EventAdmin(admin.ModelAdmin):
     list_filter = ["event_status", ]
     inlines = [EventFAQInlines, EventCoordinatorInlines, EventRuleInlines,
                EventPartnerInlines, EventRoundInlines, EventPerksInlines,EligibilityInline]
-    exclude = ['event_faqs', 'event_rules', 'events_coordinators', 'event_partners', 'event_perks',
-               'event_rounds']
+    exclude = ['created_at','event_faqs', 'event_rules', 'events_coordinators', 'event_partners', 'event_perks',
+               'event_rounds', 'event_eligibility']
 
 
 # admin.site.register(Services)
