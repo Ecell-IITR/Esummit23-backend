@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import Services, EventCoordinator, EventsFAQ, EventsPartners, EventRounds, EventRules, Event, EventPerks
 from .models import EventSeo
-from django.core.mail import send_mail
+
+from user.tasks import send_feedback_email_task
 
 
 class RoundStartupsInline(admin.TabularInline):
@@ -37,21 +38,23 @@ class AdminRound(admin.ModelAdmin):
 
         for query in queryset:
             stp = query.StudentUser.all()
+            email_array = []
             for user in stp:
-                send_mail('message from esummit', "", 'from@example.com', [
-                          user.email], fail_silently=False, html_message=query.EmailMessage)
+                email_array.append(user.email)
+
             prf = query.ProffUser.all()
             for user in prf:
-                send_mail('message from esummit', "", 'from@example.com', [
-                          user.email], fail_silently=False, html_message=query.EmailMessage)
+                email_array.append(user.email)
+
             stu = query.StudentUser.all()
             for user in stu:
-                send_mail('message from esummit', "", 'from@example.com', [
-                          user.email], fail_silently=False, html_message=query.EmailMessage)
+                email_array.append(user.email)
+
             ca = query.CAUser.all()
             for user in ca:
-                send_mail('message from esummit', "", 'from@example.com', [
-                          user.email], fail_silently=False, html_message=query.EmailMessage)
+                email_array.append(user.email)
+            send_feedback_email_task.delay(
+                email_array, query.EmailMessage, 'esummit Notification')
         # for i in queryset:
         #     if i.email:
         #         send_mail('message from esummit', 'Here is the message.', 'from@example.com',[i.email], fail_silently=False)
@@ -68,11 +71,10 @@ class CoordinatorList(admin.ModelAdmin):
 class ServicesList(admin.ModelAdmin):
     list_display = ["name", "desc", "fixed_cost", "varaible_cost"]
 
+
 @admin.register(EventPerks)
 class EventPerksList(admin.ModelAdmin):
     list_display = ["heading", "description", "image"]
- 
-    
 
 class EventFAQInlines(admin.TabularInline):
     model = Event.event_faqs.through
@@ -109,20 +111,19 @@ class EventPerksInlines(admin.TabularInline):
     verbose_name_plural = "Event Perks"
     extra = 2
 
-class EventEligibilityInlines(admin.TabularInline):
-    model = Event.event_eligibility.through   
-    verbose_name_plural = "Eligibilty Rules"
-    extra=2 
-
+class EligibilityInline(admin.TabularInline):
+    model = Event.event_eligibility.through
+    verbose_name_plural = "Eligibility"
+    extra = 2
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ["event_name", "tagline", "event_priority"]
     search_fields = ["event_name", "tagline", ]
     list_filter = ["event_status", ]
-    inlines = [EventEligibilityInlines,EventFAQInlines, EventCoordinatorInlines, EventRuleInlines,
-               EventPartnerInlines, EventRoundInlines, EventPerksInlines]
-    exclude = ['event_eligibility','event_faqs', 'event_rules', 'events_coordinators', 'event_partners', 'event_perks',
-               'event_rounds']
+    inlines = [EventFAQInlines, EventCoordinatorInlines, EventRuleInlines,
+               EventPartnerInlines, EventRoundInlines, EventPerksInlines,EligibilityInline]
+    exclude = ['created_at','event_faqs', 'event_rules', 'events_coordinators', 'event_partners', 'event_perks',
+               'event_rounds', 'event_eligibility']
 
 
 # admin.site.register(Services)
