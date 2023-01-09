@@ -100,7 +100,6 @@ CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 CKEDITOR_IMAGE_BACKEND = "pillow"
-
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': None,
@@ -152,7 +151,7 @@ CACHES = {
     }
 }
 
-CACHE_TTL = 60 * 15 * 24
+CACHE_TTL = 10 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
