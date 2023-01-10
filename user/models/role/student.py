@@ -38,6 +38,11 @@ class StudentUser(AbstractProfile):
                 unique_value = unique_id.id + 1
             else:
                 unique_value = 0
+        if self.enrollment_no:
+            self.student_type="IITR"
+
+
+
             self.esummit_id = 'ES23'+professional_tag + \
                 str((unique_value + 1) * 31)
         return super(StudentUser, self).save(*args, **kwargs)
