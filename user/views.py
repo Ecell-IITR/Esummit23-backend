@@ -281,7 +281,6 @@ def TeamSignupView(request):
                  "number_of_members": no+1}
 
         db_entry_team = TeamSerializer(data=data3)
-        ev=Event.objects.filter(name=request.data["event"])[0]
         
 
         if db_entry_team.is_valid():
