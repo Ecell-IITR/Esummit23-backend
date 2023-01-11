@@ -219,17 +219,21 @@ def TeamSignupView(request):
 
         # email = request.data["user"]['email']
         # name = request.data["user"]['name']
+        name_string = ""
         Leader = auth(request.headers['Authorization'].split(' ')[1])
         if Leader == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
+        name_string += Leader.full_name +" "
         no = request.data["no_user"]
         no = int(no)
         if no > 4:
             return Response({"error": "Maximum 5 members allowed"}, status=status.HTTP_400_BAD_REQUEST)
         person_array = []
-
+        
         for i in range(no):
+            name_string += request.data["users"][i]['full_name']+" "
             if person.objects.filter(email=request.data["users"][i]['email']).exists():
+                
                 person_array.append(person.objects.filter(
                     email=request.data["users"][i]['email'])[0])
 
@@ -304,7 +308,8 @@ def TeamSignupView(request):
             message = """Congratulations!
             Your team <b>"""+str(request.data["team_name"]) +"""</b> has been successfully registered for  IIT Roorkee E-Summit's <b>"""+request.data["event"]+""""</b>.<br><br>
 
-
+Your team members are: 
+"""+name_string+ """<br><br>
 For further details about the event, click on the 'Events' tab on the website and proceed with your relevant event.
 <br><br>
 Thanks and Regards<br>
