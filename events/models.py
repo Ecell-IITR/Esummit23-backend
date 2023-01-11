@@ -234,3 +234,7 @@ class Event(AbstractEvent):
         Meta class for Event
         """
         verbose_name_plural = 'Events'
+
+def xyz(**kwargs):
+    pass
+xyz(**{'a':1,'b':2,'c':3})

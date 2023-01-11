@@ -20,8 +20,8 @@ class StudentUser(AbstractProfile):
         blank=True,
         verbose_name="Enrollment Number(If IITR Student)"
     )
-    gender = models.CharField(max_length=1, blank=True,
-                              null=True, verbose_name="Gender", choices=GENDER)
+    gender = models.CharField(max_length=10, blank=True,
+                              null=True, verbose_name="Gender")
     city = models.CharField(max_length=50, null=True, blank=True)
     state = models.CharField(max_length=50, null=True, blank=True)
     collage = models.CharField(max_length=200, verbose_name="Collage Name",default="IIT Roorkee")
@@ -29,9 +29,11 @@ class StudentUser(AbstractProfile):
     referred_by = models.CharField(max_length=20,null=True,blank=True,default="")
 
     def save(self, *args, **kwargs):
-        professional_tag = "stu"
-
+        professional_tag = "STU"
+        if self.enrollment_no!=None:
+            self.student_type="IITR"
         if not self.esummit_id:
+            
             # getting a non-repeating number
             unique_id = StudentUser.objects.last()
             if unique_id:
@@ -40,5 +42,14 @@ class StudentUser(AbstractProfile):
                 unique_value = 0
             self.esummit_id = 'ES23'+professional_tag + \
                 str((unique_value + 1) * 31)
+
+
+
+
+        
+
+
+
+          
         return super(StudentUser, self).save(*args, **kwargs)
     

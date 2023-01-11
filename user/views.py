@@ -17,7 +17,7 @@ from django.contrib.auth.hashers import check_password
 from django.core.mail import send_mail
 from .models.person import person
 from .utils.auth import auth
-from events.models import Services, EventRounds
+from events.models import Services, Event
 from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
 # Create your views here.
@@ -38,16 +38,16 @@ class LoginApiView(APIView):
         if not esummit_id:
             return Response('Esummit_id cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
         else:
-            if (esummit_id.find("stp") != -1):
+            if (esummit_id.find("STP") != -1):
                 user = StartupUser.objects.all().filter(esummit_id=esummit_id)
                 professional_tag = 'stp'
             elif(esummit_id.find("CAP") != -1):
                 user = CAUser.objects.all().filter(esummit_id=esummit_id)
                 professional_tag = 'ca'
-            elif(esummit_id.find("stu") != -1):
+            elif(esummit_id.find("STU") != -1):
                 user = StudentUser.objects.all().filter(esummit_id=esummit_id)
                 professional_tag = 'stu'
-            elif(esummit_id.find("prf")):
+            elif(esummit_id.find("PRF") != -1):
                 user = ProffUser.objects.all().filter(esummit_id=esummit_id)
                 professional_tag = 'prf'
 
@@ -56,6 +56,7 @@ class LoginApiView(APIView):
 
                 at = str(user[0].authToken)
                 print(at[2:-1])
+                print(at)
 
                 return Response({"n": user[0].full_name, 'at': at[2:-1], 'role': professional_tag, "e_id": user[0].esummit_id}, status=status.HTTP_200_OK)
 
@@ -140,7 +141,6 @@ def SignupView(request):
         saver = False
         db_entry = ""
 
-
         db_entry_person = PearsonSerializer
         data = request.data["user"]
         userType = request.data.get('UserType')
@@ -164,7 +164,7 @@ def SignupView(request):
                 data["referred_by"] = request.data["referred_by"]
 
             except:
-                data["referred_by"] = " "
+                data["referred_by"] = ""
 
             db_entry = StudentUserSerializer(data=data)
 
@@ -192,8 +192,7 @@ def SignupView(request):
             try:
 
                 user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
-                user.points=50+user.points
-
+                user.points = 50+user.points
 
                 user.save()
             except:
@@ -259,7 +258,7 @@ def TeamSignupView(request):
                     return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
 
                 message = "Dear "+"<b>"+saver.full_name+"</b>" + \
-                    " account created your esummit id is "+"<b> "+saver.esummit_id+"</b>"
+                    " account created your esummit id is "+"<b> "+saver.esummit_id+"</b> password is <b>esummit23</b>"
         # send_mail('esummit account created', "", 'from@example.com', [
         #           saver.email], fail_silently=False, html_message=message)
                 mail = saver.email
@@ -282,30 +281,23 @@ def TeamSignupView(request):
                  "number_of_members": no+1}
 
         db_entry_team = TeamSerializer(data=data3)
+        
 
         if db_entry_team.is_valid():
 
             db_entry_team.save()
 
             sevice = Services.objects.filter(name=request.data["event"])[0]
-
-            EVround = EventRounds.objects.filter(
-                round_name=request.data["event"]+" 1")[0]
-
             person_array.append(lser)
             for i in person_array:
-
 
                 if i.ca:
                     print(i)
                     i.ca.Services.add(sevice.pk)
-                    EVround.CAUser.add(i.ca.pk)
                 if i.student:
                     i.student.Services.add(sevice.pk)
-                    EVround.StudentUser.add(i.student.pk)
                 if i.proff:
                     i.proff.Services.add(sevice.pk)
-                    EVround.ProffUser.add(i.proff.pk)
 
             return Response({"success": "team created"}, status=status.HTTP_201_CREATED)
         else:
@@ -314,8 +306,8 @@ def TeamSignupView(request):
 
 @api_view(('GET', 'POST'))
 def UserServices(request):
-    if request.method == 'GET' and request.headers['Authorization']: 
-        
+    if request.method == 'GET' and request.headers['Authorization']:
+
         user = auth(request.headers['Authorization'].split(' ')[1])
         if user == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)

@@ -12,15 +12,15 @@ class ProffUser(AbstractProfile):
     )
     organisation_name = models.CharField(
         max_length=100, blank=True, null=True, verbose_name="Organisation From")
-    gender = models.CharField(max_length=1, blank=True,
-                              null=True, verbose_name="Gender", choices=GENDER)
+    gender = models.CharField(max_length=10, blank=True,
+                              null=True, verbose_name="Gender")
     industry = models.CharField(
         max_length=100, blank=True, null=True, verbose_name="Industry From")
     esummit_id = models.CharField(max_length=20, unique=True, db_index=True)
     referred_by = models.CharField(max_length=20,null=True,blank=True,default="")
 
     def save(self, *args, **kwargs):
-        professional_tag = "prf"
+        professional_tag = "PRF"
 
         if not self.esummit_id:
             # getting a non-repeating number
