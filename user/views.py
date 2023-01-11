@@ -258,7 +258,8 @@ def TeamSignupView(request):
                     return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
 
                 message = "Dear "+"<b>"+saver.full_name+"</b>" + \
-                    " account created your esummit id is "+"<b> "+saver.esummit_id+"</b> password is <b>esummit23</b>"
+                    " account created your esummit id is "+"<b> " + \
+                    saver.esummit_id+"</b> password is <b>Esummit23</b>"
         # send_mail('esummit account created', "", 'from@example.com', [
         #           saver.email], fail_silently=False, html_message=message)
                 mail = saver.email
@@ -281,7 +282,6 @@ def TeamSignupView(request):
                  "number_of_members": no+1}
 
         db_entry_team = TeamSerializer(data=data3)
-        
 
         if db_entry_team.is_valid():
 
@@ -299,6 +299,21 @@ def TeamSignupView(request):
                 if i.proff:
                     i.proff.Services.add(sevice.pk)
 
+               
+
+            message = """Congratulations!
+            Your team <b>"""+str(request.data["team_name"]) +"""</b> has been successfully registered for  IIT Roorkee E-Summit's <b>"""+request.data["event"]+""""</b>.<br><br>
+
+
+For further details about the event, click on the 'Events' tab on the website and proceed with your relevant event.
+<br><br>
+Thanks and Regards<br>
+Team E-Summit, IIT Roorkee"""
+            mail = Leader.email
+            
+            send_feedback_email_task.delay(
+                    mail, message, 'esummit team registered'
+                )
             return Response({"success": "team created"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"Faliure": str(db_entry_team.errors)}, status=status.HTTP_400_BAD_REQUEST)
