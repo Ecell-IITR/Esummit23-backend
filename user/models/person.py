@@ -13,6 +13,7 @@ class person(models.Model):
     proff=models.ForeignKey(ProffUser,on_delete=models.CASCADE,blank=True,null=True)
     created=models.DateTimeField(default=timezone.now)
     updated=models.DateTimeField(auto_now=True)
+    otp=models.CharField(max_length=6,blank=True,null=True)
     def save(self, *args, **kwargs):
         if not self.created:
             self.created = timezone.now()
