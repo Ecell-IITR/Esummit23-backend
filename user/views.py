@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password,make_password
-from .models.person import person
+from .models.person import person 
 from .utils.auth import auth
 from events.models import Services, Event
 from events.serializer import ServiceSerilizer
@@ -54,9 +54,7 @@ class LoginApiView(APIView):
             if check_password(password, user[0].password):
 
                 at = str(user[0].authToken)
-                print(at[2:-1])
-                print(at)
-
+         
                 return Response({"n": user[0].full_name, 'at': at[2:-1], 'role': professional_tag, "e_id": user[0].esummit_id}, status=status.HTTP_200_OK)
 
         return Response({'error_msg': 'check the credentials'}, status=status.HTTP_404_NOT_FOUND)
@@ -70,11 +68,11 @@ class OtpView(APIView):
         totp = pyotp.TOTP('base32secret3232')
         otp = totp.now()
         mail = request.data.get('email', None)
-        print(mail,request.data)
+
         personi = person.objects.filter(email=mail)
-        print(personi)
+
         if len(personi)==0:
-            return Response("email not registered", status=400)
+            return Response({"error":"email not registered"}, status=400)
         else:
             personi = personi[0]
             personi.otp = otp
@@ -126,7 +124,7 @@ class OtpView(APIView):
 class VerifyView(APIView):
     def post(self, request):
         data = request.data
-        print(data)
+
         otp = data.get('otp', None)
         email = data.get('email', None)
         password = data.get('password', None)
@@ -251,6 +249,17 @@ def SignupView(request):
             " account created your esummit id is "+"<b> "+saver.esummit_id+"</b>"
         # send_mail('esummit account created', "", 'from@example.com', [
         #           saver.email], fail_silently=False, html_message=message)
+        message = "Congratulations "+ "<b>"+saver.full_name+"</b>" + """Your IIT Roorkee E-Summit account has been created successfully.<br>
+<br>
+Your E-Summit ID is:<br>
+ <b>"""+saver.esummit_id+"""</b><br>
+<br>
+Visit our website esummit.in/dashboard and login to register for the E-Summit events.<br>
+<br>
+<br>
+Thanks and Regards<br>
+<br>
+Team E-Summit, IIT Roorkee"""
         mail = saver.email
 
         send_feedback_email_task.delay(
@@ -271,6 +280,7 @@ def TeamSignupView(request):
         # name = request.data["user"]['name']
         name_string = ""
         Leader = auth(request.headers['Authorization'].split(' ')[1])
+
         if Leader == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
         name_string += Leader.full_name + " "
@@ -346,7 +356,7 @@ def TeamSignupView(request):
             for i in person_array:
 
                 if i.ca:
-                    print(i)
+
                     i.ca.Services.add(sevice.pk)
                 if i.student:
                     i.student.Services.add(sevice.pk)

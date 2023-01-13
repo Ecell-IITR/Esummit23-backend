@@ -9,7 +9,7 @@ secret = '7o9d=)+(f-chzvhcr#*(dc6k!#8&q2=)w5m4a+d$-$m&)hr4gh'
 def auth(token):
     secret = '7o9d=)+(f-chzvhcr#*(dc6k!#8&q2=)w5m4a+d$-$m&)hr4gh'
     try:
-        print(token)
+
         decoded = jwt.decode(token, secret, algorithms=['HS256'])
 
         email = decoded['email']

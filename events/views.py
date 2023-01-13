@@ -62,7 +62,7 @@ class Register(APIView):
                     r=str(i)
                     
                     if r.find("1")>-1:
-                        print(r)
+                     
                         add_round=i
                 if "ca" in str(type(user)):
                     add_round.CAUser.add(user)
