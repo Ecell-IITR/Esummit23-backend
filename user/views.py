@@ -64,11 +64,14 @@ class LoginApiView(APIView):
 
 class OtpView(APIView):
     
-    def get(self, request):
+    def post(self, request):
+    
+        
         totp = pyotp.TOTP('base32secret3232')
         otp = totp.now()
-        data = request.data["id"]
-        personi = person.objects.filter(email=data)
+        mail = request.data.get('email', None)
+        print(mail,request.data)
+        personi = person.objects.filter(email=mail)
         print(personi)
         if len(personi)==0:
             return Response("email not registered", status=400)
@@ -82,8 +85,48 @@ class OtpView(APIView):
             mail, message, 'Your OTP is '
         )
             return Response("Successful", status=200)
+    # def post(self, request):
+    #     data = request.data
+    #     print(data)
+    #     otp = data.get('otp', None)
+    #     email = data.get('email', None)
+    #     password = data.get('password', None)
+    #     if not otp:
+    #         return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+    #     if not email:
+    #         return Response('Email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+    #     if not password:
+    #         return Response('Password cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+    #     else:
+    #         personi = person.objects.filter(email=email)
+    #         if len(personi)==0:
+    #             return Response("email not registered", status=400)
+    #         else:
+    #             personi = personi[0]
+    #             if personi.otp == otp:
+    #                 user=""
+    #                 if personi.student:
+    #                     user = personi.student
+    #                     user.password = make_password(password)
+    #                     user.save()
+    #                 elif personi.ca:
+    #                     user = personi.ca
+    #                     user.password = make_password(password)
+    #                     user.save()
+    #                 elif personi.proff:
+    #                     user = personi.proff
+    #                     user.password = make_password(password)
+    #                     user.save()
+                    
+    #                 personi.otp = ""
+    #                 return Response("Password change Successful", status=200)
+    #             else:
+    #                 return Response("Wrong OTP", status=400)
+        
+class VerifyView(APIView):
     def post(self, request):
         data = request.data
+        print(data)
         otp = data.get('otp', None)
         email = data.get('email', None)
         password = data.get('password', None)
@@ -118,8 +161,6 @@ class OtpView(APIView):
                     return Response("Password change Successful", status=200)
                 else:
                     return Response("Wrong OTP", status=400)
-        
-
 
 class QuerryView(APIView):
 
