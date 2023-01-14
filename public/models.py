@@ -10,8 +10,9 @@ class Speakers(models.Model):
         verbose_name='Designation', max_length=1000, blank=True)
     profile_image = models.ImageField(
         upload_to='speakers/', verbose_name='Speaker Image')
-    date_event = models.DateField()
-    time_event = models.TimeField()
+    event_year = models.CharField(
+        verbose_name='Event Year', max_length=4, default='2023')
+    priority = models.IntegerField(default=0)
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
 

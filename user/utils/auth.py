@@ -4,12 +4,12 @@ from user.models.role.startup import StartupUser
 from user.models.role.student import StudentUser
 from user.models.role.proff import ProffUser
 
-secret = 'django-insecure-*+z5#+d&a@s^7)x^cez!r)mqq^iz8fld@rbo36nyke-%cp%o0i'
+secret = '7o9d=)+(f-chzvhcr#*(dc6k!#8&q2=)w5m4a+d$-$m&)hr4gh'
 
 def auth(token):
     secret = '7o9d=)+(f-chzvhcr#*(dc6k!#8&q2=)w5m4a+d$-$m&)hr4gh'
     try:
-        print(token)
+
         decoded = jwt.decode(token, secret, algorithms=['HS256'])
 
         email = decoded['email']
