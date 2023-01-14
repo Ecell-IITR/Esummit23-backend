@@ -1,4 +1,4 @@
-from . models import Submission, Task, Goodies, Leaderboard
+from . models import Submission, Task, Goodies
 from rest_framework import serializers
 
 
@@ -8,19 +8,15 @@ class SubmissionSerializer(serializers.ModelSerializer):
         exclude = ['created', 'updated']
 
 
-class SubmissionSerializer(serializers.ModelSerializer):
+class TaskSerializer(serializers.ModelSerializer):
     class Meta :
         model = Task
         exclude = ['created', 'updated']
 
 
-class SubmissionSerializer(serializers.ModelSerializer):
+class GoodiesSerializer(serializers.ModelSerializer):
     class Meta :
         model = Goodies
         exclude = ['created', 'updated']
 
 
-class SubmissionSerializer(serializers.ModelSerializer):
-    class Meta :
-        model = Leaderboard
-        exclude = ['created', 'updated']

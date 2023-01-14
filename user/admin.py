@@ -30,19 +30,26 @@ class TeamAdmin(admin.ModelAdmin):
 class StartupUserAdmin(UserAdmin):
     pass
 
-
-class CAUserAdmin(UserAdmin):
-    pass
-
-
 class StudentUserAdmin(UserAdmin):
     pass
-
 
 class ProffUserAdmin(UserAdmin):
     pass
 
+class CaTaskCompletedInlines(admin.TabularInline):
+    model = CAUser.taskCompleted.through
+    verbose_name_plural = "Task Completed"
+    extra = 2
 
+class CaTaskAssignedInlines(admin.TabularInline):
+    model = CAUser.taskAssigned.through
+    verbose_name_plural = "Task Assigned"
+    extra = 1
+class CAUserAdmin(UserAdmin):
+    
+    inlines = [CaTaskCompletedInlines,CaTaskAssignedInlines]
+    exclude = ['created', 'updated', 'authToken','taskCompleted','taskAssigned']
+    extra=2
 
 
 admin.site.register(StartupUser, StartupUserAdmin)

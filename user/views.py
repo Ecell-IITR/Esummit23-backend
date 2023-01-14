@@ -293,6 +293,7 @@ def TeamSignupView(request):
 
                 if i.ca:
                     print(i)
+             
                     i.ca.Services.add(sevice.pk)
                 if i.student:
                     i.student.Services.add(sevice.pk)
