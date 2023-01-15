@@ -13,8 +13,6 @@ from user.utils.auth import auth
 # Create your views here.
 class EventListView(APIView):
 
-    @method_decorator(vary_on_cookie)
-    @method_decorator(cache_page(60*60))
     def get(self,request):
         serializer = EventMiniSerializer(
                     Event.objects.all(), many=True)

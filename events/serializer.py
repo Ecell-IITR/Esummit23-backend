@@ -53,7 +53,7 @@ class EventRoundsSerializer(serializers.ModelSerializer):
 
 class EventMiniSerializer(serializers.Serializer):
     event_name = serializers.CharField(max_length=100)
-    logo_image = serializers.ImageField()
+    card_image = serializers.ImageField()
     card_description = serializers.CharField(max_length=1000)
 
     class Meta:
