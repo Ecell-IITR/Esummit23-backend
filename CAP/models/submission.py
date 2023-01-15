@@ -1,33 +1,13 @@
 from unicodedata import name
 from django.db import models
 from django.utils import timezone
+from user.models.role.ca import CAUser
+from CAP.models.tasks import Task
+
 
 # Create your models here.
-class Task(models.Model):
-    name = models.CharField(max_length=50, verbose_name="TaskName")
-    desc = models.CharField(max_length=1000, verbose_name="description", default='null')
-    points = models.IntegerField(default=0)
-    format = models.CharField(max_length=50, verbose_name="Submission Format", default='null')
-    url = models.CharField(max_length=200, default='null' )
-    keywords = models.CharField(max_length=400, default='null')
-    created = models.DateTimeField(default=timezone.now)
-    updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.name
-    
-    class Meta:
-        """
-        Meta class for Task
-        """
-        verbose_name_plural = "Tasks"
 
-    def save(self, *args, **kwargs):
-        if not self.created:
-            self.created = timezone.now()
-
-        self.updated = timezone.now()
-        return super(Task, self).save(*args, **kwargs)
 
 
 class Leaderboard(models.Model):
@@ -56,16 +36,17 @@ class Leaderboard(models.Model):
         return super(Leaderboard, self).save(*args, **kwargs)
 
 class Submission(models.Model):
-    images= models.ImageField(upload_to='Submission/',verbose_name='Submitted Images',default='null')
-    esummitId = models.CharField(max_length=50,default='null')
+    taskId = models.IntegerField(default=0)
+    points = models.IntegerField(default=0)
+    images= models.ImageField(upload_to='Submission/',verbose_name='Submitted Images')
+    esummitId = models.CharField(max_length=50,default='')
     check = models.BooleanField(default=False, verbose_name='Team Check')
-    verify = models.BooleanField(default=False, verbose_name='Team Accepted')
-    mlpoints = models.IntegerField(verbose_name='Points ML', default='null')
+    verify = models.BooleanField(default=False, verbose_name='Team Accepted')  
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return str(self.taskId)
     
     class Meta:
         """
@@ -76,7 +57,18 @@ class Submission(models.Model):
     def save(self, *args, **kwargs):
         if not self.created:
             self.created = timezone.now()
-
+        if self.verify and self.check:
+           user = CAUser.objects.filter(esummit_id=self.esummitId)[0]           
+           user.points = user.points + self.points   
+           self.points = 0
+           task=Task.objects.filter(task_id=self.taskId)[0]
+           user.taskCompleted.add(task.pk)
+           print(user.taskCompleted)     
+           user.save()
+           
+         
+          
+                     
         self.updated = timezone.now()
         return super(Submission, self).save(*args, **kwargs)
 

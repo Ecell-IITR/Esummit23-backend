@@ -1,9 +1,13 @@
 from django.contrib import admin,messages
-from .models import Task, Submission
+from CAP.models.submission import Submission
+from CAP.models.tasks import Task
 from user.models.role.ca import CAUser
 
 
-admin.site.register(Submission)
+class SubmissionAdmin(admin.ModelAdmin):
+  exclude=('points','created')
+
+
 
 
 
@@ -12,7 +16,7 @@ class TaskAdmin(admin.ModelAdmin):
    actions=["addTask"]
 
 
-   @admin.action(description='Add task to users')
+   @admin.action(description='Assign task to users')
    def addTask(self, request, queryset):
         for obj  in queryset:
           
@@ -25,3 +29,4 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Task,TaskAdmin)               
+admin.site.register(Submission,SubmissionAdmin)

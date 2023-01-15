@@ -1,4 +1,5 @@
-from . models import Submission, Task, Goodies
+from CAP.models.submission import Submission,Goodies
+from CAP.models.tasks import Task
 from rest_framework import serializers
 
 
@@ -19,4 +20,8 @@ class GoodiesSerializer(serializers.ModelSerializer):
         model = Goodies
         exclude = ['created', 'updated']
 
-
+class TaskAssignedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields= ['task_id','desc','points','url']
+        

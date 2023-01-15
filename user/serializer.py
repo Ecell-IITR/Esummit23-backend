@@ -7,6 +7,7 @@ from .models.role.ca import CAUser
 from .models.querry import Querry
 from .models.person import person
 from .models.teams import teams
+
 from rest_framework.response import Response
 
 class ProffUserLoginSerializer(serializers.ModelSerializer):
@@ -73,6 +74,8 @@ class CAUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CAUser
         exclude=['payment','taskAssigned','taskCompleted','esummit_id','created','updated','authToken','points']
+
+
 
 class LeaderboardSerializer(serializers.ModelSerializer):
 

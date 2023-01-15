@@ -1,7 +1,6 @@
 from user.models.abstarct import AbstractProfile
-
 from django.db import models
-from CAP.models import Task
+from CAP.models.tasks import Task
 class CAUser(AbstractProfile):
     collage = models.CharField(max_length=50, verbose_name="Collage", default="IIT Roorkee")
     points = models.IntegerField(default=0)
