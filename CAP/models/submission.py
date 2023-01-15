@@ -62,8 +62,8 @@ class Submission(models.Model):
            user.points = user.points + self.points   
            self.points = 0
            task=Task.objects.filter(task_id=self.taskId)[0]
-           user.taskCompleted.add(task.pk)
-           print(user.taskCompleted)     
+           user.taskCompleted.add(task.pk)   
+           user.taskAssigned.clear()
            user.save()
            
          
