@@ -247,7 +247,7 @@ def TeamSignupView(request):
         # name = request.data["user"]['name']
         name_string = ""
         Leader = auth(request.headers['Authorization'].split(' ')[1])
-
+            
         if Leader == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
         name_string += Leader.full_name + " "
@@ -291,8 +291,8 @@ def TeamSignupView(request):
                 message = "Dear "+"<b>"+saver.full_name+"</b>" + \
                     " account created your esummit id is "+"<b> " + \
                     saver.esummit_id+"</b> password is <b>Esummit23</b>"
-        # send_mail('esummit account created', "", 'from@example.com', [
-        #           saver.email], fail_silently=False, html_message=message)
+         # send_mail('esummit account created', "", 'from@example.com', [
+         #           saver.email], fail_silently=False, html_message=message)
                 mail = saver.email
 
                 send_feedback_email_task.delay(
@@ -326,6 +326,8 @@ def TeamSignupView(request):
 
                 if i.ca:
 
+                    print(i)
+             
                     i.ca.Services.add(sevice.pk)
                 if i.student:
                     i.student.Services.add(sevice.pk)
