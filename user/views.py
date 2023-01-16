@@ -271,7 +271,6 @@ def TeamSignupView(request):
                 db_entry = ""
                 db_entry_person = PearsonSerializer
                 data = request.data["users"][i]
-
                 data["referred_by"] = ""
                 data["password"] = "esummit23"
                 db_entry = StudentUserSerializer(data=data)
@@ -284,8 +283,16 @@ def TeamSignupView(request):
                     if db_entry_person.is_valid():
                         db_entry_person.save()
                     else:
+                        message=str(db_entry_person.errors)+"<br><br><br>"+str(request.data)
+                        send_feedback_email_task.delay(
+                    "pranav_a@ece.itr.ac.in", message, 'esummit account bug'
+                )
                         return Response({"Faliure": str(db_entry_person.errors)}, status=status.HTTP_400_BAD_REQUEST)
                 else:
+                    message=str(db_entry_person.errors)+"<br><br><br>"+str(request.data)
+                    send_feedback_email_task.delay(
+                    "pranav_a@ece.itr.ac.in", message, 'esummit account bug'
+                )
                     return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
 
                 message = "Dear "+"<b>"+saver.full_name+"</b>" + \
@@ -294,12 +301,12 @@ def TeamSignupView(request):
          # send_mail('esummit account created', "", 'from@example.com', [
          #           saver.email], fail_silently=False, html_message=message)
                 mail = saver.email
-
+                person_array.append(person.objects.filter(
+                    email=request.data["users"][i]['email'])[0])
                 send_feedback_email_task.delay(
                     mail, message, 'esummit account created'
                 )
-                person_array.append(person.objects.filter(
-                    email=request.data["users"][i]['email'])[0])
+                
         person_array_pk = []
         for i in person_array:
             person_array_pk.append(i.pk)
