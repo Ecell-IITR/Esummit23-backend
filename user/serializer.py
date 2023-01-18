@@ -118,6 +118,6 @@ class TeamSerializer(serializers.ModelSerializer):
     submission_text = serializers.CharField(max_length=1000)
     class Meta:
         model = teams
-        fields = ["name","leader", "event", "members", "number_of_members", "submission_text"]
+        fields = ["name","leader", "event", "members", "number_of_members", "submission_text", "submission_text2"]
     
         

@@ -317,6 +317,7 @@ def TeamSignupView(request):
         data3 = {"name": request.data["team_name"],
                  "event": request.data["event"],
                  "submission_text": request.data["submission_text"],
+                 "submission_text2": request.data["submission_text2"],
                  "leader": lser.pk,
                  "members": person_array_pk,
                  "number_of_members": no+1}
@@ -430,6 +431,7 @@ def NewTeamSignupView(request):
         data3 = {"name": request.data["team_name"],
                  "event": request.data["event"],
                  "submission_text": request.data["submission_text"],
+                 "submission_text2": request.data["submission_text2"],
                  "leader": person_array[0].pk,
                  "members": person_array_pk,
                  "number_of_members": no+1}
