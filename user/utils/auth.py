@@ -25,3 +25,8 @@ def auth(token):
 
     except:
         return None
+def get_cap(esummit_id,point):
+        if CAUser.objects.filter(esummit_id=esummit_id ).exists():
+             CAUser.objects.get(esummit_id=esummit_id).points  = point + CAUser.objects.get(esummit_id=esummit_id).points
+        else:
+            return False

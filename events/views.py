@@ -13,8 +13,6 @@ from user.utils.auth import auth
 # Create your views here.
 class EventListView(APIView):
 
-    @method_decorator(vary_on_cookie)
-    @method_decorator(cache_page(60*60))
     def get(self,request):
         serializer = EventMiniSerializer(
                     Event.objects.all(), many=True)
@@ -99,6 +97,12 @@ class RegisterDetail(APIView):
         else:
             return Response(data={"error":"Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
-
+class SingleService(APIView):
+    def post(self,request):
+        data = request.data
+        print(data)
+        ser = Services.objects.filter(name=request.data["service_name"])
+        db_data = ServiceSerilizer(ser[0])
+        return Response(db_data.data, status=status.HTTP_200_OK)
+        
 

@@ -8,6 +8,7 @@ from .models.querry import Querry
 from .models.person import person
 from .models.teams import teams
 
+from rest_framework.response import Response
 
 class ProffUserLoginSerializer(serializers.ModelSerializer):
     
@@ -74,6 +75,19 @@ class CAUserSerializer(serializers.ModelSerializer):
         model = CAUser
         exclude=['payment','taskAssigned','taskCompleted','esummit_id','created','updated','authToken','points']
 
+
+
+class LeaderboardSerializer(serializers.ModelSerializer):
+
+    class ColorField(serializers.Field):
+        def to_representation(self,noOftaskCompleted):
+             noOftaskCompleted = serializers.Field(source='noOftaskCompleted')
+             return noOftaskCompleted
+   
+    class Meta:
+         model = CAUser
+         fields = ['full_name','collage','points','noOftaskCompleted']
+
 class StudentUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentUser
@@ -104,6 +118,6 @@ class TeamSerializer(serializers.ModelSerializer):
     submission_text = serializers.CharField(max_length=1000)
     class Meta:
         model = teams
-        fields = ["name","leader", "event", "members", "number_of_members", "submission_text"]
+        fields = ["name","leader", "event", "members", "number_of_members", "submission_text", "submission_text2"]
     
         
