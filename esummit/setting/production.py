@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'design.apps.DesignConfig',
     'events.apps.EventsConfig',
     'CAP.apps.CapConfig',
+    'ticket.apps.TicketConfig',
     'rest_framework',
     'ckeditor',
     'django_rq',

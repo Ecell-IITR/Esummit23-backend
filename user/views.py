@@ -1,9 +1,6 @@
 from rest_framework.response import Response
 import pyotp
-import smtplib
-from rest_framework.generics import GenericAPIView
-from .serializer import otpSerializer
-from time import time
+
 from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer
 from rest_framework.response import Response
 from rest_framework import status
