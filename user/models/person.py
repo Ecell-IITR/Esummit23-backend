@@ -14,6 +14,7 @@ class person(models.Model):
     created=models.DateTimeField(default=timezone.now)
     updated=models.DateTimeField(auto_now=True)
     otp=models.CharField(max_length=6,blank=True,null=True)
+    verified=models.BooleanField(default=True)
     def save(self, *args, **kwargs):
         if not self.created:
             self.created = timezone.now()

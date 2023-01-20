@@ -8,6 +8,7 @@ from .constants import PaymentStatus
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from .models import Payment
+import json
 
 # Get Razorpay Key id and secret for authorize razorpay client.
 RAZOR_KEY_ID = os.getenv('RAZORPAY_KEY_ID', None)
@@ -49,7 +50,6 @@ def RazorpayPaymentView(request):
 
         data = {
             "name" : name,
-            "merchantId": RAZOR_KEY_ID,
             "amount": amount,
             "currency" : 'INR' ,
             "orderId" : razorpay_order["id"],
@@ -59,3 +59,61 @@ def RazorpayPaymentView(request):
         return Response(data, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Invalid Request"}, status=status.HTTP_400_BAD_REQUEST)
+@api_view(('POST',"GET"))
+def RazorpayCallback(request, *args, **kwargs):
+    
+
+
+  
+  
+
+        # geting data form request
+        
+        print(request)
+        try:
+            response = request.data
+            print(response,2)
+        except:
+            response = request.POST
+            print(response,1)
+
+        # if "razorpay_signature" in response:
+
+        #     # Verifying Payment Signature
+        #     data = razorpay_client.utility.verify_payment_signature(response)
+
+        #     # if we get here Ture signature
+        #     if data:
+        #         payment_object = Payment.objects.get(provider_order_id = response['razorpay_order_id'])                # razorpay_payment = RazorpayPayment.objects.get(order_id=response['razorpay_order_id'])
+        #         payment_object.status = PaymentStatus.SUCCESS
+        #         payment_object.payment_id = response['razorpay_payment_id']
+        #         payment_object.signature_id = response['razorpay_signature']          
+        #         payment_object.save()
+
+        return Response({'status': 'Payment Done'}, status=status.HTTP_200_OK)
+        #     else:
+        #         return Response({'status': 'Signature Mismatch!'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # # Handling failed payments
+        # else:
+        #     error_code = response['error[code]']
+        #     error_description = response['error[description]']
+        #     error_source = response['error[source]']
+        #     error_reason = response['error[reason]']
+        #     error_metadata = json.loads(response['error[metadata]'])
+
+        #     razorpay_payment = Payment.objects.get(provider_order_id=error_metadata['order_id'])
+        #     razorpay_payment.payment_id = error_metadata['payment_id']
+        #     razorpay_payment.signature_id = "None"
+        #     razorpay_payment.status = PaymentStatus.FAILURE
+        #     razorpay_payment.save()
+
+        #     error_status = {
+        #         'error_code': error_code,
+        #         'error_description': error_description,
+        #         'error_source': error_source,
+        #         'error_reason': error_reason,
+        #     }
+
+        #     return Response({'error_data': error_status}, status=status.HTTP_401_UNAUTHORIZED)
+
