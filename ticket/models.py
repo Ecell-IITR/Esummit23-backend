@@ -9,7 +9,7 @@ class Plan(models.Model):
     price = models.IntegerField(default=0, verbose_name="Price")
     description = models.TextField(verbose_name="Description")
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(auto_now=True) 
 
 
 class Payment(models.Model):
@@ -39,6 +39,7 @@ class Payment(models.Model):
 
 class Ticket(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name")
+    quantity = models.IntegerField(default=0, verbose_name="Quantity")
     Person = models.ForeignKey(
         person, on_delete=models.CASCADE, verbose_name="Person")
     plan = models.ForeignKey(

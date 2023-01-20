@@ -3,6 +3,7 @@ from user.models.role.ca import CAUser
 from user.models.role.startup import StartupUser
 from user.models.role.student import StudentUser
 from user.models.role.proff import ProffUser
+from user.models.person import person
 
 secret = '7o9d=)+(f-chzvhcr#*(dc6k!#8&q2=)w5m4a+d$-$m&)hr4gh'
 
@@ -25,8 +26,12 @@ def auth(token):
 
     except:
         return None
-def get_cap(esummit_id,point):
-        if CAUser.objects.filter(esummit_id=esummit_id ).exists():
-             CAUser.objects.get(esummit_id=esummit_id).points  = point + CAUser.objects.get(esummit_id=esummit_id).points
+def get_Person(token):
+        decoded = jwt.decode(token, secret, algorithms=['HS256'])
+
+        email = decoded['email']
+        password = decoded['password']
+        if person.objects.filter(email=email ).exists():
+            return person.objects.get(email=email )
         else:
-            return False
+            return None
