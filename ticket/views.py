@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view
 from .models import Payment,Plan,Ticket
 import json
 from user.utils.auth import get_Person
-
+from user.tasks import send_feedback_email_task
 # Get Razorpay Key id and secret for authorize razorpay client.
 RAZOR_KEY_ID = os.getenv('RAZORPAY_KEY_ID', None)
 RAZOR_KEY_SECRET = os.getenv('RAZORPAY_SECRET_KEY', None)
@@ -58,16 +58,7 @@ def RazorpayPaymentView(request):
         return Response({"error": "Invalid Request"}, status=status.HTTP_400_BAD_REQUEST)
 @api_view(('POST',"GET"))
 def RazorpayCallback(request, *args, **kwargs):
-    
 
-        """
-{'response': {'razorpay_payment_id': 'pay_L6OyjrdLtR9UBV', 'razorpay_order_id': 'order_L6OyNXuYRAmt03', 'razorpay_signature': '9fc4967d3d3ec7f00582f64bdf6b545e82f4f83482dbfd7dbf8c879d4e9251ee', 'status_code': 200}, 'razorpayPaymentId': 'pay_L6OyjrdLtR9UBV', 'razorpayOrderId': 'order_L6OyNXuYRAmt03', 'razorpaySignature': '9fc4967d3d3ec7f00582f64bdf6b545e82f4f83482dbfd7dbf8c879d4e9251ee'} 2
-"""
-
-  
-
-        # geting data form request
-        
         print(request)
         response = request.data["response"]
   
@@ -95,6 +86,23 @@ def RazorpayCallback(request, *args, **kwargs):
                     plan=request.data.get('plan')
                 )
                 ticket.save()
+                e_id=""
+                if Person.ca:
+                    e_id=Person.ca.esummit_id
+                elif Person.student:
+                    e_id=Person.student.esummit_id
+                elif Person.proff:
+                    e_id=Person.proff.esummit_id
+                message = """Hi,<br>
+Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
+Your Esummit ID: """ + e_id + """<br>
+No. of tickets confirmed: """ + str(request.data.get('quantity')) + """<br>
+Payment mode: Online<br>
+Event Dates: Feb 17 to Feb 19<br>
+Venue: Campus, IIT Roorkee<br><br>
+
+All the best for your prep. See you soon!"""
+                send_feedback_email_task.delay(Person.email, "Esummit 2023 Ticket Confirmation", message)
                 return Response({'status': 'Payment Done'}, status=status.HTTP_200_OK)
             else:
                 return Response({'status': 'Signature Mismatch!'}, status=status.HTTP_400_BAD_REQUEST)

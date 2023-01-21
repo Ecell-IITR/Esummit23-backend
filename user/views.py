@@ -474,7 +474,8 @@ def OtpSignupView(request):
     elif request.method == 'POST':
         email = request.data["user"]['email']
         name = request.data["user"]['full_name']
-
+        totp = pyotp.TOTP('base32secret3232')
+        otp = totp.now()
         if person.objects.filter(email=email).exists():
             personi = person.objects.get(email=email)
             personi.verified = False
@@ -492,8 +493,7 @@ def OtpSignupView(request):
         db_entry_person = PearsonSerializer
         data = request.data["user"]
         userType = request.data.get('UserType')
-        totp = pyotp.TOTP('base32secret3232')
-        otp = totp.now()
+        
         data["password"] = "esummit23"+str(otp)
         db_entry = StudentUserSerializer(data=data)
         if db_entry.is_valid(raise_exception=True):
