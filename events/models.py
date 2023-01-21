@@ -15,8 +15,8 @@ class Services(models.Model):
     fixed_cost = models.IntegerField(default=0)
     varaible_cost = models.IntegerField(default=0)
     add_details = RichTextUploadingField(default="")
-    question1 = models.TextField(default=r"", max_length=1000)
-    question2 = models.TextField(default=r"", max_length=1000)
+    question1 = models.TextField(default=r"", max_length=1000, blank=True)
+    question2 = models.TextField(default=r"", max_length=1000, blank=True)
     is_verified = models.BooleanField(default=False) 
     no_of_QA = models.IntegerField(default=0)
 
