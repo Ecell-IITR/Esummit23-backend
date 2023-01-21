@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'public.apps.PublicConfig',
     'design.apps.DesignConfig',
     'events.apps.EventsConfig',
+    'ticket.apps.TicketConfig',
     'CAP.apps.CapConfig',
     'rest_framework',
     'ckeditor',
