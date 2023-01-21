@@ -476,7 +476,16 @@ def OtpSignupView(request):
         name = request.data["user"]['full_name']
 
         if person.objects.filter(email=email).exists():
-            return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            personi = person.objects.get(email=email)
+            personi.verified = False
+
+            personi.otp = otp
+            personi.save()
+            message = "Your OTP is <b>" + otp + "</b>"
+            send_feedback_email_task.delay(
+                email, message, 'Your OTP for esummit account'
+            )
+            return Response({"message": "user intilized"}, status=status.HTTP_201_CREATED)
         saver = False
         db_entry = ""
 
@@ -520,7 +529,7 @@ def OTPSignupVerify(request):
 
         otp = data.get('otp', None)
         email = data.get('email', None)
-
+        print(otp, email)
         if not otp:
             return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
         if not email:
@@ -533,6 +542,7 @@ def OTPSignupVerify(request):
             else:
                 personi = personi[0]
                 user = ""
+                print(personi.otp,"i",otp)
                 if personi.otp == otp:
                     personi.otp = ""
                     personi.verified = True

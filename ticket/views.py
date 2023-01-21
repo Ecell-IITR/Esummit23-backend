@@ -29,6 +29,7 @@ def RazorpayPaymentView(request):
     if request.method == 'POST':
 
         name = request.data.get('name', None)
+        amount = request.data.get('amount', None)
 
         if not name :
             return Response({"error": "Please provide name"}, status=status.HTTP_400_BAD_REQUEST)
@@ -36,7 +37,7 @@ def RazorpayPaymentView(request):
 
         # Create Order
         razorpay_order = razorpay_client.order.create(
-            {"amount": int(1) *100, "currency": "INR", "payment_capture": "1"}
+            {"amount": int(amount) *100, "currency": "INR", "payment_capture": "1"}
         )
 
         # Save the order in DB
@@ -46,7 +47,7 @@ def RazorpayPaymentView(request):
 
         data = {
             "name" : name,
-            "amount": 1,
+            "amount": amount,
             "currency" : 'INR' ,
             "orderId" : razorpay_order["id"],
             }
@@ -69,10 +70,7 @@ def RazorpayCallback(request, *args, **kwargs):
         
         print(request)
         response = request.data["response"]
-        #     print(response,2)
-        # except:
-        #     response = request.POST
-        #     print(response,1)
+  
 
         if "razorpay_signature" in response:
 
@@ -94,7 +92,7 @@ def RazorpayCallback(request, *args, **kwargs):
                     name=payment_object.name,
                     payment=payment_object,
                     quantity=int(request.data.get('quantity')),
-                    plan=Plan.objects.get(name=request.data.get('plan'))
+                    plan=request.data.get('plan')
                 )
                 ticket.save()
                 return Response({'status': 'Payment Done'}, status=status.HTTP_200_OK)
