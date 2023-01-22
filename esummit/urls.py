@@ -21,6 +21,7 @@ import design.urls as designUrls
 import user.urls as userUrls
 import events.urls as eventsUrls
 import CAP.urls as capurls
+import ticket.urls as ticketUrls
 from django.conf import settings
 
 urlpatterns = [
@@ -31,5 +32,6 @@ urlpatterns = [
     path("rq/", include('django_rq.urls')),
     path('events/', include(eventsUrls)),
     path('cap/', include(capurls)),
+    path('ticket/', include(ticketUrls)),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -16,7 +16,8 @@ class teams(models.Model):
     round_1 = models.BooleanField(default=True)
     round_2 = models.BooleanField(default=False)
     round_3 = models.BooleanField(default=False)
-    submission_text = RichTextUploadingField(default="")
+    submission_text = RichTextUploadingField(default="",blank=True,null=True)
+    submission_text2 = RichTextUploadingField(default="",blank=True,null=True)
     submission_file = models.FileField(
         upload_to='event/submission/', verbose_name="Submission File", blank=True)
     submission_link = models.URLField(default="",null=True)

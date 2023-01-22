@@ -1,9 +1,6 @@
 from rest_framework.response import Response
 import pyotp
-import smtplib
-from rest_framework.generics import GenericAPIView
-from .serializer import otpSerializer
-from time import time
+
 from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -86,7 +83,6 @@ class OtpView(APIView):
             return Response("Successful", status=200)
 
 
-
 class VerifyView(APIView):
     def post(self, request):
         data = request.data
@@ -122,6 +118,7 @@ class VerifyView(APIView):
                         user.save()
 
                     personi.otp = ""
+                    personi.save()
                     return Response("Password change Successful", status=200)
                 else:
                     return Response("Wrong OTP", status=400)
@@ -247,7 +244,7 @@ def TeamSignupView(request):
         # name = request.data["user"]['name']
         name_string = ""
         Leader = auth(request.headers['Authorization'].split(' ')[1])
-            
+
         if Leader == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
         name_string += Leader.full_name + " "
@@ -271,7 +268,6 @@ def TeamSignupView(request):
                 db_entry = ""
                 db_entry_person = PearsonSerializer
                 data = request.data["users"][i]
-
                 data["referred_by"] = ""
                 data["password"] = "esummit23"
                 db_entry = StudentUserSerializer(data=data)
@@ -284,8 +280,18 @@ def TeamSignupView(request):
                     if db_entry_person.is_valid():
                         db_entry_person.save()
                     else:
+                        message = str(db_entry_person.errors) + \
+                            "<br><br><br>"+str(request.data)
+                        send_feedback_email_task.delay(
+                            "pranav_a@ece.iitr.ac.in", message, 'esummit account bug'
+                        )
                         return Response({"Faliure": str(db_entry_person.errors)}, status=status.HTTP_400_BAD_REQUEST)
                 else:
+                    message = str(db_entry_person.errors) + \
+                        "<br><br><br>"+str(request.data)
+                    send_feedback_email_task.delay(
+                        "pranav_a@ece.iitr.ac.in", message, 'esummit account bug'
+                    )
                     return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
 
                 message = "Dear "+"<b>"+saver.full_name+"</b>" + \
@@ -294,12 +300,12 @@ def TeamSignupView(request):
          # send_mail('esummit account created', "", 'from@example.com', [
          #           saver.email], fail_silently=False, html_message=message)
                 mail = saver.email
-
+                person_array.append(person.objects.filter(
+                    email=request.data["users"][i]['email'])[0])
                 send_feedback_email_task.delay(
                     mail, message, 'esummit account created'
                 )
-                person_array.append(person.objects.filter(
-                    email=request.data["users"][i]['email'])[0])
+
         person_array_pk = []
         for i in person_array:
             person_array_pk.append(i.pk)
@@ -310,6 +316,7 @@ def TeamSignupView(request):
         data3 = {"name": request.data["team_name"],
                  "event": request.data["event"],
                  "submission_text": request.data["submission_text"],
+                 "submission_text2": request.data["submission_text2"],
                  "leader": lser.pk,
                  "members": person_array_pk,
                  "number_of_members": no+1}
@@ -326,8 +333,6 @@ def TeamSignupView(request):
 
                 if i.ca:
 
-                    print(i)
-             
                     i.ca.Services.add(sevice.pk)
                 if i.student:
                     i.student.Services.add(sevice.pk)
@@ -344,6 +349,212 @@ def TeamSignupView(request):
             return Response({"success": "team created"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"Faliure": str(db_entry_team.errors)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(('GET', 'POST'))
+def NewTeamSignupView(request):
+    if request.method == 'GET':
+        return Response(status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+
+        # email = request.data["user"]['email']
+        # name = request.data["user"]['name']
+        name_string = ""
+
+        no = request.data["no_user"]
+        no = int(no)
+
+        if no > 5:
+            return Response({"error": "Maximum 5 members allowed"}, status=status.HTTP_400_BAD_REQUEST)
+        person_array = []
+
+        for i in range(no):
+            name_string += request.data["users"][i]['full_name']+" "
+            if person.objects.filter(email=request.data["users"][i]['email']).exists():
+
+                person_array.append(person.objects.filter(
+                    email=request.data["users"][i]['email'])[0])
+
+            else:
+                email = request.data["users"][i]['email']
+                name = request.data["users"][i]['full_name']
+                saver = False
+                db_entry = ""
+                db_entry_person = PearsonSerializer
+                data = request.data["users"][i]
+                data["referred_by"] = ""
+                data["password"] = "esummit23"
+                db_entry = StudentUserSerializer(data=data)
+
+                if db_entry.is_valid():
+                    saver = db_entry.save()
+                    data2 = {"email": email, "name": name}
+                    data2["student"] = saver.pk
+                    db_entry_person = PearsonSerializer(data=data2)
+                    if db_entry_person.is_valid():
+                        db_entry_person.save()
+                    else:
+                        message = str(db_entry_person.errors) + \
+                            "<br><br><br>"+str(request.data)
+                        send_feedback_email_task.delay(
+                            "pranav_a@ece.iitr.ac.in", message, 'esummit account bug'
+                        )
+                        return Response({"Faliure": str(db_entry_person.errors)}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    message = str(db_entry_person.errors) + \
+                        "<br><br><br>"+str(request.data)
+                    send_feedback_email_task.delay(
+                        "pranav_a@ece.iitr.ac.in", message, 'esummit account bug'
+                    )
+                    return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
+
+                message = "Dear "+"<b>"+saver.full_name+"</b>" + \
+                    " account created your esummit id is "+"<b> " + \
+                    saver.esummit_id+"</b> password is <b>Esummit23</b>"
+         # send_mail('esummit account created', "", 'from@example.com', [
+         #           saver.email], fail_silently=False, html_message=message)
+                mail = saver.email
+                person_array.append(person.objects.filter(
+                    email=request.data["users"][i]['email'])[0])
+                send_feedback_email_task.delay(
+                    mail, message, 'esummit account created'
+                )
+
+        person_array_pk = []
+        for i in person_array:
+            person_array_pk.append(i.pk)
+
+        data3 = {"name": request.data["team_name"],
+                 "event": request.data["event"],
+                 "submission_text": request.data["submission_text"],
+                 "submission_text2": request.data["submission_text2"],
+                 "leader": person_array[0].pk,
+                 "members": person_array_pk,
+                 "number_of_members": no+1}
+
+        db_entry_team = TeamSerializer(data=data3)
+
+        if db_entry_team.is_valid():
+
+            db_entry_team.save()
+
+            sevice = Services.objects.filter(name=request.data["event"])[0]
+
+            for i in person_array:
+
+                if i.ca:
+
+                    i.ca.Services.add(sevice.pk)
+                if i.student:
+                    i.student.Services.add(sevice.pk)
+                if i.proff:
+                    i.proff.Services.add(sevice.pk)
+
+            message = """Congratulations!<br>Your team <b>"""+str(request.data["team_name"]) + """</b> has been successfully registered for  IIT Roorkee E-Summit's <b>"""+request.data["event"]+""""</b>.<br><br>Your team members are: """ + \
+                name_string + """<br><br>For further details about the event, click on the 'Events' tab on the website and proceed with your relevant event.<br><br>Thanks and Regards<br>Team E-Summit, IIT Roorkee"""
+            mail = person_array[0].email
+
+            send_feedback_email_task.delay(
+                mail, message, 'esummit team registered'
+            )
+            return Response({"success": "team created"}, status=status.HTTP_201_CREATED)
+        else:
+            message = str(db_entry_team.errors) + \
+                "<br><br><br>"+str(request.data)
+            send_feedback_email_task.delay(
+                "pranav_a@ece.iitr.ac.in", message, 'esummit account bug'
+            )
+            return Response({"Faliure": str(db_entry_team.errors)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(('GET', 'POST'))
+def OtpSignupView(request):
+    if request.method == 'GET':
+        return Response(status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        email = request.data["user"]['email']
+        name = request.data["user"]['full_name']
+        totp = pyotp.TOTP('base32secret3232')
+        otp = totp.now()
+        if person.objects.filter(email=email).exists():
+            personi = person.objects.get(email=email)
+            personi.verified = False
+
+            personi.otp = otp
+            personi.save()
+            message = "Your OTP is <b>" + otp + "</b>"
+            send_feedback_email_task.delay(
+                email, message, 'Your OTP for esummit account'
+            )
+            return Response({"message": "user intilized"}, status=status.HTTP_201_CREATED)
+        saver = False
+        db_entry = ""
+
+        db_entry_person = PearsonSerializer
+        data = request.data["user"]
+        userType = request.data.get('UserType')
+        
+        data["password"] = "esummit23"+str(otp)
+        db_entry = StudentUserSerializer(data=data)
+        if db_entry.is_valid(raise_exception=True):
+            saver = db_entry.save()
+            data2 = {"email": email, "name": name}
+      
+            data2["student"] = saver.pk
+           
+            db_entry_person = PearsonSerializer(data=data2)
+
+            db_entry_person.is_valid()
+            personi = db_entry_person.save()
+            personi.verified = False
+
+            personi.otp = otp
+            personi.save()
+            message = "Your OTP is <b>" + otp + "</b>"
+            send_feedback_email_task.delay(
+                email, message, 'Your OTP for esummit account'
+            )
+            return Response({"message": "user intilized"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(('GET', 'POST'))
+def OTPSignupVerify(request):
+    if request.method == 'GET':
+        return Response(status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+
+        data = request.data
+
+        otp = data.get('otp', None)
+        email = data.get('email', None)
+        print(otp, email)
+        if not otp:
+            return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+        if not email:
+            return Response('Email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            personi = person.objects.filter(email=email)
+            if len(personi) == 0:
+                return Response("email not registered", status=400)
+            else:
+                personi = personi[0]
+                user = ""
+                print(personi.otp,"i",otp)
+                if personi.otp == otp:
+                    personi.otp = ""
+                    personi.verified = True
+                    personi.save()
+                    user = personi.student
+                    print(personi)
+                    at = personi.student.authToken
+
+                    return Response({"n": user.full_name, 'at': at[2:-1], 'role': "stu", "e_id": user.esummit_id}, status=status.HTTP_200_OK)
+
+                else:
+                    return Response("Wrong OTP", status=400)
 
 
 @api_view(('GET', 'POST'))
