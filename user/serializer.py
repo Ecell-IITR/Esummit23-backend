@@ -83,10 +83,9 @@ class LeaderboardSerializer(serializers.ModelSerializer):
         def to_representation(self,noOftaskCompleted):
              noOftaskCompleted = serializers.Field(source='noOftaskCompleted')
              return noOftaskCompleted
-   
     class Meta:
          model = CAUser
-         fields = ['full_name','collage','points','noOftaskCompleted']
+         fields = ['full_name','collage','points','noOftaskCompleted','rank']
 
 class StudentUserSerializer(serializers.ModelSerializer):
     class Meta:
