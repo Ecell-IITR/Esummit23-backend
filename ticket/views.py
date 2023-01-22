@@ -42,12 +42,12 @@ def RazorpayPaymentView(request):
 
         # Save the order in DB
         order = Payment.objects.create(
-            name=name, amount="1", provider_order_id=razorpay_order["id"]
+            name=name, amount=str(amount), provider_order_id=razorpay_order["id"]
         )
 
         data = {
             "name" : name,
-            "amount": amount,
+            "amount": int(amount),
             "currency" : 'INR' ,
             "orderId" : razorpay_order["id"],
             }
