@@ -58,7 +58,7 @@ class Submission(models.Model):
         if not self.created:
             self.created = timezone.now()
         if self.verify and self.check:
-           user = CAUser.objects.filter(esummit_id=self.esummitId)[0]           
+           user = CAUser.objects.get(esummit_id=self.esummitId)    
            user.points = user.points + self.points   
            self.points = 0
            task=Task.objects.filter(task_id=self.taskId)[0]
