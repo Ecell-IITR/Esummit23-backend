@@ -47,7 +47,7 @@ class LoginApiView(APIView):
                 professional_tag = 'stu'
             elif(esummit_id.find("PRF") != -1):
                 user = ProffUser.objects.all().filter(esummit_id=esummit_id)
-                professional_tag = 'prf'
+                professional_tag = 'proff'
 
         if user:
             if check_password(password, user[0].password):
