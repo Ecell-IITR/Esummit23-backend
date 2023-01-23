@@ -492,15 +492,24 @@ def OtpSignupView(request):
 
         db_entry_person = PearsonSerializer
         data = request.data["user"]
-        userType = request.data.get('UserType')
+        userType = request.data.get('type')
+        db_entry = ""
         
         data["password"] = "esummit23"+str(otp)
-        db_entry = StudentUserSerializer(data=data)
+        if userType == "stu":
+            db_entry = StudentUserSerializer(data=data)
+        elif userType == "proff":
+            data["organisation_name"]=data["collage"]
+            del data["collage"]
+            db_entry = ProffUserSerializer(data=data)
+        
         if db_entry.is_valid(raise_exception=True):
             saver = db_entry.save()
             data2 = {"email": email, "name": name}
-      
-            data2["student"] = saver.pk
+            if userType == "stu":
+                data2["student"] = saver.pk
+            elif userType == "proff":
+                data2["proff"] = saver.pk
            
             db_entry_person = PearsonSerializer(data=data2)
 
@@ -529,7 +538,7 @@ def OTPSignupVerify(request):
 
         otp = data.get('otp', None)
         email = data.get('email', None)
-        print(otp, email)
+        
         if not otp:
             return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
         if not email:
@@ -542,16 +551,20 @@ def OTPSignupVerify(request):
             else:
                 personi = personi[0]
                 user = ""
-                print(personi.otp,"i",otp)
                 if personi.otp == otp:
                     personi.otp = ""
                     personi.verified = True
                     personi.save()
-                    user = personi.student
-                    print(personi)
-                    at = personi.student.authToken
-
-                    return Response({"n": user.full_name, 'at': at[2:-1], 'role': "stu", "e_id": user.esummit_id}, status=status.HTTP_200_OK)
+                    if personi.student:
+                        user = personi.student
+                    elif personi.proff:
+                        user = personi.proff
+                
+                    at = user.authToken
+                    data5={"n": user.full_name, 'at': at[2:-1], 'role': "stu", "e_id": user.esummit_id}
+                    if personi.proff:
+                        data5["role"]="proff"
+                    return Response(data5, status=status.HTTP_200_OK)
 
                 else:
                     return Response("Wrong OTP", status=400)

@@ -15,7 +15,7 @@ def Leaderboard(request):
   if request.method == 'GET':
      AuthToken = request.headers['Authorization'].split(' ')[1]
      user = auth(AuthToken) 
-     print(user)
+     
      if user == None:
          return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST) 
 
@@ -51,10 +51,10 @@ def Submission(request):
        
           data = {"taskId": request.data.get("taskId"), "esummitId": request.data.get(
             "esummitId"), "images": request.data.get("images"), "points" : request.data.get("points")}
-          print(data)
+        
           db_entry = SubmissionSerializer(data=data)          
           db_entry.is_valid(raise_exception=True)
-          print(db_entry.error_messages)
+      
           db_entry.save()
           return Response(data={"success":"data submitted"}, status=status.HTTP_200_OK) 
              
@@ -85,10 +85,9 @@ def TaskAssigned(request):
               rank +=1
             if(rank>1201):
              rank = str("1200+")
-          print(rank)
-          print(data)  
+          
           points = [{ "points" : user.points , "rank" : rank}]
-          print(user.points)
+          
           return Response({"points": points ,"data": data})
 
 

@@ -100,7 +100,7 @@ class RegisterDetail(APIView):
 class SingleService(APIView):
     def post(self,request):
         data = request.data
-        print(data)
+    
         ser = Services.objects.filter(name=request.data["service_name"])
         db_data = ServiceSerilizer(ser[0])
         return Response(db_data.data, status=status.HTTP_200_OK)

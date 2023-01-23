@@ -14,7 +14,6 @@ from user.tasks import send_feedback_email_task
 # Get Razorpay Key id and secret for authorize razorpay client.
 RAZOR_KEY_ID = os.getenv('RAZORPAY_KEY_ID',"rzp_live_U0W39W3I1yR00g")
 RAZOR_KEY_SECRET = os.getenv('RAZORPAY_SECRET_KEY', "RndrTeCVPTxYTJxVt10S7KET")
-print(RAZOR_KEY_ID)
 # Creating Razorpay Client instance.
 razorpay_client = razorpay.Client(auth=(RAZOR_KEY_ID, RAZOR_KEY_SECRET))
 # Create your views here.
@@ -59,14 +58,14 @@ def RazorpayPaymentView(request):
 @api_view(('POST',"GET"))
 def RazorpayCallback(request, *args, **kwargs):
 
-        print(request)
+        
         response = request.data["response"]
   
 
         if "razorpay_signature" in response:
 
             data = razorpay_client.utility.verify_payment_signature(response)
-            print(data)
+        
             # if we get here Ture signature
             if data:
                 payment_object = Payment.objects.get(provider_order_id = response['razorpay_order_id'])                # razorpay_payment = RazorpayPayment.objects.get(order_id=response['razorpay_order_id'])
@@ -74,7 +73,6 @@ def RazorpayCallback(request, *args, **kwargs):
                 payment_object.payment_id = response['razorpay_payment_id']
                 payment_object.signature_id = response['razorpay_signature']          
                 payment=payment_object.save()
-                print(request.headers.get('Authorization'))
                 Person=get_Person(request.headers.get('Authorization').split(' ')[1])
              
                 # Creating Ticket
