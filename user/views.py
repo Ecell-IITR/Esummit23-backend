@@ -1,6 +1,5 @@
 from rest_framework.response import Response
 import pyotp
-
 from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -15,10 +14,32 @@ from .utils.auth import auth
 from events.models import Services, Event
 from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
 SECRET_KEY = '7o9d=)+(f-chzvhcr#*(dc6k!#8&q2=)w5m4a+d$-$m&)hr4gh'
+
+
+
+@csrf_exempt
+@api_view(["POST","GET"])
+def send_purchase_confirmation(request): # Webhook_owner also helps identify the webhook target
+    y=""
+    try:
+        y = str(request.data)
+    except:
+        pass
+    
+    message = "Order Paid Webhook Received: " + y
+
+    send_feedback_email_task.delay(
+                "pranavleo22@gmail.com", message, 'Your OTP is '
+            )
+    return Response("Successful", status=status.HTTP_200_OK)
+
+
+
 
 
 class LoginApiView(APIView):
