@@ -49,7 +49,7 @@ def send_purchase_confirmation(request):
         name=name, amount=amount, payment_id=data['payload']["payment"]["entity"]['id'], provider_order_id=data['payload']["payment"]["entity"]['order_id'])
     payment_obj.save()
     ticket_obj = Ticket.objects.create(
-        Person=person_obj, payment=payment_obj, total_payment=amount, amount=amount, quantity=1)
+        Person=person_obj, payment=payment_obj, total_payment=amount, quantity=1)
     e_id = ""
     if person_obj.ca:
         e_id = person_obj.ca.esummit_id
