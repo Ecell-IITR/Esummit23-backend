@@ -1,6 +1,6 @@
 ﻿Django==3.2.6
 django_ckeditor==6.1.0
-django_storages==1.13.2
+django_storages==1.11.1
 djangorestframework==3.14.0
 pyotp==2.8.0
 python-dotenv==0.21.1
