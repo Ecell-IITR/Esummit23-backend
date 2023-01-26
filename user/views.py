@@ -170,7 +170,7 @@ class VerifyView(APIView):
         otp = data.get('otp', None)
         email = data.get('email', None)
         if (block_mail(email,'')):
-              return Response({'error_msg': 'Blocked Credentials'}) 
+              return Response({'error_msg': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED) 
         password = data.get('password', None)
         if not otp:
             return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
@@ -214,7 +214,7 @@ class QuerryView(APIView):
         data = {"name": request.data.get("name"), "email": request.data.get(
             "email"), "phone_number": request.data.get("phone_number"), "message": request.data.get("message")}
         if (block_mail(data.email)):
-              return Response({'error_msg': 'Blocked Credentials'}) 
+              return Response({'error_msg': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED) 
         db_entry = QuerrySerializer(data=data)
 
         if db_entry.is_valid():
@@ -229,11 +229,12 @@ def SignupView(request):
     if request.method == 'GET':
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        email = request.data["user"]['email']
-        name = request.data["user"]['full_name']
-        if block_mail(email,''):
-           return Response('Blocked Credentials')
-      
+     email = request.data["user"]['email']
+     name = request.data["user"]['full_name']
+     if block_mail(email,''):
+        return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)
+        
+     else :
         if person.objects.filter(email=email).exists():
             return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         saver = False
@@ -342,7 +343,7 @@ def TeamSignupView(request):
         person_array = []
         for i in range(no):
           if block_mail(request.data["users"][i]['email'],''):
-            return Response('Blocked Credentials')  
+            return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)  
 
         for i in range(no):
             name_string += request.data["users"][i]['full_name']+" "
@@ -459,7 +460,7 @@ def NewTeamSignupView(request):
         person_array = []
         for i in range(no):
           if block_mail(request.data["users"][i]['email'],''):
-            return Response('Blocked Credentials')  
+            return Response({'error_msg': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)  
         for i in range(no):
             name_string += request.data["users"][i]['full_name']+" "
             if person.objects.filter(email=request.data["users"][i]['email']).exists():
@@ -636,7 +637,7 @@ def OTPSignupVerify(request):
         email = data.get('email', None)
 
         if block_mail(email,''):
-            return Response('Blocked Credentials')  
+            return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)  
         else :
          if not otp:
           return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
