@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import QuerryView, LoginApiView, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView, OtpSignupView, OTPSignupVerify
+from .views import QuerryView, LoginApiView, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView, OtpSignupView, OTPSignupVerify ,send_purchase_confirmation
 
 urlpatterns = [
     path('login', LoginApiView.as_view(), name='Loginview'),
@@ -12,4 +12,5 @@ urlpatterns = [
     path('querry', QuerryView.as_view()),
     path('team_signup', TeamSignupView),
     path('team_signup/new', NewTeamSignupView),
+    path('purchase_confirmation', send_purchase_confirmation),
     path('services', UserServices)]

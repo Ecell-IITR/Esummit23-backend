@@ -1,7 +1,8 @@
 from rest_framework.response import Response
 import pyotp
 
-from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer, BlockSerializer
+
+from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -16,10 +17,76 @@ from events.models import Services, Event
 from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
 from .utils.block import block_mail
+from django.views.decorators.csrf import csrf_exempt
+from ticket.models import Ticket, Payment
+
 # Create your views here.
 
 
-SECRET_KEY = '7o9d=)+(f-chzvhcr#*(dc6k!#8&q2=)w5m4a+d$-$m&)hr4gh'
+@csrf_exempt
+@api_view(["POST", "GET"])
+# Webhook_owner also helps identify the webhook target
+def send_purchase_confirmation(request):
+    
+
+    data = request.data
+    if (data['event'] != 'order.paid'):
+        return Response({"error": "Invalid Request"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    email = data['payload']["payment"]["entity"]['notes']['email']
+    phone = data['payload']["order"]["entity"]['notes']['phone']
+    name = data['payload']["order"]["entity"]['notes']['name']
+    amount = int(data['payload']["order"]["entity"]['amount'])/100
+    person_obj = ""
+    case2 = False
+    if person.objects.filter(email=email).exists():
+        person_obj = person.objects.get(email=email)
+    else:
+        student = StudentUser.objects.create(
+            email=email, phone=phone, full_name=name, password="esummit@123")
+        person_obj = person.objects.create(
+            name=name, email=email, student=student
+        )
+        case2 = True
+
+    payment_obj = Payment.objects.create(
+        name=name, amount=amount, payment_id=data['payload']["payment"]["entity"]['id'], provider_order_id=data['payload']["payment"]["entity"]['order_id'])
+    payment_obj.save()
+    ticket_obj = Ticket.objects.create(
+        Person=person_obj, payment=payment_obj, total_payment=amount, quantity=1)
+    e_id = ""
+    if person_obj.ca:
+        e_id = person_obj.ca.esummit_id
+    elif person_obj.student:
+        e_id = person_obj.student.esummit_id
+    elif person_obj.proff:
+        e_id = person_obj.proff.esummit_id
+    message = """Hi,<br>
+Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
+Your Esummit ID: """ + e_id + """<br>
+No. of tickets confirmed: """ + str(1) + """<br>
+Payment mode: Online<br>
+Event Dates: Feb 17 to Feb 19<br>
+Venue: Campus, IIT Roorkee<br><br>
+
+All the best for your prep. See you soon!"""
+    if case2:
+        message = """Hi,<br>
+Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
+Your Esummit ID: """ + e_id + """<br>
+No. of tickets confirmed: """ + str(1) + """<br>
+Payment mode: Online<br>
+Event Dates: Feb 17 to Feb 19<br>
+Venue: Campus, IIT Roorkee<br><br>
+your password is esummit@123<br>
+All the best for your prep. See you soon!"""
+
+    ticket_obj.save()
+    person_obj.save()
+    send_feedback_email_task.delay(
+        email, message, "Esummit 2023 Ticket Confirmation"
+    )
+    return Response("Successful", status=status.HTTP_200_OK)
 
 
 class LoginApiView(APIView):
@@ -37,21 +104,23 @@ class LoginApiView(APIView):
             return Response('Password cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
         if not esummit_id:
             return Response('Esummit_id cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
-        else:
-            if (esummit_id.find("STP") != -1):
-                user = StartupUser.objects.all().filter(esummit_id=esummit_id)
-                professional_tag = 'stp'
-            elif(esummit_id.find("CAP") != -1):
-                user = CAUser.objects.all().filter(esummit_id=esummit_id)
-                professional_tag = 'ca'
-            elif(esummit_id.find("STU") != -1):
-                user = StudentUser.objects.all().filter(esummit_id=esummit_id)
-                professional_tag = 'stu'
-            elif(esummit_id.find("PRF") != -1):
-                user = ProffUser.objects.all().filter(esummit_id=esummit_id)
-                professional_tag = 'proff'
-
+        print(esummit_id,password)
+    
+        if (esummit_id.find("STP") != -1):
+            user = StartupUser.objects.all().filter(esummit_id=esummit_id)
+            professional_tag = 'stp'
+        elif(esummit_id.find("CAP") != -1):
+            user = CAUser.objects.all().filter(esummit_id=esummit_id)
+            professional_tag = 'ca'
+        elif(esummit_id.find("STU") != -1):
+            user = StudentUser.objects.all().filter(esummit_id=esummit_id)
+            professional_tag = 'stu'
+        elif(esummit_id.find("PRF") != -1):
+            user = ProffUser.objects.all().filter(esummit_id=esummit_id)
+            professional_tag = 'proff'
+        print(user[0])
         if user:
+
             mail = user[0].email
             value= block_mail(mail,'')
             print(value)
@@ -60,6 +129,9 @@ class LoginApiView(APIView):
             else :
                 if check_password(password, user[0].password):
                  at = str(user[0].authToken)
+
+            print(user[0].password,check_password(password, user[0].password))
+            if check_password(password, user[0].password):
 
                  return Response({"n": user[0].full_name, 'at': at[2:-1], 'role': professional_tag, "e_id": user[0].esummit_id}, status=status.HTTP_200_OK)
 
@@ -112,6 +184,7 @@ class VerifyView(APIView):
                 return Response("email not registered",status=400)
             else:
                 personi = personi[0]
+                print(personi.otp, otp)
                 if personi.otp == otp:
                     user = ""
                     if personi.student:
@@ -126,7 +199,7 @@ class VerifyView(APIView):
                         user = personi.proff
                         user.password = make_password(password)
                         user.save()
-
+                    print(user.password)
                     personi.otp = ""
                     personi.save()
                     return Response("Password change Successful", status=200)
@@ -517,15 +590,15 @@ def OtpSignupView(request):
         data = request.data["user"]
         userType = request.data.get('type')
         db_entry = ""
-        
+
         data["password"] = "esummit23"+str(otp)
         if userType == "stu":
             db_entry = StudentUserSerializer(data=data)
         elif userType == "proff":
-            data["organisation_name"]=data["collage"]
+            data["organisation_name"] = data["collage"]
             del data["collage"]
             db_entry = ProffUserSerializer(data=data)
-        
+
         if db_entry.is_valid(raise_exception=True):
             saver = db_entry.save()
             data2 = {"email": email, "name": name}
@@ -533,7 +606,7 @@ def OtpSignupView(request):
                 data2["student"] = saver.pk
             elif userType == "proff":
                 data2["proff"] = saver.pk
-           
+
             db_entry_person = PearsonSerializer(data=data2)
 
             db_entry_person.is_valid()
@@ -561,12 +634,16 @@ def OTPSignupVerify(request):
 
         otp = data.get('otp', None)
         email = data.get('email', None)
+
         if block_mail(email,''):
             return Response('Blocked Credentials')  
         else :
          if not otp:
           return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
          if not email:
+
+
+
             return Response('Email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
 
          else:
@@ -584,11 +661,12 @@ def OTPSignupVerify(request):
                         user = personi.student
                     elif personi.proff:
                         user = personi.proff
-                
+
                     at = user.authToken
-                    data5={"n": user.full_name, 'at': at[2:-1], 'role': "stu", "e_id": user.esummit_id}
+                    data5 = {"n": user.full_name,
+                             'at': at[2:-1], 'role': "stu", "e_id": user.esummit_id}
                     if personi.proff:
-                        data5["role"]="proff"
+                        data5["role"] = "proff"
                     return Response(data5, status=status.HTTP_200_OK)
 
                 else:

@@ -42,7 +42,7 @@ class Ticket(models.Model):
     quantity = models.IntegerField(default=0, verbose_name="Quantity")
     Person = models.ForeignKey(
         person, on_delete=models.CASCADE, verbose_name="Person")
-    plan = models.CharField(max_length=100, verbose_name="Plan",default="ssp")
+    plan = models.CharField(max_length=100, verbose_name="Plan",default="")
     total_payment = models.IntegerField(
         default=0, verbose_name="Total Payment")
     payment=models.ForeignKey(Payment,on_delete=models.CASCADE,verbose_name="Payment")
