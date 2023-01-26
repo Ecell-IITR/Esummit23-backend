@@ -12,7 +12,7 @@ def auth(token):
     try:
 
         decoded = jwt.decode(token, secret, algorithms=['HS256'])
-
+        
         email = decoded['email']
         password = decoded['password']
         if CAUser.objects.filter(email=email ).exists():

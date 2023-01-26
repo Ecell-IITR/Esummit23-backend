@@ -7,6 +7,7 @@ from .models.role.ca import CAUser
 from .models.querry import Querry
 from .models.person import person
 from .models.teams import teams
+from .models.block import BlockMail
 
 from rest_framework.response import Response
 
@@ -117,5 +118,10 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = teams
         fields = ["name","leader", "event", "members", "number_of_members", "submission_text", "submission_text2"]
+
+class BlockSerializer(serializers.ModelSerializer):
+    class Meta:
+       model = BlockMail
+       fields = ['mail']
     
         

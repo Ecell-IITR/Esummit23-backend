@@ -1,5 +1,7 @@
 from rest_framework.response import Response
 import pyotp
+
+
 from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -14,8 +16,10 @@ from .utils.auth import auth
 from events.models import Services, Event
 from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
+from .utils.block import block_mail
 from django.views.decorators.csrf import csrf_exempt
 from ticket.models import Ticket, Payment
+
 # Create your views here.
 
 
@@ -92,9 +96,10 @@ class LoginApiView(APIView):
 
         password = data.get('password', None)
         esummit_id = data.get('esummit_id', None)
+        
         professional_tag = ''
         user = False
-
+        
         if not password:
             return Response('Password cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
         if not esummit_id:
@@ -115,12 +120,20 @@ class LoginApiView(APIView):
             professional_tag = 'proff'
         print(user[0])
         if user:
+
+            mail = user[0].email
+            value= block_mail(mail,'')
+            print(value)
+            if value:
+              return Response({'error_msg': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED) 
+            else :
+                if check_password(password, user[0].password):
+                 at = str(user[0].authToken)
+
             print(user[0].password,check_password(password, user[0].password))
             if check_password(password, user[0].password):
 
-                at = str(user[0].authToken)
-
-                return Response({"n": user[0].full_name, 'at': at[2:-1], 'role': professional_tag, "e_id": user[0].esummit_id}, status=status.HTTP_200_OK)
+                 return Response({"n": user[0].full_name, 'at': at[2:-1], 'role': professional_tag, "e_id": user[0].esummit_id}, status=status.HTTP_200_OK)
 
         return Response({'error_msg': 'check the credentials'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -132,7 +145,8 @@ class OtpView(APIView):
         totp = pyotp.TOTP('base32secret3232')
         otp = totp.now()
         mail = request.data.get('email', None)
-
+        if (block_mail(mail,'')):
+              return Response({'error_msg': 'Blocked Credentials'}) 
         personi = person.objects.filter(email=mail)
 
         if len(personi) == 0:
@@ -152,9 +166,11 @@ class OtpView(APIView):
 class VerifyView(APIView):
     def post(self, request):
         data = request.data
-
+        
         otp = data.get('otp', None)
         email = data.get('email', None)
+        if (block_mail(email,'')):
+              return Response({'error_msg': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED) 
         password = data.get('password', None)
         if not otp:
             return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
@@ -165,7 +181,7 @@ class VerifyView(APIView):
         else:
             personi = person.objects.filter(email=email)
             if len(personi) == 0:
-                return Response("email not registered", status=400)
+                return Response("email not registered",status=400)
             else:
                 personi = personi[0]
                 print(personi.otp, otp)
@@ -197,7 +213,8 @@ class QuerryView(APIView):
 
         data = {"name": request.data.get("name"), "email": request.data.get(
             "email"), "phone_number": request.data.get("phone_number"), "message": request.data.get("message")}
-
+        if (block_mail(data.email)):
+              return Response({'error_msg': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED) 
         db_entry = QuerrySerializer(data=data)
 
         if db_entry.is_valid():
@@ -212,9 +229,12 @@ def SignupView(request):
     if request.method == 'GET':
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        email = request.data["user"]['email']
-        name = request.data["user"]['full_name']
-
+     email = request.data["user"]['email']
+     name = request.data["user"]['full_name']
+     if block_mail(email,''):
+        return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)
+        
+     else :
         if person.objects.filter(email=email).exists():
             return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         saver = False
@@ -299,6 +319,7 @@ Team E-Summit, IIT Roorkee"""
         return Response({"n": saver.full_name, "e_id": saver.esummit_id, "at": saver.authToken}, status=status.HTTP_201_CREATED)
 
         # return Response(status=status.HTTP_400_BAD_REQUEST)
+    
 
 
 @api_view(('GET', 'POST'))
@@ -306,12 +327,12 @@ def TeamSignupView(request):
     if request.method == 'GET':
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
-
+        
         # email = request.data["user"]['email']
         # name = request.data["user"]['name']
         name_string = ""
         Leader = auth(request.headers['Authorization'].split(' ')[1])
-
+        
         if Leader == None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
         name_string += Leader.full_name + " "
@@ -320,6 +341,9 @@ def TeamSignupView(request):
         if no > 4:
             return Response({"error": "Maximum 5 members allowed"}, status=status.HTTP_400_BAD_REQUEST)
         person_array = []
+        for i in range(no):
+          if block_mail(request.data["users"][i]['email'],''):
+            return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)  
 
         for i in range(no):
             name_string += request.data["users"][i]['full_name']+" "
@@ -434,7 +458,9 @@ def NewTeamSignupView(request):
         if no > 5:
             return Response({"error": "Maximum 5 members allowed"}, status=status.HTTP_400_BAD_REQUEST)
         person_array = []
-
+        for i in range(no):
+          if block_mail(request.data["users"][i]['email'],''):
+            return Response({'error_msg': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)  
         for i in range(no):
             name_string += request.data["users"][i]['full_name']+" "
             if person.objects.filter(email=request.data["users"][i]['email']).exists():
@@ -520,7 +546,8 @@ def NewTeamSignupView(request):
             message = """Congratulations!<br>Your team <b>"""+str(request.data["team_name"]) + """</b> has been successfully registered for  IIT Roorkee E-Summit's <b>"""+request.data["event"]+""""</b>.<br><br>Your team members are: """ + \
                 name_string + """<br><br>For further details about the event, click on the 'Events' tab on the website and proceed with your relevant event.<br><br>Thanks and Regards<br>Team E-Summit, IIT Roorkee"""
             mail = person_array[0].email
-
+            if block_mail(mail,''):
+             return Response('Blocked Credentials')
             send_feedback_email_task.delay(
                 mail, message, 'esummit team registered'
             )
@@ -543,6 +570,9 @@ def OtpSignupView(request):
         name = request.data["user"]['full_name']
         totp = pyotp.TOTP('base32secret3232')
         otp = totp.now()
+    
+        if block_mail(email,''):
+            return Response('Blocked Credentials')  
         if person.objects.filter(email=email).exists():
             personi = person.objects.get(email=email)
             personi.verified = False
@@ -606,12 +636,18 @@ def OTPSignupVerify(request):
         otp = data.get('otp', None)
         email = data.get('email', None)
 
-        if not otp:
-            return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
-        if not email:
+        if block_mail(email,''):
+            return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)  
+        else :
+         if not otp:
+          return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+         if not email:
+
+
+
             return Response('Email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
 
-        else:
+         else:
             personi = person.objects.filter(email=email)
             if len(personi) == 0:
                 return Response("email not registered", status=400)
@@ -657,3 +693,4 @@ def UserServices(request):
 
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+

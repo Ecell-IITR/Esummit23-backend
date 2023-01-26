@@ -7,6 +7,7 @@ from user.models.role.proff import ProffUser
 from user.models.otp import OTP
 from user.models.person import person
 from user.models.teams import teams
+from user.models.block import BlockMail,BlockNumber
 
 # Register your models here.
 
@@ -26,6 +27,11 @@ class TeamAdmin(admin.ModelAdmin):
     list_filter = ('name', 'event')
     inlines = [Members]
 
+class BlockMailAdmin(admin.ModelAdmin):
+    list_filter = ('blockmail',)
+
+class BlockNumberAdmin(admin.ModelAdmin):
+    list_filter = ('blocknumber',)
 
 class StartupUserAdmin(UserAdmin):
     pass
@@ -60,3 +66,5 @@ admin.site.register(OTP)
 admin.site.register(Querry)
 admin.site.register(person)
 admin.site.register(teams,TeamAdmin)
+admin.site.register(BlockMail,BlockMailAdmin)
+admin.site.register(BlockNumber,BlockNumberAdmin)
