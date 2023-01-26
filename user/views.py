@@ -19,9 +19,6 @@ from ticket.models import Ticket, Payment
 # Create your views here.
 
 
-SECRET_KEY = '7o9d=)+(f-chzvhcr#*(dc6k!#8&q2=)w5m4a+d$-$m&)hr4gh'
-
-
 @csrf_exempt
 @api_view(["POST", "GET"])
 # Webhook_owner also helps identify the webhook target
@@ -52,7 +49,7 @@ def send_purchase_confirmation(request):
         name=name, amount=amount, payment_id=data['payload']["payment"]["entity"]['id'], provider_order_id=data['payload']["payment"]["entity"]['order_id'])
     payment_obj.save()
     ticket_obj = Ticket.objects.create(
-        person=person_obj, payment=payment_obj, total_payment=amount, amount=amount, quantity=1)
+        Person=person_obj, payment=payment_obj, total_payment=amount, amount=amount, quantity=1)
     e_id = ""
     if person_obj.ca:
         e_id = person_obj.ca.esummit_id
@@ -102,22 +99,23 @@ class LoginApiView(APIView):
             return Response('Password cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
         if not esummit_id:
             return Response('Esummit_id cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
-        else:
-            if (esummit_id.find("STP") != -1):
-                user = StartupUser.objects.all().filter(esummit_id=esummit_id)
-                professional_tag = 'stp'
-            elif(esummit_id.find("CAP") != -1):
-                user = CAUser.objects.all().filter(esummit_id=esummit_id)
-                professional_tag = 'ca'
-            elif(esummit_id.find("STU") != -1):
-                user = StudentUser.objects.all().filter(esummit_id=esummit_id)
-                professional_tag = 'stu'
-            elif(esummit_id.find("PRF") != -1):
-                user = ProffUser.objects.all().filter(esummit_id=esummit_id)
-                professional_tag = 'proff'
-
+        print(esummit_id,password)
+    
+        if (esummit_id.find("STP") != -1):
+            user = StartupUser.objects.all().filter(esummit_id=esummit_id)
+            professional_tag = 'stp'
+        elif(esummit_id.find("CAP") != -1):
+            user = CAUser.objects.all().filter(esummit_id=esummit_id)
+            professional_tag = 'ca'
+        elif(esummit_id.find("STU") != -1):
+            user = StudentUser.objects.all().filter(esummit_id=esummit_id)
+            professional_tag = 'stu'
+        elif(esummit_id.find("PRF") != -1):
+            user = ProffUser.objects.all().filter(esummit_id=esummit_id)
+            professional_tag = 'proff'
+        print(user[0])
         if user:
-
+            print(user[0].password,check_password(password, user[0].password))
             if check_password(password, user[0].password):
 
                 at = str(user[0].authToken)
@@ -170,6 +168,7 @@ class VerifyView(APIView):
                 return Response("email not registered", status=400)
             else:
                 personi = personi[0]
+                print(personi.otp, otp)
                 if personi.otp == otp:
                     user = ""
                     if personi.student:
@@ -184,7 +183,7 @@ class VerifyView(APIView):
                         user = personi.proff
                         user.password = make_password(password)
                         user.save()
-
+                    print(user.password)
                     personi.otp = ""
                     personi.save()
                     return Response("Password change Successful", status=200)
