@@ -75,7 +75,7 @@ def TaskAssigned(request):
     else :
           taskassigned= user.taskAssigned.all().order_by('task_id')
           serializer = TaskAssignedSerializer(taskassigned, many=True)
-          queryset = CAUser.objects.all().annotate(latest=Max(('points'))).order_by('-points','latest')[:1200]
+          queryset = user.taskAssigned.all().annotate(latest=Max(('points'))).order_by('-points','latest')[:1200]
           data=serializer.data
           rank= 1
           for ca in queryset:   
