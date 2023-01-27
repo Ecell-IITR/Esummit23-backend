@@ -74,17 +74,20 @@ def TaskAssigned(request):
 
     else :
           taskassigned= user.taskAssigned.all().order_by('task_id')
+          
           serializer = TaskAssignedSerializer(taskassigned, many=True)
-          queryset = user.taskAssigned.all().annotate(latest=Max(('points'))).order_by('-points','latest')[:1200]
+          rank = user.rank
+          
           data=serializer.data
-          rank= 1
-          for ca in queryset:   
-            if(ca==taskassigned):
-              break
-            else : 
-              rank +=1
-            if(rank>1201):
-             rank = str("1200+")
+          
+          # rank= 1
+          # for ca in queryset:   
+          #   if(ca==taskassigned):
+          #     break
+          #   else : 
+          #     rank +=1
+          #   if(rank>1201):
+          #    rank = str("1200+")
           
           points = [{ "points" : user.points , "rank" : rank}]
           
