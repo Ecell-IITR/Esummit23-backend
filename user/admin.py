@@ -8,6 +8,7 @@ from user.models.otp import OTP
 from user.models.person import person
 from user.models.teams import teams
 from user.models.block import BlockMail,BlockNumber
+from user.tasks import send_feedback_email_task
 
 # Register your models here.
 
@@ -25,7 +26,29 @@ class UserAdmin(admin.ModelAdmin):
 class TeamAdmin(admin.ModelAdmin):
     exclude = ('created', 'updated',"members")
     list_filter = ('name', 'event')
-    inlines = [Members]
+    actions = ['send_EMAIL']
+    def send_EMAIL(self, request, queryset):
+        m="""Greeting from E-Cell IITR
+This is to inform you that the orientation session for Mind The Product has been scheduled at 10:15 am  IST on 29th January 2023. You will get a first hand experience in product management with latest trends and best practices by senior product managers of MNCs in USA.<br>
+This session is compulsory for all the participants of Mind The Product and also open for non-participants.<br>
+Join the session  : meet.google.com/cri-ttym-hzi<br>
+Date: 29th January <br>
+Time: 10:15 AM<br>
+Participants are requested to join this whatsapp group: https://chat.whatsapp.com/LrCz6v9BNVAGZdfGga3ehz<br>
+<br>
+Regards,<br>
+Kunal, 9432810879<br>"""
+        email_array = []
+        for query in queryset:
+            stp = query.leader.email
+            
+
+            email_array.append(stp)
+        send_feedback_email_task.delay(
+                email_array, m, 'E-Cell IITR: Orientation Session for Mind The Product')
+
+
+    
 
 class BlockMailAdmin(admin.ModelAdmin):
     list_filter = ('blockmail',)
