@@ -44,7 +44,7 @@ def send_purchase_confirmation(request):
         person_obj = person.objects.get(email=email)
     else:
         student = StudentUser.objects.create(
-            email=email, phone=phone, full_name=name, password="esummit@123")
+            email=email, phone_number=phone, full_name=name, password="esummit@123")
         person_obj = person.objects.create(
             name=name, email=email, student=student
         )
