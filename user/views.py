@@ -119,7 +119,7 @@ class LoginApiView(APIView):
         elif(esummit_id.find("PRF") != -1):
             user = ProffUser.objects.all().filter(esummit_id=esummit_id)
             professional_tag = 'proff'
-        print(user[0])
+        
         if user:
 
             mail = user[0].email
