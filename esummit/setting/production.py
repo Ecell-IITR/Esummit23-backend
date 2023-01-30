@@ -235,7 +235,7 @@ AWS_SECRET_ACCESS_KEY = "4GWhXaA/J6huEKZLPAHNFyW7Q+eOko6vXJ0+D951"
 AWS_STORAGE_BUCKET_NAME = "e-cell-server-bucket"
 
 EMAIL_HOST_USER = "no.reply.esummit@gmail.com"
-EMAIL_HOST_PASSWORD = "dekhptoevnbyzssy"
+EMAIL_HOST_PASSWORD = "kbiegdcngknuxcuv"
 
 ########S3 Bucket
 AWS_ACCESS_KEY_ID = 'AKIAT4QCDQEC2VEPQUMK'
