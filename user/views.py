@@ -63,7 +63,7 @@ def send_purchase_confirmation(request):
     payment_obj = Payment.objects.create(
         name=name, amount=amount, payment_id=data['payload']["payment"]["entity"]['id'], provider_order_id=data['payload']["payment"]["entity"]['order_id'])
     payment_obj.save()
-    name, quantity = Plans().plan_quantity(amount)
+    name, quantity = Plans.plan_quantity(amount)
     ticket_obj = Ticket.objects.create(
         name=name,Person=person_obj, payment=payment_obj, total_payment=amount, quantity=quantity)
     e_id = ""
