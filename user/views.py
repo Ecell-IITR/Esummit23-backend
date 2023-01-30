@@ -19,7 +19,7 @@ from user.tasks import send_feedback_email_task
 from .utils.block import block_mail
 from django.views.decorators.csrf import csrf_exempt
 from ticket.models import Ticket, Payment
-
+from ticket.constants import Plans
 # Create your views here.
 
 
@@ -31,13 +31,23 @@ def send_purchase_confirmation(request):
     send_feedback_email_task.delay(
         "pranav_a@ece.iitr.ac.in", str(data), "Esummit 2023 Ticket Confirmation"
     )
-
-   
-
     email = data['payload']["payment"]["entity"]['notes']['email']
     phone = data['payload']["order"]["entity"]['notes']['phone']
     name = data['payload']["order"]["entity"]['notes']['name']
     amount = int(data['payload']["order"]["entity"]['amount'])/100
+    reffral_code=False
+    try:
+        reffral_code = data['payload']["order"]["entity"]['notes']['reffral_code']
+    except:
+        pass
+    if reffral_code:
+        try:
+
+                user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
+                user.points = 200+user.points
+                user.save()
+        except:
+                pass
     person_obj = ""
     case2 = False
     if person.objects.filter(email=email).exists():
@@ -53,8 +63,9 @@ def send_purchase_confirmation(request):
     payment_obj = Payment.objects.create(
         name=name, amount=amount, payment_id=data['payload']["payment"]["entity"]['id'], provider_order_id=data['payload']["payment"]["entity"]['order_id'])
     payment_obj.save()
+    name, quantity = Plans().plan_quantity(amount)
     ticket_obj = Ticket.objects.create(
-        Person=person_obj, payment=payment_obj, total_payment=amount, quantity=1)
+        name=name,Person=person_obj, payment=payment_obj, total_payment=amount, quantity=quantity)
     e_id = ""
     if person_obj.ca:
         e_id = person_obj.ca.esummit_id
@@ -69,7 +80,6 @@ No. of tickets confirmed: """ + str(1) + """<br>
 Payment mode: Online<br>
 Event Dates: Feb 17 to Feb 19<br>
 Venue: Campus, IIT Roorkee<br><br>
-
 All the best for your prep. See you soon!"""
     if case2:
         message = """Hi,<br>
