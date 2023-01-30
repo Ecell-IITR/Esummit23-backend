@@ -16,8 +16,8 @@ class ProffUser(AbstractProfile):
                               null=True, verbose_name="Gender")
     industry = models.CharField(
         max_length=100, blank=True, null=True, verbose_name="Industry From")
-    esummit_id = models.CharField(max_length=20, unique=True, db_index=True)
-    referred_by = models.CharField(max_length=20,null=True,blank=True,default="")
+    esummit_id = models.CharField(max_length=40, unique=True, db_index=True)
+    referred_by = models.CharField(max_length=40,null=True,blank=True,default="")
 
     def save(self, *args, **kwargs):
         professional_tag = "PRF"

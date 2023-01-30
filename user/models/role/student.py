@@ -25,8 +25,8 @@ class StudentUser(AbstractProfile):
     city = models.CharField(max_length=50, null=True, blank=True)
     state = models.CharField(max_length=50, null=True, blank=True)
     collage = models.CharField(max_length=200, verbose_name="Collage Name",default="IIT Roorkee")
-    esummit_id = models.CharField(max_length=20, unique=True, db_index=True)
-    referred_by = models.CharField(max_length=20,null=True,blank=True,default="")
+    esummit_id = models.CharField(max_length=40, unique=True, db_index=True)
+    referred_by = models.CharField(max_length=40,null=True,blank=True,default="")
 
     def save(self, *args, **kwargs):
         professional_tag = "STU"

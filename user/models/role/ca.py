@@ -11,12 +11,12 @@ class CAUser(AbstractProfile):
                               null=True, verbose_name="Gender")
     taskAssigned = models.ManyToManyField(Task, verbose_name="Task Assigned", related_name='task_assigned',blank=True)
     taskCompleted = models.ManyToManyField(Task, verbose_name="Task Completed", related_name='task_completed',blank=True)
-    esummit_id = models.CharField(max_length=20, unique=True, db_index=True)
+    esummit_id = models.CharField(max_length=40, unique=True, db_index=True)
     rank = models.IntegerField(default=0)
     @property
     def noOftaskCompleted(self):
-     likes = self.taskCompleted.count()
-     return likes 
+     task_count = self.taskCompleted.count()
+     return task_count 
     
     def save(self, *args, **kwargs):
         ca_tag = "CAP"

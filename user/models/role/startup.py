@@ -8,8 +8,8 @@ class StartupUser(AbstractProfile):
     domain = models.CharField(max_length=50, verbose_name="Domain")
     category = models.CharField(max_length=50, verbose_name="Category")
     description = models.CharField(max_length=200, verbose_name="Description")
-    esummit_id = models.CharField(max_length=20, unique=True, db_index=True)
-    referred_by = models.CharField(max_length=20,null=True,blank=True,default="")
+    esummit_id = models.CharField(max_length=40, unique=True, db_index=True)
+    referred_by = models.CharField(max_length=40,null=True,blank=True,default="")
 
     def save(self, *args, **kwargs):
         professional_tag = "STP"
