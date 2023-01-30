@@ -37,13 +37,14 @@ def send_purchase_confirmation(request):
     amount = int(data['payload']["order"]["entity"]['amount'])/100
     reffral_code=False
     try:
-        reffral_code = data['payload']["order"]["entity"]['notes']['reffralcode'].lstrip().rstrip()
+        reffral_code = data['payload']["order"]["entity"]['notes']['reffralcode']
     except:
         pass
+
     if reffral_code:
         try:
 
-                user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
+                user = CAUser.objects.filter(esummit_id=reffral_code)[0]
                 user.points = 200+user.points
                 user.save()
         except:
@@ -63,7 +64,7 @@ def send_purchase_confirmation(request):
     payment_obj = Payment.objects.create(
         name=name, amount=amount, payment_id=data['payload']["payment"]["entity"]['id'], provider_order_id=data['payload']["payment"]["entity"]['order_id'])
     payment_obj.save()
-    name, quantity = Plans.plan_quantity(amount)
+    name, quantity = Plans().plan_quantity(amount)
     ticket_obj = Ticket.objects.create(
         name=name,Person=person_obj, payment=payment_obj, total_payment=amount, quantity=quantity)
     e_id = ""
