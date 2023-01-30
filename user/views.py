@@ -37,7 +37,7 @@ def send_purchase_confirmation(request):
     amount = int(data['payload']["order"]["entity"]['amount'])/100
     reffral_code=False
     try:
-        reffral_code = data['payload']["order"]["entity"]['notes']['reffral_code']
+        reffral_code = data['payload']["order"]["entity"]['notes']['reffralcode'].lstrip().rstrip()
     except:
         pass
     if reffral_code:
