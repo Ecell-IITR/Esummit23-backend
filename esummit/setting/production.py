@@ -157,22 +157,19 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
 
-        "LOCATION": "redis://{}:{}/1".format(REDIS_HOST, REDIS_PORT),
+#         "LOCATION": "redis://{}:{}/1".format(REDIS_HOST, REDIS_PORT),
 
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-        },
-        "KEY_PREFIX": "example"
-    }
-}
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient"
+#         },
+#         "KEY_PREFIX": "example"
+#     }
+# }
 
-CACHE_TTL = 10 
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
 
 
 # Password validation
