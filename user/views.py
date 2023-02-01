@@ -77,7 +77,7 @@ def send_purchase_confirmation(request):
     message = """Hi,<br>
 Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
 Your Esummit ID: """ + e_id + """<br>
-No. of tickets confirmed: """ + str(1) + """<br>
+No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
 Event Dates: Feb 17 to Feb 19<br>
 Venue: Campus, IIT Roorkee<br><br>
@@ -86,7 +86,7 @@ All the best for your prep. See you soon!"""
         message = """Hi,<br>
 Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
 Your Esummit ID: """ + e_id + """<br>
-No. of tickets confirmed: """ + str(1) + """<br>
+No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
 Event Dates: Feb 17 to Feb 19<br>
 Venue: Campus, IIT Roorkee<br><br>
