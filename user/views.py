@@ -1,7 +1,5 @@
 from rest_framework.response import Response
 import pyotp
-
-
 from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,7 +16,7 @@ from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
 from .utils.block import block_mail
 from django.views.decorators.csrf import csrf_exempt
-from ticket.models import Ticket, Payment
+from ticket.models import Ticket, Payment, ReffealCode
 from ticket.constants import Plans
 # Create your views here.
 
@@ -42,11 +40,23 @@ def send_purchase_confirmation(request):
         pass
 
     if reffral_code:
-        try:
+        try:    
+                print(reffral_code)
+                if "CAP" not in reffral_code and amount==1499:
+                    
+                    if ReffealCode.objects.filter(code=reffral_code).exists():
+                        rfc= ReffealCode.objects.filter(code=reffral_code)[0]
+                        rfc.usage = rfc.usage+1
+                        rfc.save()
+                    else:
+                        message = """Hi you were found using an unauthorized reffral code. Hence no ticket will be issued."""
+                        send_feedback_email_task.delay(email, message, "Esummit 2023 Unauthorized Reffral Code")
+                        return Response("Successful", status=status.HTTP_200_OK)
 
-                user = CAUser.objects.filter(esummit_id=reffral_code)[0]
-                user.points = 200+user.points
-                user.save()
+                else:
+                    user = CAUser.objects.filter(esummit_id=reffral_code)[0]
+                    user.points = 200+user.points
+                    user.save()
         except:
                 pass
     person_obj = ""

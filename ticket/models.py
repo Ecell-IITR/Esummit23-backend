@@ -51,4 +51,22 @@ class Ticket(models.Model):
     updated = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.name+"_"+str(self.Person)+"_"
+
+class ReffealCode(models.Model):
+    owner=models.CharField(max_length=50,verbose_name="Owner")
+    code=models.CharField(max_length=50,verbose_name="Code",blank=True,null=True)
+    usage=models.IntegerField(default=0,verbose_name="Usage")
+    
+    def __str__(self):
+        return self.code+"_"+self.owner+"_"+str(self.usage)
+    def save(self, *args, **kwargs):
+        if not self.code or self.code[:4]!="ESRF":
+            unique_id = ReffealCode.objects.last()
+            if unique_id:
+                self.code="ESRF"+self.owner[:3]+str(unique_id.id+1)
+            else:
+                self.code="ESRF"+self.owner[:3]+"1"
+
+      
+        super().save(*args, **kwargs)
         
