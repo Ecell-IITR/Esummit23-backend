@@ -7,7 +7,7 @@ class PaymentStatus:
 
 class Plans:
     Plans = {"MUN": {"price": 1998, "description": "MUN Description"}, "SSP": {"price": 599, "description": "SSP Description"},
-             "PSP": {"price": 1499, "description": "PSP Description"}, "PPP": {"price": 1999, "description": "PPP Description"}, "TTP": {"price": 1, "description": "Tech team Description"}}
+             "PSP": {"price": 1799, "description": "PSP Description"}, "PPP": {"price": 2499, "description": "PPP Description"}, "TTP": {"price": 1, "description": "Tech team Description"}}
     def plan_quantity(self, cost):
         array=list(self.Plans.keys())
         for i in array:
