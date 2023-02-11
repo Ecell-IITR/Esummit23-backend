@@ -11,7 +11,9 @@ class Speakers(models.Model):
     profile_image = models.ImageField(
         upload_to='speakers/', verbose_name='Speaker Image')
     event_year = models.CharField(
-        verbose_name='Event Year', max_length=4, default='2023')
+        verbose_name='Event Year', max_length=30, default='2023')
+    venue = models.TextField(default="")
+    description = models.TextField(default="")
     priority = models.IntegerField(default=0)
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
