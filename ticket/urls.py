@@ -1,8 +1,9 @@
-from .views import RazorpayPaymentView ,RazorpayCallback
+from .views import RazorpayPaymentView ,RazorpayCallback, import_data
 from django.urls import path
 
 urlpatterns = [
     path('razorpay', RazorpayPaymentView, name='razorpay'),
     path('razorpay/callback', RazorpayCallback, name='razorpay_callback'),
+    path('import_data', import_data, name='import_data'),
     
 ]

@@ -39,13 +39,13 @@ class Payment(models.Model):
 
 class Ticket(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name")
-    quantity = models.IntegerField(default=0, verbose_name="Quantity")
+    quantity = models.IntegerField(default=1, verbose_name="Quantity")
     Person = models.ForeignKey(
         person, on_delete=models.CASCADE, verbose_name="Person")
     plan = models.CharField(max_length=100, verbose_name="Plan",default="")
     total_payment = models.IntegerField(
         default=0, verbose_name="Total Payment")
-    payment=models.ForeignKey(Payment,on_delete=models.CASCADE,verbose_name="Payment")
+    payment=models.ForeignKey(Payment,on_delete=models.CASCADE,verbose_name="Payment",null=True,blank=True)
     verified = models.BooleanField(default=True, verbose_name="Verified")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
