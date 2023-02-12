@@ -148,8 +148,8 @@ def import_data(request):
                 per.name = data[0]
                 per.save()
             else:
-                stu = StudentUser.objects.get(email=data[1])
-                per = person.objects.get(email=data[1])
+                stu = StudentUser.objects.get(email=data[1])[0]
+                per = person.objects.get(email=data[1])[0]
             ticket = Ticket()
             ticket.name = User
             ticket.Person = per
