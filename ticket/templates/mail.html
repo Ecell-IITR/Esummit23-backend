@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>mail form</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="mail_subject">Subject </label>
+      <input type="text" name="Subject" /><br />
+      <label for="mail_message">message </label>
+      <input type="text" name="message" />
+      <label for="mail_file">Choose File </label>
+      <input type="file" name="importData"  />
+      <button class="btn btn-primary" type="submit">Import</button>
+    </form>
+  </body>
+</html>
