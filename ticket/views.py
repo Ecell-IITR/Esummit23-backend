@@ -131,42 +131,44 @@ def import_data(request):
 
         for row in decoded_file:
             # print(row)
-            data = row.split(",")
-            print(data[0])
-            per = ""
-            stu = ""
-            if not person.objects.filter(email=data[1]).exists():
-                stu = StudentUser()
-                stu.password = "123456"
-                stu.full_name = data[0]
-                stu.email = data[1]
-                stu.phone = data[2]
-                stu.save()
-                per = person()
-                per.student = stu
-                per.email = data[1]
-                per.name = data[0]
-                per.save()
-            else:
-                
-                per = person.objects.get(email=data[1])
-                if per.student:
-                    stu = per.student
-                elif per.ca:
-                    stu = per.ca    
-                elif per.proff:
-                    stu = per.proff
-                
-            ticket = Ticket()
-            ticket.name = User
-            ticket.Person = per
-            ticket.quantity = 1
-            ticket.plan = desc
+            try:
+                data = row.split(",")
+                print(data[0])
+                per = ""
+                stu = ""
+                if not person.objects.filter(email=data[1]).exists():
+                    stu = StudentUser()
+                    stu.password = "123456"
+                    stu.full_name = data[0]
+                    stu.email = data[1]
+                    stu.phone = data[2]
+                    stu.save()
+                    per = person()
+                    per.student = stu
+                    per.email = data[1]
+                    per.name = data[0]
+                    per.save()
+                else:
+                    
+                    per = person.objects.get(email=data[1])
+                    if per.student:
+                        stu = per.student
+                    elif per.ca:
+                        stu = per.ca    
+                    elif per.proff:
+                        stu = per.proff
+                    
+                ticket = Ticket()
+                ticket.name = User
+                ticket.Person = per
+                ticket.quantity = 1
+                ticket.plan = desc
 
-            ticket.save()
-            send_feedback_email_task(data[1], "Hi,<br>Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>Your Esummit ID: " +
-                                     stu.esummit_id+"<br>No. of tickets confirmed: 1<br>Payment mode: Online<br>Event Dates: Feb 17 to Feb 19<br>Venue: Campus, IIT Roorkee<br><br>All the best for your prep. See you soon!", "Esummit 2023 Ticket Confirmation")
-
+                ticket.save()
+                send_feedback_email_task(data[1], "Hi,<br>Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>Your Esummit ID: " +
+                                            stu.esummit_id+"<br>No. of tickets confirmed: 1<br>Payment mode: Online<br>Event Dates: Feb 17 to Feb 19<br>Venue: Campus, IIT Roorkee<br><br>All the best for your prep. See you soon!", "Esummit 2023 Ticket Confirmation")
+            except Exception as e:
+                pass
         # if file_format == 'CSV':
         #     imported_data = dataset.load(new_employees.read().decode('utf-8'),format='csv')
         #     result = employee_resource.import_data(dataset, dry_run=True)
