@@ -1,6 +1,9 @@
 from django.shortcuts import render
 import os
 import razorpay
+
+
+from user.tasks import send_link_email_task
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -182,3 +185,25 @@ def import_data(request):
             # employee_resource.import_data(dataset, dry_run=False)
 
     return render(request, r'import.html')
+
+def Sent_data(request):
+    if request.method == 'POST':
+
+
+        desc = request.POST["desc"]
+        User = ""
+        print(request.POST["user"])
+
+        User = request.POST["user"]
+
+        queryset=Ticket.objects.all()
+        for query in queryset:
+            email_address = query.Person.email
+          
+            mail_message= User
+
+            mail_subject = desc
+            send_feedback_email_task(email_address,mail_message,mail_subject)
+       
+
+    return render(request, r'mail.html')
