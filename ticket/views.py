@@ -135,7 +135,7 @@ def import_data(request):
             print(data[0])
             per = ""
             stu = ""
-            if not StudentUser.objects.filter(email=data[1]).exists():
+            if not person.objects.filter(email=data[1]).exists():
                 stu = StudentUser()
                 stu.password = "123456"
                 stu.full_name = data[0]
@@ -148,8 +148,15 @@ def import_data(request):
                 per.name = data[0]
                 per.save()
             else:
-                stu = StudentUser.objects.get(email=data[1])[0]
+                
                 per = person.objects.get(email=data[1])[0]
+                if per.student:
+                    stu = per.student
+                elif per.ca:
+                    stu = per.ca    
+                elif per.proff:
+                    stu = per.proff
+                
             ticket = Ticket()
             ticket.name = User
             ticket.Person = per
