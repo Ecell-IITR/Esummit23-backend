@@ -141,7 +141,7 @@ def import_data(request):
                     stu.password = "123456"
                     stu.full_name = data[0]
                     stu.email = data[1]
-                    stu.phone = data[2]
+                    stu.phone_number = data[2]
                     stu.save()
                     per = person()
                     per.student = stu
