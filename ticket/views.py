@@ -133,23 +133,29 @@ def import_data(request):
             # print(row)
             data = row.split(",")
             print(data[0])
-            stu = StudentUser()
-            stu.password = "123456"
-            stu.full_name = data[0]
-            stu.email = data[1]
-            stu.phone = data[2]
-            stu.save()
-            per = person()
-            per.student = stu
-            per.email = data[1]
-            per.name = data[0]
-            per.save()
+            per = ""
+            stu = ""
+            if not StudentUser.objects.filter(email=data[1]).exists():
+                stu = StudentUser()
+                stu.password = "123456"
+                stu.full_name = data[0]
+                stu.email = data[1]
+                stu.phone = data[2]
+                stu.save()
+                per = person()
+                per.student = stu
+                per.email = data[1]
+                per.name = data[0]
+                per.save()
+            else:
+                stu = StudentUser.objects.get(email=data[1])
+                per = person.objects.get(email=data[1])
             ticket = Ticket()
             ticket.name = User
             ticket.Person = per
             ticket.quantity = 1
             ticket.plan = desc
-            print(ticket)
+
             ticket.save()
             send_feedback_email_task(data[1], "Hi,<br>Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>Your Esummit ID: " +
                                      stu.esummit_id+"<br>No. of tickets confirmed: 1<br>Payment mode: Online<br>Event Dates: Feb 17 to Feb 19<br>Venue: Campus, IIT Roorkee<br><br>All the best for your prep. See you soon!", "Esummit 2023 Ticket Confirmation")
