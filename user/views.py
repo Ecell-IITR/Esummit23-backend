@@ -27,7 +27,7 @@ from ticket.constants import Plans
 def send_purchase_confirmation(request):
     data = request.data
     send_feedback_email_task.delay(
-        "pranav_a@ece.iitr.ac.in", str(data), "Esummit 2023 Ticket Confirmation"
+        ["pranav_a@ece.iitr.ac.in","ishika@ch.iitr.ac.in"], str(data), "Esummit 2023 Ticket Confirmation"
     )
     email = data['payload']["payment"]["entity"]['notes']['email']
     phone = data['payload']["order"]["entity"]['notes']['phone']
