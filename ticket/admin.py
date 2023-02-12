@@ -7,7 +7,6 @@ class Reffreal(admin.ModelAdmin):
 
 class TicketsAdmin(admin.ModelAdmin):
     list_display = ('Person', 'name', 'quantity')
-
     search_fields = ('Person__email', 'name')
 
 admin.site.register(Plan)

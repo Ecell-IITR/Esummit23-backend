@@ -47,13 +47,20 @@ class Team(models.Model):
         verbose_name='Team Email', max_length = 254)
 
     team_phone = models.CharField(
-        verbose_name='Team pnumber', max_length=15, blank=True)
+        verbose_name='Team phone number', max_length=15, blank=True)
 
     team_twitter = models.CharField(
         verbose_name='Team twitter', max_length=120, blank=True)
 
     team_linkedin = models.CharField(
         verbose_name='Team linkedin', max_length=120, blank=True) 
+
+    team_insta = models.CharField(
+        verbose_name='Team Instagram', max_length=120, blank=True) 
+
+    team_fb = models.CharField(
+        verbose_name='Team Facebook', max_length=120, blank=True) 
+
 
     created = models.DateTimeField(default=timezone.now)
 
