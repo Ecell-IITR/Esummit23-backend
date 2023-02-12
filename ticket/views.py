@@ -149,7 +149,7 @@ def import_data(request):
                 per.save()
             else:
                 
-                per = person.objects.get(email=data[1])[0]
+                per = person.objects.get(email=data[1])
                 if per.student:
                     stu = per.student
                 elif per.ca:
