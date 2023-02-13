@@ -37,7 +37,7 @@ class TicketsAdmin(admin.ModelAdmin):
             elif querry.Person.proff:
                 phone=querry.Person.proff.phone_number
             print(phone)
-            writer.writerow([querry.Person,querry.Person.email,querry.quantity,querry.Person.student.phone_number])
+            writer.writerow([querry.Person,querry.Person.email,querry.quantity,phone])
 
         f.seek(0)
         response = HttpResponse(f, content_type='text/csv')
