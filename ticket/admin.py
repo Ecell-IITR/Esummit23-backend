@@ -49,33 +49,9 @@ admin.site.register(Plan)
 admin.site.register(Payment)
 
 
-class XForm(ActionForm):
-    x_field = forms.TextInput()
-
-
-class ticketAdmin(admin.ModelAdmin):
-   exclude = ('created', 'updated')
-   action_form = XForm
-
-   actions=["sendMail"]
-
-
-   def sendMail(self, request, queryset):
-       print(request.POST)
-       if 'submit' in request.POST :
-         for query in queryset:
-            email_address = query.Person.email
-          
-            # mail_message= request.POST['message']
-            # attachment = request.POST['importData']
-            # mail_subject = request.POST['Subject']
-            # send_link_email_task.delay( email_address,mail_message,mail_subject,attachment
-            #     )
-       return render(request,
-                      r'mail.html',context={})
 
         
-admin.site.register(Ticket, ticketAdmin)
+admin.site.register(Ticket, TicketsAdmin)
           
 
         
