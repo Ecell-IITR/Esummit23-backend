@@ -1,0 +1,64 @@
+
+
+{% extends "admin/change_list.html" %}
+
+{% block content_title %}
+    <h1> Sales Summary </h1>
+{% endblock %}
+
+{% block result_list %}
+
+{% load humanize %}
+<!-- ... -->
+
+<div class="results">
+    <table>
+
+    <thead>
+      <tr>
+        <th>
+          <div class="text">
+            <a href="#">Person</a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">Type</a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">Quantity</a>
+          </div>
+        </th>
+        
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for row in summary %}
+      <tr class="{% cycle 'row1' 'row2' %}">
+        <td> {{ row.Person }} </td>
+        <td> {{ row.name }} </td>
+        <td> {{ row.quantity }} </td>
+        
+      </tr>
+      {% endfor %}
+      <tr style="font-weight:bold; border-top:2px solid #DDDDDD;">
+        <td> Total </td>
+        <td> empty </td>
+        <td> {{ summary_total.total_sales }} </td>
+     
+    </tr>
+    </tbody>
+
+  </table>
+</div>
+
+<!-- ... -->
+
+{% endblock %}
+
+{% block pagination %}{% endblock %}
+
+

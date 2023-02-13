@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from django.db.models import Count, Sum, Min, Max, DateTimeField
 from user.tasks import send_link_email_task
 from django.shortcuts import render
 
@@ -19,40 +19,41 @@ class TicketsAdmin(admin.ModelAdmin):
     list_display = ('Person', 'name', 'quantity')
     search_fields = ('Person__email', 'name')
     actions = ['download_csv']
-    def download_csv(self, request, queryset):
-
-    
-
-        f = StringIO()
-        writer = csv.writer(f)
-        writer.writerow(["name", "email", "quanty", "phone"])
-
-        for querry in queryset:
-            phone=""
+    change_list_template = 'change_list.html'
+    def changelist_view(self, request, extra_context=None):
+        response = super().changelist_view(
+            request,
+            extra_context=extra_context,
+        )
+        qs=""
         
-            if querry.Person.student:
-                phone=querry.Person.student.phone_number
-            elif querry.Person.ca:
-                phone=querry.Person.ca.phone_number
-            elif querry.Person.proff:
-                phone=querry.Person.proff.phone_number
-            print(phone)
-            writer.writerow([querry.Person,querry.Person.email,querry.quantity,phone])
+        try:
+            qs = response.context_data['cl'].queryset
+        except (AttributeError, KeyError):
+            return response
+        print(qs)
+        metrics = {
+            'total': Count('id'),
+            'total_sales': Sum('quantity'),
+        }
 
-        f.seek(0)
-        response = HttpResponse(f, content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=stat-info.csv'
+        response.context_data['summary'] = list(
+            qs
+            .values('Person', 'name', 'quantity')
+            .annotate(**metrics)
+        
+        )
+        response.context_data['summary_total'] = dict(
+            qs.aggregate(**metrics)
+        )
+   
+
         return response
-
 
 admin.site.register(Plan)
 admin.site.register(Payment)
-
-
-
-        
 admin.site.register(Ticket, TicketsAdmin)
-          
+admin.site.register(ReffealCode,Reffreal)          
 
         
 # Register your models here.
