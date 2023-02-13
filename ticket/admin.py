@@ -29,7 +29,7 @@ class TicketsAdmin(admin.ModelAdmin):
 
         for querry in queryset:
             phone=""
-            print(querry.Person.student.phone_number)
+        
             if querry.Person.student:
                 phone=querry.Person.student.phone_number
             elif querry.Person.ca:
