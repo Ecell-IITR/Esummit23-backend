@@ -37,7 +37,10 @@ def send_purchase_confirmation(request):
         phone = data['payload']["order"]["entity"]['notes']['phone']
         name = data['payload']["order"]["entity"]['notes']['name']
     except:
-        email = ["payload"]["payment"]["entity"]["email"]
+        try:
+            email = ["payload"]["payment"]["entity"]["email"]
+        except:
+            return Response("Successful", status=status.HTTP_200_OK)
     
     amount = int(data['payload']["order"]["entity"]['amount'])/100
     reffral_code=False
