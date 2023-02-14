@@ -12,4 +12,4 @@ class SpeakerEventView(ListAPIView):
 
 class teamEventView(ListAPIView):
     serializer_class = teamSerializer
-    queryset = Team.objects.all()
+    queryset = Team.objects.all().order_by('priority')

@@ -36,7 +36,8 @@ class Speakers(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=120)
-
+    priority = models.IntegerField(default=0)
+    
     designation = models.CharField(
         verbose_name='Designation', max_length=1000, blank=True)
 
