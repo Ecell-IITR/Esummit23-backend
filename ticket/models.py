@@ -78,7 +78,7 @@ class StatisticsParticipants(models.Model):
     PhoneNo = models.IntegerField(default=0)
     Email= models.EmailField(max_length=50)
     EventName = models.CharField(max_length=50)
-    TimeEntryExit = models.DateTimeField(default=timezone.now)
+    TimeEntryExit = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.Name+"_"+self.EventName+"_"+self.Type

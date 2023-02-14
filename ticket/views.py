@@ -210,15 +210,15 @@ def StatsParticipants(request):
 
         try:
 
-            data = {"Type": request.data.get("type"), "summitId": request.data.get(
+            data = {"Type": request.data.get("type"), "SummitId": request.data.get(
                 "summitId"), "Name": request.data.get("Name"), "Email": request.data.get("Email"), "PhoneNo": request.data.get("phoneNo"),
                 "EventName": request.data.get("EventName")}
            
 
             db_entry = StatsParticipantSerializer(data=data)
-            print(data)
-            print(db_entry.is_valid(), db_entry.error_messages)
-            print(db_entry.is_valid(raise_exception=False))
+            # print(data)
+            # print(db_entry.is_valid(), db_entry.error_messages)
+            db_entry(raise_exception=False)
 
             db_entry.save()
             return Response(data={"success": "data submitted"}, status=status.HTTP_200_OK)
