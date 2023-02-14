@@ -2,6 +2,7 @@ from django.db import models
 from user.models.person import person
 from django.utils.translation import gettext_lazy as _
 from .constants import PaymentStatus
+from django.utils import timezone
 
 
 class Plan(models.Model):
@@ -70,3 +71,20 @@ class ReffealCode(models.Model):
       
         super().save(*args, **kwargs)
         
+class StatisticsParticipants(models.Model):
+    Type=models.CharField(max_length=30)
+    Name=models.CharField(max_length=60)
+    SummitId=models.CharField(max_length=50)
+    PhoneNo = models.IntegerField(default=0)
+    Email= models.EmailField(max_length=50)
+    EventName = models.CharField(max_length=50)
+    TimeEntryExit = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return self.Name+"_"+self.EventName+"_"+self.Type
+    
+    class Meta:
+        """
+        Meta class for StatisticsParticipants
+        """
+        verbose_name_plural = 'StatisticsParticipant'

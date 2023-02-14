@@ -3,7 +3,7 @@ from django.contrib import admin
 from user.tasks import send_link_email_task
 from django.shortcuts import render
 
-from .models import Plan, Payment, Ticket,ReffealCode
+from .models import Plan, Payment, Ticket,ReffealCode,StatisticsParticipants
 from django.http import HttpResponse
 from django import forms
 
@@ -47,7 +47,7 @@ class TicketsAdmin(admin.ModelAdmin):
 
 admin.site.register(Plan)
 admin.site.register(Payment)
-
+admin.site.register(StatisticsParticipants)
 
 
         
