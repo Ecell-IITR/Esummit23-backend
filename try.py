@@ -1,9 +1,4 @@
-import os
-import razorpay
-RAZOR_KEY_ID = os.getenv('RAZORPAY_KEY_ID',"rzp_live_U0W39W3I1yR00g")
-RAZOR_KEY_SECRET = os.getenv('RAZORPAY_SECRET_KEY', "RndrTeCVPTxYTJxVt10S7KET")
-# Creating Razorpay Client instance.
-razorpay_client = razorpay.Client(auth=(RAZOR_KEY_ID, RAZOR_KEY_SECRET))
-z=razorpay_client.order.all()
-for i in z:
-    print(i)
+
+d={'entity': 'event', 'account_id': 'acc_G2cIxjuioDptRJ', 'event': 'order.paid', 'contains': ['payment', 'order'], 'payload': {'payment': {'entity': {'id': 'pay_LG4ek8qwh7d0rz', 'entity': 'payment', 'amount': 100, 'currency': 'INR', 'status': 'captured', 'order_id': 'order_LG4e13uGHQ99Kv', 'invoice_id': None, 'international': False, 'method': 'upi', 'amount_refunded': 0, 'refund_status': None, 'captured': True, 'description': 'settlements ', 'card_id': None, 'bank': None, 'wallet': None, 'vpa': 'katuresarvesh-1@oksbi', 'email': 'esummit@iitr.ac.in', 'contact': '+918054689033', 'notes': {'dashboard': 'true'}, 'fee': 2, 'tax': 0, 'error_code': None, 'error_description': None, 'error_source': None, 'error_step': None, 'error_reason': None, 'acquirer_data': {'rrn': '304596923958'}, 'created_at': 1676323060}}, 'order': {'entity': {'id': 'order_LG4e13uGHQ99Kv', 'entity': 'order', 'amount': 100, 'amount_paid': 100, 'amount_due': 0, 'currency': 'INR', 'receipt': None, 'offer_id': None, 'offers': {'entity': 'collection', 'count': 0, 'items': []}, 'status': 'paid', 'attempts': 1, 'notes': [], 'created_at': 1676323018}}}, 'created_at': 1676323060}
+print(d["payload"]["payment"]["entity"]["email"])
+
