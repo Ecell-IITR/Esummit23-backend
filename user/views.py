@@ -31,9 +31,19 @@ def send_purchase_confirmation(request):
     send_feedback_email_task.delay(
         ["pranav_a@ece.iitr.ac.in","ishika@ch.iitr.ac.in"], str(data), "Esummit 2023 Ticket Confirmation"
     )
-    email = data['payload']["payment"]["entity"]['notes']['email']
-    phone = data['payload']["order"]["entity"]['notes']['phone']
-    name = data['payload']["order"]["entity"]['notes']['name']
+    email=""
+    phone="0000000000"
+    name=""
+    try:
+        email = data['payload']["payment"]["entity"]['notes']['email']
+        phone = data['payload']["order"]["entity"]['notes']['phone']
+        name = data['payload']["order"]["entity"]['notes']['name']
+    except:
+        try:
+            email = ["payload"]["payment"]["entity"]["email"]
+        except:
+            return Response("Successful", status=status.HTTP_200_OK)
+    
     amount = int(data['payload']["order"]["entity"]['amount'])/100
     reffral_code=False
     try:

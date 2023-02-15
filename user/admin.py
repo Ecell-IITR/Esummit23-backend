@@ -80,7 +80,10 @@ class CAUserAdmin(UserAdmin):
     inlines = [CaTaskCompletedInlines,CaTaskAssignedInlines]
     exclude = ['created', 'updated', 'authToken','taskCompleted','taskAssigned']
     extra=2
-
+class PersonAdmin(admin.ModelAdmin):
+    exclude = ('created', 'updated')
+    list_filter = ('name', 'email')
+    search_fields = ('name', 'email')
 
 admin.site.register(StartupUser, StartupUserAdmin)
 admin.site.register(CAUser, CAUserAdmin)
@@ -88,7 +91,7 @@ admin.site.register(StudentUser, StudentUserAdmin)
 admin.site.register(ProffUser, ProffUserAdmin)
 admin.site.register(OTP)
 admin.site.register(Querry)
-admin.site.register(person)
+admin.site.register(person,PersonAdmin)
 admin.site.register(teams,TeamAdmin)
 admin.site.register(BlockMail,BlockMailAdmin)
 admin.site.register(BlockNumber,BlockNumberAdmin)

@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     
 ]
 
@@ -146,6 +147,7 @@ RQ_QUEUES = {
 
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_TASK_TIME_LIMIT = 30 * 60 * 60 * 60 * 60
 
 REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
 REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
