@@ -200,7 +200,45 @@ def Sent_data(request):
 
     return render(request, 'mail.html')
 
+def AddForm(request):
+    if request.method == 'POST':
+        per = ""
+        stu = ""
 
+        if not person.objects.filter(email=request.POST["email"]).exists():
+            stu = StudentUser()
+            stu.password = "123456"
+            stu.full_name = request.POST["name"]
+            stu.email = request.POST["email"]
+            stu.phone_number = request.POST["phone"]
+            stu.save()
+            per = person()
+            per.student = stu
+            per.email = request.POST["email"]
+            per.name =request.POST["name"]
+            per.save()
+        else:
+
+            per = person.objects.get(email=request.POST["email"])
+            if per.student:
+                stu = per.student
+            elif per.ca:
+                stu = per.ca
+            elif per.proff:
+                stu = per.proff
+
+        ticket = Ticket()
+        ticket.name = request.POST["name"]
+        ticket.Person = per
+        ticket.quantity = 1
+        ticket.plan = "desc registration"
+
+        ticket.save()
+        send_feedback_email_task(request.POST["email"], "Hi,<br>Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>Your Esummit ID: " +
+                                    stu.esummit_id+"<br>No. of tickets confirmed: 1<br>Payment mode: Online<br>Event Dates: Feb 17 to Feb 19<br>Venue: Campus, IIT Roorkee<br><br>All the best for your prep. See you soon!", "Esummit 2023 Ticket Confirmation")
+   
+
+    return render(request, 'genrate_ticket.html')
 @api_view(('GET', 'POST'))
 def StatsParticipants(request):
     if request.method == 'POST':
