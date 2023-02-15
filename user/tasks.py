@@ -13,9 +13,12 @@ def send_feedback_email_task(email, message, subject):
                   [email], fail_silently=False, html_message=message)
 
 @shared_task()
-def send_link_email_task(email, message,subject, attachment):
+def send_link_email_task(queryset, User,desc):
  
-        mail = EmailMessage(subject, message, "no.reply.esummit@gmail.com", [email])
-        for f in attachment:
-          mail.attach(f.name, f.read(), f.content_type)
-        mail.send()
+        for query in queryset:
+            email_address = query.Person.email
+          
+            mail_message= User
+
+            mail_subject = desc
+            send_feedback_email_task(email_address,mail_message,mail_subject)

@@ -18,6 +18,7 @@ import csv
 from user.models.person import person
 from user.models.role.student import StudentUser
 from user.tasks import send_feedback_email_task
+from .serializer import StatsParticipantSerializer
 # Get Razorpay Key id and secret for authorize razorpay client.
 RAZOR_KEY_ID = os.getenv('RAZORPAY_KEY_ID', "rzp_live_U0W39W3I1yR00g")
 RAZOR_KEY_SECRET = os.getenv('RAZORPAY_SECRET_KEY', "RndrTeCVPTxYTJxVt10S7KET")
@@ -152,15 +153,15 @@ def import_data(request):
                     per.name = data[0]
                     per.save()
                 else:
-                    
+
                     per = person.objects.get(email=data[1])
                     if per.student:
                         stu = per.student
                     elif per.ca:
-                        stu = per.ca    
+                        stu = per.ca
                     elif per.proff:
                         stu = per.proff
-                    
+
                 ticket = Ticket()
                 ticket.name = User
                 ticket.Person = per
@@ -169,7 +170,7 @@ def import_data(request):
 
                 ticket.save()
                 send_feedback_email_task(data[1], "Hi,<br>Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>Your Esummit ID: " +
-                                            stu.esummit_id+"<br>No. of tickets confirmed: 1<br>Payment mode: Online<br>Event Dates: Feb 17 to Feb 19<br>Venue: Campus, IIT Roorkee<br><br>All the best for your prep. See you soon!", "Esummit 2023 Ticket Confirmation")
+                                         stu.esummit_id+"<br>No. of tickets confirmed: 1<br>Payment mode: Online<br>Event Dates: Feb 17 to Feb 19<br>Venue: Campus, IIT Roorkee<br><br>All the best for your prep. See you soon!", "Esummit 2023 Ticket Confirmation")
             except Exception as e:
                 pass
         # if file_format == 'CSV':
@@ -186,24 +187,39 @@ def import_data(request):
 
     return render(request, r'import.html')
 
+
 def Sent_data(request):
     if request.method == 'POST':
 
-
         desc = request.POST["desc"]
-        User = ""
-        print(request.POST["user"])
 
         User = request.POST["user"]
 
-        queryset=Ticket.objects.all()
-        for query in queryset:
-            email_address = query.Person.email
-          
-            mail_message= User
+        queryset = Ticket.objects.all()
+        send_link_email_task(queryset, User, desc)
 
-            mail_subject = desc
-            send_feedback_email_task(email_address,mail_message,mail_subject)
-       
+    return render(request, 'mail.html')
 
-    return render(request, r'mail.html')
+
+@api_view(('GET', 'POST'))
+def StatsParticipants(request):
+    if request.method == 'POST':
+        data = {}
+        #  data["esummitId"]=request.data["esummitId"]
+        #  print(data)
+
+        try:
+
+            data = {"Type": request.data.get("type"), "SummitId": request.data.get(
+                "summitId"), "Name": request.data.get("Name"), "Email": request.data.get("Email"), "PhoneNo": int(request.data.get("phoneNo")),
+                "EventName": request.data.get("EventName")}
+
+            db_entry = StatsParticipantSerializer(data=data)
+
+            db_entry.is_valid()
+
+            db_entry.save()
+            return Response(data={"success": "data submitted"}, status=status.HTTP_200_OK)
+
+        except:
+            return Response({"Faliure": "failure"}, status=status.HTTP_400_BAD_REQUEST)

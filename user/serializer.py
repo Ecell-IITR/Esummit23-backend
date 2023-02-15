@@ -8,7 +8,7 @@ from .models.querry import Querry
 from .models.person import person
 from .models.teams import teams
 from .models.block import BlockMail
-
+from .models.teamecell import Teamecell
 from rest_framework.response import Response
 
 class ProffUserLoginSerializer(serializers.ModelSerializer):
@@ -124,4 +124,7 @@ class BlockSerializer(serializers.ModelSerializer):
        model = BlockMail
        fields = ['mail']
     
-        
+class TeamecellSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teamecell
+        fields = '__all__'       

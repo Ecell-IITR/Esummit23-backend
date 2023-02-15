@@ -3,7 +3,7 @@ from django.db.models import Count, Sum, Min, Max, DateTimeField
 from user.tasks import send_link_email_task
 from django.shortcuts import render
 
-from .models import Plan, Payment, Ticket,ReffealCode
+from .models import Plan, Payment, Ticket,ReffealCode,StatisticsParticipants
 from django.http import HttpResponse
 from django import forms
 
@@ -83,6 +83,7 @@ class TicketsAdmin2(admin.ModelAdmin):
 
 admin.site.register(Plan)
 admin.site.register(Payment)
+admin.site.register(StatisticsParticipants)
 admin.site.register(Ticket, TicketsAdmin)
 admin.site.register(ReffealCode,Reffreal)          
 
