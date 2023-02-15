@@ -64,15 +64,16 @@ class TicketsAdmin2(admin.ModelAdmin):
 
         for querry in queryset:
             phone=""
-            print(querry.Person.student.phone_number)
-            if querry.Person.student:
-                phone=querry.Person.student.phone_number
-            elif querry.Person.ca:
-                phone=querry.Person.ca.phone_number
-            elif querry.Person.proff:
-                phone=querry.Person.proff.phone_number
-            print(phone)
-            writer.writerow([querry.Person,querry.Person.email,querry.quantity,querry.Person.student.phone_number])
+            try:
+                if querry.Person.student:
+                    phone=querry.Person.student.phone_number
+                elif querry.Person.ca:
+                    phone=querry.Person.ca.phone_number
+                elif querry.Person.proff:
+                    phone=querry.Person.proff.phone_number
+            except:
+                pass
+            writer.writerow([querry.Person,querry.Person.email,querry.quantity,phone])
 
         f.seek(0)
         response = HttpResponse(f, content_type='text/csv')
