@@ -77,12 +77,12 @@ class ReffealCode(models.Model):
 
 
 class StatisticsParticipants(models.Model):
-    Type = models.CharField(max_length=30, null=True)
-    Name = models.CharField(max_length=60, null=True)
+    Type = models.CharField(max_length=30, blank=True, null=True)
+    Name = models.CharField(max_length=60, blank=True, null=True)
     SummitId = models.CharField(max_length=50)
     PhoneNo = models.IntegerField(default=0,blank=True, null=True)
-    Email = models.EmailField(max_length=50, null=True)
-    EventName = models.CharField(max_length=50, null=True)
+    Email = models.EmailField(max_length=50, blank=True, null=True)
+    EventName = models.CharField(max_length=50, blank=True, null=True)
     TimeEntryExit = models.DateTimeField()
 
     def __str__(self):
