@@ -84,7 +84,7 @@ class TicketsAdmin2(admin.ModelAdmin):
 admin.site.register(Plan)
 admin.site.register(Payment)
 admin.site.register(StatisticsParticipants)
-admin.site.register(Ticket, TicketsAdmin)
+admin.site.register(Ticket, TicketsAdmin2)
 admin.site.register(ReffealCode,Reffreal)          
 
         
