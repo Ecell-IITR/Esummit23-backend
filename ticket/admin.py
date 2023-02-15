@@ -60,7 +60,7 @@ class TicketsAdmin2(admin.ModelAdmin):
 
         f = StringIO()
         writer = csv.writer(f)
-        writer.writerow(["name", "email", "quanty", "phone"])
+        writer.writerow(["name", "email", "quanty", "phone","type","desc"])
 
         for querry in queryset:
             phone=""
@@ -73,7 +73,7 @@ class TicketsAdmin2(admin.ModelAdmin):
                     phone=querry.Person.proff.phone_number
             except:
                 pass
-            writer.writerow([querry.Person,querry.Person.email,querry.quantity,phone])
+            writer.writerow([querry.Person,querry.Person.email,querry.quantity,phone,querry.name,querry.plan])
 
         f.seek(0)
         response = HttpResponse(f, content_type='text/csv')
