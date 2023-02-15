@@ -1,11 +1,12 @@
 from rest_framework.response import Response
 import pyotp
-from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer
+from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer, TeamecellSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .serializer import StartupUser, ProffUser, StudentUser, CAUser
 from rest_framework.views import APIView
+from .models.teamecell import Teamecell
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password, make_password
@@ -18,6 +19,7 @@ from .utils.block import block_mail
 from django.views.decorators.csrf import csrf_exempt
 from ticket.models import Ticket, Payment, ReffealCode
 from ticket.constants import Plans
+
 # Create your views here.
 
 
@@ -716,3 +718,50 @@ def UserServices(request):
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+class TeamecellOtpView(APIView):
+
+    def post(self, request):
+        
+        totp = pyotp.TOTP('base32secret3232')
+        otp = totp.now()
+        mail = request.data.get('email', None)
+        personi = Teamecell.objects.filter(Email=mail)
+
+        if len(personi) == 0:
+            return Response({"error": "email not registered"}, status=400)
+        else:
+            personi = personi[0]
+            personi.Otp = otp
+            personi.save()
+          
+            message = "Your OTP is <b>" + otp + "</b>"
+            send_feedback_email_task.delay(
+                mail, message, 'Your OTP is '
+            )
+            return Response("Successful", status=200)
+        
+
+class TeamecellVerifyView(APIView):
+    def post(self, request):
+        data = request.data
+        
+        otp = data.get('otp', None)
+        email = data.get('email', None)
+        if not otp:
+            return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+        if not email:
+            return Response('Email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+        else:
+            personi = Teamecell.objects.filter(Email=email)
+            
+            if len(personi) == 0:
+                return Response("email not registered",status=400)
+            else:
+                personi = personi[0]
+                if personi.Otp == otp:   
+                    personi.Otp=''  
+                    personi.save()              
+                    return Response("True", status=200)
+                else:
+                    return Response("Wrong OTP", status=400)

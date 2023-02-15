@@ -9,7 +9,7 @@ from user.models.person import person
 from user.models.teams import teams
 from user.models.block import BlockMail,BlockNumber
 from user.tasks import send_feedback_email_task
-
+from user.models.teamecell import Teamecell
 # Register your models here.
 
 
@@ -65,6 +65,7 @@ class StudentUserAdmin(UserAdmin):
 class ProffUserAdmin(UserAdmin):
     pass
 
+
 class CaTaskCompletedInlines(admin.TabularInline):
     model = CAUser.taskCompleted.through
     verbose_name_plural = "Task Completed"
@@ -91,3 +92,4 @@ admin.site.register(person)
 admin.site.register(teams,TeamAdmin)
 admin.site.register(BlockMail,BlockMailAdmin)
 admin.site.register(BlockNumber,BlockNumberAdmin)
+admin.site.register(Teamecell)
