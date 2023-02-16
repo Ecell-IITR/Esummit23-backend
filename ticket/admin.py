@@ -52,7 +52,7 @@ class TicketsAdmin(admin.ModelAdmin):
 
 class TicketsAdmin2(admin.ModelAdmin):
     list_display = ('Person', 'name', 'quantity')
-    search_fields = ('Person__email', 'name')
+    search_fields = ('Person__email', 'name',"Person__name")
     actions = ['download_csv']
     def download_csv(self, request, queryset):
     
