@@ -231,7 +231,7 @@ def AddForm(request):
         ticket.name = request.POST["name"]
         ticket.Person = per
         ticket.quantity = 1
-        ticket.plan = "desc registration"
+        ticket.plan = "desc registration "+request.POST["amount"]
 
         ticket.save()
         send_feedback_email_task(request.POST["email"], "Hi,<br>Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>Your Esummit ID: " +
