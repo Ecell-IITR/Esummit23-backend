@@ -195,7 +195,8 @@ def Sent_data(request):
 
         User = request.POST["user"]
 
-        queryset = Ticket.objects.filter(plan="PPP")
+        queryset = Ticket.objects.filter(name="PPP")
+        print(queryset)
         send_link_email_task(queryset, User, desc)
 
     return render(request, 'mail.html')
