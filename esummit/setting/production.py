@@ -46,7 +46,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-SECRET_KEY = "ltx_c@+)ak_@6l8&r1g78&y*=-^#_(ts&=3^9rzibepdnrt&f3"
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -229,17 +229,16 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
-AWS_ACCESS_KEY_ID = "AKIAT4QCDQEC2VEPQUMK"
-AWS_SECRET_ACCESS_KEY = "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"
-AWS_STORAGE_BUCKET_NAME = "e-cell-server-bucket"
+AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"] 
+AWS_SECRET_ACCESS_KEY =  os.environ["AWS_SECRET_ACCESS_KEY"]
+AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
 
-EMAIL_HOST_USER = "no.reply.esummit@gmail.com"
-EMAIL_HOST_PASSWORD = "kbiegdcngknuxcuv"
+EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
 
 ########S3 Bucket
-AWS_ACCESS_KEY_ID = 'AKIAT4QCDQEC2VEPQUMK'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'e-cell-server-bucket'
+AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"] 
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_REGION_NAME="ap-south-1"
 AWS_S3_SIGNATURE_VERSION = 's3v4'
