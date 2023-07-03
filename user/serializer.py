@@ -78,15 +78,15 @@ class CAUserSerializer(serializers.ModelSerializer):
 
 
 
-class LeaderboardSerializer(serializers.ModelSerializer):
+# class LeaderboardSerializer(serializers.ModelSerializer):
 
-    class ColorField(serializers.Field):
-        def to_representation(self,noOftaskCompleted):
-             noOftaskCompleted = serializers.Field(source='noOftaskCompleted')
-             return noOftaskCompleted
-    class Meta:
-         model = CAUser
-         fields = ['full_name','collage','points','noOftaskCompleted','rank']
+#     class ColorField(serializers.Field):
+#         def to_representation(self,noOftaskCompleted):
+#              noOftaskCompleted = serializers.Field(source='noOftaskCompleted')
+#              return noOftaskCompleted
+#     class Meta:
+#          model = CAUser
+#          fields = ['full_name','collage','points','noOftaskCompleted','rank']
 
 class StudentUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -128,3 +128,18 @@ class TeamecellSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teamecell
         fields = '__all__'       
+
+class CaLeaderboadSerializer(serializers.ModelSerializer):
+
+    taskCompleted = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CAUser
+        fields = ['full_name','collage','points','taskCompleted','rank']
+    @staticmethod
+    def get_taskCompleted(instance):
+        query_set = list(instance.taskCompleted)
+        length = len(query_set)
+        return length
+
+        

@@ -36,7 +36,7 @@ Start Redis Server
 ```bash
   redis-server start
 ```
-Migrate SQL Databse
+Migrate SQL Database
 ```bash
   python manage.py runserver
 ```

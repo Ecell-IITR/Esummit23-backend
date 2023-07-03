@@ -10,7 +10,6 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 
 
-
 class TaskAdmin(admin.ModelAdmin):
    exclude = ('created', 'updated','task_id')
    actions=["addTask"]

@@ -9,7 +9,7 @@ class CAUser(AbstractProfile):
     state = models.CharField(max_length=50, verbose_name="State",blank=True,null=True)
     gender = models.CharField(max_length=10, blank=True,
                               null=True, verbose_name="Gender")
-    taskAssigned = models.ManyToManyField(Task, verbose_name="Task Assigned", related_name='task_assigned',blank=True)
+    # taskAssigned = models.ManyToManyField(Task, verbose_name="Task Assigned", related_name='task_assigned',blank=True)
     taskCompleted = models.ManyToManyField(Task, verbose_name="Task Completed", related_name='task_completed',blank=True)
     esummit_id = models.CharField(max_length=40, unique=True, db_index=True)
     rank = models.IntegerField(default=0)
