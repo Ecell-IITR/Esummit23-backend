@@ -283,7 +283,7 @@ def SignupView(request):
                 data["referred_by"] = ""
                 db_entry = CAUserSerializer(data=data)
                 db_entry.is_valid(raise_exception=True)
-                saver = db_entry.save()
+                db_entry.save()
                 data2 = {"email": email, "name": name, "ca": saver.pk}
                 db_entry_person = PearsonSerializer(data=data2)
                 db_entry_person.is_valid(raise_exception=True)

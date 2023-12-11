@@ -49,7 +49,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("SECRET_KEY","Random")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
@@ -225,12 +225,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media_files')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER",None)
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD",None)
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ianis.donica@gmail.com'
+EMAIL_HOST_PASSWORD = 'my app password'
+# EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER",None)
+# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD",None)
 
 ########S3 Bucket
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', None)
