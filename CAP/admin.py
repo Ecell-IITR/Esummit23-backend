@@ -2,6 +2,7 @@ from django.contrib import admin,messages
 from CAP.models.submission import Submission
 from CAP.models.tasks import Task
 from user.models.role.ca import CAUser
+from CAP.models.users import CapUsers
 
 
 class SubmissionAdmin(admin.ModelAdmin):
@@ -9,7 +10,7 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 
 
-
+admin.site.register(CapUsers)
 
 class TaskAdmin(admin.ModelAdmin):
    exclude = ('created', 'updated','task_id')

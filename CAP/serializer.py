@@ -1,8 +1,15 @@
 from CAP.models.submission import Submission,Goodies
 from CAP.models.tasks import Task
+from CAP.models.users import CapUsers
 from rest_framework import serializers
 
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CapUsers
+        fields = ['email', 'password','gender','phone_number','college','state','city','studyYear','fullname']
+        
 class SubmissionSerializer(serializers.ModelSerializer):
     class Meta :
         model = Submission
