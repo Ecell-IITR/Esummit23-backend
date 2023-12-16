@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from user.serializer import LeaderboardSerializer
-from .serializer import SubmissionSerializer, TaskAssignedSerializer,UserSerializer
-from user.models.role.ca import CAUser
+from .serializer import SubmissionSerializer, TaskAssignedSerializer,UserSerializer,TaskStatusSerializer,TaskSerializer,LeaderboardSerializer
+from CAP.models.tasks import TaskStatus,Task
+# from CAP.models.users import CapUsers
+# # from user.models.role.ca import CAUser
 from rest_framework import filters
 from rest_framework.decorators import api_view
 from user.models.abstarct import AbstractProfile
@@ -11,7 +13,7 @@ from rest_framework import status
 from django.db.models import Max
 from CAP.models.users import CapUsers
 from user.tasks import send_feedback_email_task
-from django.db import Error
+from django.db import OperationalError,Error
 
 # Create your views here.
 
@@ -72,7 +74,7 @@ Team E-Summit, IIT Roorkee"""
 
 
 
-@api_view(('GET', 'POST'))
+@api_view(['GET', 'POST'])
 def Leaderboard(request):
   if request.method == 'GET':
      AuthToken = request.headers['Authorization'].split(' ')[1]
@@ -82,8 +84,8 @@ def Leaderboard(request):
          return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST) 
 
      else : 
-      leaderboard= CAUser.objects.all().order_by('-points')
-      queryset = CAUser.objects.all().annotate(latest=Max(('points'))).order_by('-points','latest')[:1200]
+      leaderboard= CapUsers.objects.all().order_by('-totalpoints')
+      queryset = CapUsers.objects.all().annotate(latest=Max(('totalpoints'))).order_by('-totalpoints','latest')[:1200]
       current_CA = auth(AuthToken)
       rank_counter = 1
       for ca in queryset:   
@@ -94,35 +96,30 @@ def Leaderboard(request):
             ca.rank=rank_counter
             rank_counter+=1
           ca.save()
-      leaderboard= CAUser.objects.all().order_by('-points')[0:20] 
-      serializer= LeaderboardSerializer(leaderboard, many=True)
+      leaderboard= CapUsers.objects.all().order_by('-totalpoints') 
+      serializer=LeaderboardSerializer(leaderboard, many=True)
      
       # if serializer.is_valid(raise_exception=True):
       #    serializer.save()
       return Response({"data": serializer.data})
 
-
 @api_view(('GET','POST'))
 def Submission(request):
-  if request.method =='POST':
-     data={}
-    #  data["esummitId"]=request.data["esummitId"]
-    #  print(data)
-     
-     try: 
-       
-          data = {"taskId": request.data.get("taskId"), "esummitId": request.data.get(
-            "esummitId"), "images": request.data.get("images"), "points" : request.data.get("points")}
+    if request.method == 'POST':
+        AuthToken = request.headers['Authorization'].split(' ')[1]
+        user = auth(AuthToken)
+        if user is None:
+            return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+                data = {"taskId": request.data.get("taskId"), "esummitId": request.data.get(
+            "esummitId"), "images": request.FILES.get("images",False)}
         
-          db_entry = SubmissionSerializer(data=data)          
-          db_entry.is_valid(raise_exception=True)
-      
-          db_entry.save()
-          return Response(data={"success":"data submitted"}, status=status.HTTP_200_OK) 
-             
-     except:
-         return Response({"Faliure": "failure"}, status=status.HTTP_400_BAD_REQUEST)
-
+        db_entry = SubmissionSerializer(data=data)          
+        if db_entry.is_valid():
+            db_entry.save()
+            return Response(db_entry.data, status=status.HTTP_201_CREATED)
+    
+        return Response(db_entry.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(('GET','POST'))   
@@ -135,26 +132,119 @@ def TaskAssigned(request):
          return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST) 
 
     else :
-          taskassigned= user.taskAssigned.all().order_by('task_id')
+          taskassigned= Task.objects.all().order_by('-task_id')
           
           serializer = TaskAssignedSerializer(taskassigned, many=True)
-          rank = user.rank
-          
-          data=serializer.data
-          
-          # rank= 1
-          # for ca in queryset:   
-          #   if(ca==taskassigned):
-          #     break
-          #   else : 
-          #     rank +=1
-          #   if(rank>1201):
-          #    rank = str("1200+")
-          
-          points = [{ "points" : user.points , "rank" : rank}]
-          
-          return Response({"points": points ,"data": data})
+         
+          return Response({"data": serializer.data},status=status.HTTP_200_OK)
 
+# @api_view(('GET','POST'))   
+# def CapuserInfo(request):
+#   if request.method=='GET' :
+#     AuthToken = request.headers['Authorization'].split(' ')[1]
+#     user = auth(AuthToken) 
+   
+#     if user == None:
+#          return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST) 
+#     else :
+#       queryset = TaskStatus.objects.all()
+#       # upoints = user.points
+#       # print(upoints)
+#       rank= 1
+#       # for ca in queryset:   
+#       #       if(ca==user):
+#       #         break
+#       #       else : 
+#       #         rank +=1
+#       #       if(rank>1201):
+#       #        rank = str("1200+")
+#       #        break
 
+#       points = [{ "points" : user.points , "rank" : rank}]
+          
+#       return Response({"points": points 
+#                       #  ,"data": data
+#                        })
 
+# @api_view(('GET','POST'))   
+# def Login(request):
+#   if request.method=='GET' :
+#         password = request.data.get('password')
+#         esummitId = request.data.get('esummitId')
+#         email = request.data.get('email')
 
+#         if not password:
+#             return Response('Password cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+#         if not esummitId or not email:
+#             return Response('Esummit Id or email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+#         if esummitId:
+#             user = CapUsers.objects.all().filter(esummitId=esummitId)
+#         else:
+#             user = CapUsers.objects.all().filter(email=email)
+#         if user:
+#              if password==user[0].password:
+#                return Response({"name": user[0].fullname, "esummitId": user[0].esummitId}, status=status.HTTP_200_OK)
+        
+
+#         return Response({'error_msg': 'check the credentials'}, status=status.HTTP_404_NOT_FOUND)
+  
+
+@api_view(('GET','POST'))   
+def CapuserInfo(request):
+  print("reacged")
+  if request.method =='GET' :
+    print('user')
+    if 'Authorization' not in request.headers:
+     return Response({"error": "Authorization header missing"}, status=status.HTTP_200_OK)
+    AuthToken = request.headers['Authorization'].split(' ')[1]
+    print(AuthToken)
+    user = auth(AuthToken) 
+    print(user)
+   
+    if user == None:
+         return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST) 
+    else :
+      queryset = TaskStatus.objects.all()
+      upoints = user.totalpoints
+      print(upoints)
+      rank= 1
+      for ca in queryset:   
+            if(ca==user):
+              break
+            else : 
+              rank +=1
+            if(rank>1201):
+             rank = str("1200+")
+             break
+
+      points = [{ "points" : user.totalpoints , "rank" : rank, "taskcompleted":user.taskCompleted}]
+          
+      return Response({"points": points} )
+
+@api_view(('GET','POST'))   
+def Login(request):
+  if request.method=='GET' :
+        password = request.data.get('password')
+        print(password)
+        esummitId = request.data.get('esummitId')
+        email = request.data.get('email')
+
+        if not password:
+            return Response('Password cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+        if not esummitId and not email:
+            return Response('Esummit Id or email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+        if esummitId:
+            user = CapUsers.objects.all().filter(esummitId=esummitId)
+        else:
+            user = CapUsers.objects.all().filter(email=email)
+        if user:
+             if password==user[0].password:
+               data={"name":user[0].fullname,"esummitId":user[0].esummitId,"studyYear":user[0].studyYear,
+                     "email":user[0].email,"gender":user[0].gender,"phoneNumber":user[0].phone_number,
+                     "state":user[0].state,"college":user[0].college,"city":user[0].city,"totalpoints":user[0].totalpoints,
+                     "taskCompleted":user[0].taskCompleted,"password":user[0].password}
+               return Response({"data": data}, status=status.HTTP_200_OK)
+        
+
+        return Response({'error_msg': 'check the credentials'}, status=status.HTTP_404_NOT_FOUND)
+  
