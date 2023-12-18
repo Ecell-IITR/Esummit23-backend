@@ -27,8 +27,6 @@ class CapUsers(models.Model):
     state= models.CharField(max_length=100, verbose_name="State",default="")
     city= models.CharField(max_length=100, verbose_name="City",default="")
     studyYear = models.CharField(max_length=10,verbose_name="YearofStudy",default="")
-    totalpoints = models.IntegerField(default=0)
-    taskCompleted = models.IntegerField(default=0)
     esummitId = models.CharField(max_length=100,verbose_name="EsummitId",default="")
     refferedby = models.CharField(max_length=100,verbose_name="RefferedBy",default="")
     created = models.DateTimeField(default=timezone.now)
@@ -62,7 +60,7 @@ class CapUsers(models.Model):
 
         return super(CapUsers, self).save(*args, **kwargs)
     
-    def _str_(self):
+    def __str__(self):
         return self.fullname
 
     class Meta:

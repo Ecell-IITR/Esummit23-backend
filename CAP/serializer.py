@@ -1,5 +1,5 @@
 from CAP.models.submission import Submission,Goodies
-from CAP.models.tasks import Task, TaskStatus
+from CAP.models.tasks import Task
 from CAP.models.users import CapUsers
 from rest_framework import serializers
 
@@ -12,8 +12,9 @@ class UserSerializer(serializers.ModelSerializer):
         
 class SubmissionSerializer(serializers.ModelSerializer):
     class Meta :
-        model =  TaskStatus
-        fields = ['taskId','images','esummitId']
+        model = Submission
+        exclude = ['created', 'updated']
+
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta :
@@ -31,12 +32,3 @@ class TaskAssignedSerializer(serializers.ModelSerializer):
         model = Task
         fields= ['task_id','desc','points','url']
         
-class TaskStatusSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TaskStatus
-        fields = '_all_'
-
-class LeaderboardSerializer(serializers.ModelSerializer):
-    class Meta:
-        model= CapUsers
-        fields=['taskCompleted','totalpoints','fullname','college','studyYear']

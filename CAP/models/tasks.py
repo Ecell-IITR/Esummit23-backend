@@ -1,27 +1,16 @@
 from django.db import models
 from django.utils import timezone
-from CAP.models.users import CapUsers
-
 class Task(models.Model):  
-    STATUS_CHOICES = [
-        ('LIVE', 'Live'),
-        ('PEND', 'Pending'),
-        ('VERI', 'Verifed'),
-        ('EXPI', 'Expired')
-    ]
-    
-    status=models.CharField(max_length=200,default='null',choices=STATUS_CHOICES)
     task_id = models.IntegerField(default=0)
     desc = models.CharField(max_length=1000, verbose_name="description", default='null')
     points = models.IntegerField(default=0)
     format = models.CharField(max_length=50, verbose_name="Submission Format", default='null')
     url = models.CharField(max_length=200, default='null' )
     keywords = models.CharField(max_length=400, default='null')
-    deadline=models.DateTimeField(default='null')
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
 
-    def _str_(self):
+    def __str__(self):
         return str(self.task_id)
     
     class Meta:
@@ -45,41 +34,3 @@ class Task(models.Model):
         self.updated = timezone.now()
         return super(Task, self).save(*args, **kwargs)
 
-class TaskStatus(models.Model): 
-   
-    esummitId = models.CharField(max_length=100,verbose_name="EsummitId",default="")
-    taskId = models.IntegerField(default=0)
-    images= models.ImageField(upload_to='Submission/',verbose_name='Submitted Images')
-    check = models.BooleanField(default=False, verbose_name='Team Check')
-    verify = models.BooleanField(default=False, verbose_name='Team Accepted') 
-    # inspected=models.CharField(default='no')
-    taskassign=models.IntegerField(default=0)
-    taskpoint=models.CharField(default="",max_length=20)
-    created = models.DateTimeField(default=timezone.now)
-    updated = models.DateTimeField(auto_now=True)
-    def _str_(self):
-        return str(self.taskId)
-    
-    class Meta:
-        """
-        Meta class for Task
-        """
-        verbose_name_plural = "Tasks"
-    def save(self, *args, **kwargs):
-        if not self.created:
-            self.created = timezone.now()
-        if not self.check:
-            task=Task.objects.get(task_id=self.taskId)
-            taskpoint=task.points
-           
-        if self.verify and self.check: 
-           user = CapUsers.objects.get(esummit_id=self.esummitId)    
-           CapUsers.totalpoints = CapUsers.totalpoints + self.taskpoints  
-           if self.taskpoints>0:
-            CapUsers.taskCompleted =  CapUsers.taskCompleted +1
-           self.taskpoints = 0
-           task=Task.objects.get(task_id=self.taskId)[0]
-           user.save()
-              
-        self.updated = timezone.now()
-        return super(TaskStatus, self).save(*args, **kwargs)
