@@ -1,12 +1,12 @@
 from django.contrib import admin,messages
-from CAP.models.submission import Submission
+# from CAP.models.submission import Submission
 from CAP.models.tasks import Task,TaskStatus
 from user.models.role.ca import CAUser
 from CAP.models.users import CapUsers
 
 
-class SubmissionAdmin(admin.ModelAdmin):
-  exclude=('points','created')
+# class SubmissionAdmin(admin.ModelAdmin):
+#   exclude=('points','created')
 
 
 
@@ -32,4 +32,4 @@ admin.site.register(CapUsers)
 # admin.site.register(Task,TaskAdmin)    
 admin.site.register(Task)          
 admin.site.register(TaskStatus)          
-admin.site.register(Submission,SubmissionAdmin)
+# admin.site.register(Submission,SubmissionAdmin)

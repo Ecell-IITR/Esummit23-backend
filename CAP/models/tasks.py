@@ -10,14 +10,14 @@ class Task(models.Model):
         ('EXPI', 'Expired')
     ]
     
-    status=models.CharField(max_length=200,default='null',choices=STATUS_CHOICES)
+    status=models.CharField(max_length=200,default='LIVE',choices=STATUS_CHOICES)
     task_id = models.IntegerField(default=0)
     desc = models.CharField(max_length=1000, verbose_name="description", default='null')
     points = models.IntegerField(default=0)
-    format = models.CharField(max_length=50, verbose_name="Submission Format", default='null')
-    url = models.CharField(max_length=200, default='null' )
-    keywords = models.CharField(max_length=400, default='null')
-    deadline=models.DateTimeField(default='null')
+    # format = models.CharField(max_length=50, verbose_name="Submission Format", default='null')
+    # url = models.CharField(max_length=200, default='null' )
+    # keywords = models.CharField(max_length=400, default='null')
+    deadline=models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
 
@@ -46,15 +46,23 @@ class Task(models.Model):
         return super(Task, self).save(*args, **kwargs)
 
 class TaskStatus(models.Model): 
-   
+    # STATUS_CHOICES = [
+    #     ('LIVE', 'Live'),
+    #     ('PEND', 'Pending'),
+    #     ('VERI', 'Verifed'),
+    #     ('EXPI', 'Expired')
+    # ]
+    
     esummitId = models.CharField(max_length=100,verbose_name="EsummitId",default="")
-    taskId = models.IntegerField(default=0)
-    images= models.ImageField(upload_to='Submission/',verbose_name='Submitted Images')
+    # status=models.CharField(max_length=200,default='null',choices=STATUS_CHOICES)
+    taskId=models.CharField(max_length=100,verbose_name="Esummitid",default="")
+    images= models.ImageField(upload_to='Submission/',verbose_name='Submitted Images',null=True)
     check = models.BooleanField(default=False, verbose_name='Team Check')
     verify = models.BooleanField(default=False, verbose_name='Team Accepted') 
     # inspected=models.CharField(default='no')
-    taskassign=models.IntegerField(default=0)
-    taskpoint=models.CharField(default="",max_length=20)
+    # taskassign=models.IntegerField(default=0)
+    taskpoint=models.IntegerField(default=0,null=True)
+
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
     def _str_(self):
@@ -70,15 +78,16 @@ class TaskStatus(models.Model):
             self.created = timezone.now()
         if not self.check:
             task=Task.objects.get(task_id=self.taskId)
-            taskpoint=task.points
+            self.taskpoint=task.points
+            
+
            
         if self.verify and self.check: 
-           user = CapUsers.objects.get(esummit_id=self.esummitId)    
-           CapUsers.totalpoints = CapUsers.totalpoints + self.taskpoints  
-           if self.taskpoints>0:
-            CapUsers.taskCompleted =  CapUsers.taskCompleted +1
-           self.taskpoints = 0
-           task=Task.objects.get(task_id=self.taskId)[0]
+           user = CapUsers.objects.get(esummitId=self.esummitId)    
+           user.totalpoints = int(user.totalpoints) + self.taskpoint
+           if self.taskpoint>0:
+               user.taskCompleted = int(user.taskCompleted) + 1
+           self.taskpoint=0
            user.save()
               
         self.updated = timezone.now()

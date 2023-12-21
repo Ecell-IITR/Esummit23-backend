@@ -1,4 +1,4 @@
-from CAP.models.submission import Submission,Goodies
+# from CAP.models.submission import Submission,Goodies
 from CAP.models.tasks import Task, TaskStatus
 from CAP.models.users import CapUsers
 from rest_framework import serializers
@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['email', 'password','gender','phone_number','college','state','city','studyYear','fullname']
         
 class SubmissionSerializer(serializers.ModelSerializer):
+    images = serializers.ImageField(required=False)
     class Meta :
         model =  TaskStatus
         fields = ['taskId','images','esummitId']
@@ -21,10 +22,10 @@ class TaskSerializer(serializers.ModelSerializer):
         exclude = ['created', 'updated']
 
 
-class GoodiesSerializer(serializers.ModelSerializer):
-    class Meta :
-        model = Goodies
-        exclude = ['created', 'updated']
+# class GoodiesSerializer(serializers.ModelSerializer):
+#     class Meta :
+#         model = Goodies
+#         exclude = ['created', 'updated']
 
 class TaskAssignedSerializer(serializers.ModelSerializer):
     class Meta:
