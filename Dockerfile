@@ -31,4 +31,4 @@ WORKDIR /usr/esummit23-backend
 
 COPY . .
 
-CMD ["sh", "-c", "python manage.py collectstatic --no-input; python manage.py migrate;gunicorn esummit.wsgi:application -b 0.0.0.0:9000 --timeout 60000 -c config.py  "]
+CMD ["sh", "-c", "python manage.py collectstatic --no-input;python manage.py makemigrations;python manage.py migrate;gunicorn esummit.wsgi:application -b 0.0.0.0:9000 --timeout 60000 -c config.py  "]

@@ -175,3 +175,4 @@ cython_debug/
 # Ignore redis binary dump (dump.rdb) files
 
 *.rdb
+.esummit/static
