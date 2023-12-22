@@ -197,7 +197,7 @@ def Login(request):
                      "state":user[0].state,"college":user[0].college,"city":user[0].city,"totalpoints":user[0].totalpoints,
                      "taskCompleted":user[0].taskCompleted,
                     #  "password":user[0].password,
-                     "authToken": user[0].authToken}
+                     "authToken": user[0].authToken[2:-1]}
                return Response({"data": data}, status=status.HTTP_200_OK)
         
 
