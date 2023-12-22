@@ -30,7 +30,7 @@ class TaskSerializer(serializers.ModelSerializer):
 class TaskAssignedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields= ['task_id','desc','points','url']
+        fields= ['task_id','desc','points','deadline']
         
 class TaskStatusSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,3 +41,9 @@ class LeaderboardSerializer(serializers.ModelSerializer):
     class Meta:
         model= CapUsers
         fields=['taskCompleted','totalpoints','fullname','college','studyYear']
+
+
+class TaskStatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TaskStatus
+        fields=['esummitId','status']

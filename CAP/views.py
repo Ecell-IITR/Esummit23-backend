@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from user.serializer import LeaderboardSerializer
-from .serializer import SubmissionSerializer, TaskAssignedSerializer,UserSerializer,TaskStatusSerializer,TaskSerializer,LeaderboardSerializer
+from .serializer import SubmissionSerializer, TaskAssignedSerializer,UserSerializer,TaskStatusSerializer,TaskSerializer,LeaderboardSerializer,TaskStatsSerializer
 from CAP.models.tasks import TaskStatus,Task
 # from CAP.models.users import CapUsers
 # # from user.models.role.ca import CAUser
@@ -103,7 +103,7 @@ def Leaderboard(request):
       #    serializer.save()
       return Response({"data": serializer.data})
 
-@api_view(('GET','POST'))
+@api_view(['GET','POST'])
 def Submission(request):
     if request.method == 'POST':
         AuthToken = request.headers['Authorization'].split(' ')[1]
@@ -122,7 +122,7 @@ def Submission(request):
         return Response(db_entry.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(('GET','POST'))   
+@api_view(['GET','POST'])   
 def TaskAssigned(request):
   if request.method=='GET' :
     
@@ -132,64 +132,17 @@ def TaskAssigned(request):
          return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST) 
 
     else :
+      try:
+              
           taskassigned= Task.objects.all().order_by('-task_id')
-          
           serializer = TaskAssignedSerializer(taskassigned, many=True)
          
           return Response({"data": serializer.data},status=status.HTTP_200_OK)
+      except Error as e:
+          return Response({"data":e},status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(('GET','POST'))   
-# def CapuserInfo(request):
-#   if request.method=='GET' :
-#     AuthToken = request.headers['Authorization'].split(' ')[1]
-#     user = auth(AuthToken) 
-   
-#     if user == None:
-#          return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST) 
-#     else :
-#       queryset = TaskStatus.objects.all()
-#       # upoints = user.points
-#       # print(upoints)
-#       rank= 1
-#       # for ca in queryset:   
-#       #       if(ca==user):
-#       #         break
-#       #       else : 
-#       #         rank +=1
-#       #       if(rank>1201):
-#       #        rank = str("1200+")
-#       #        break
 
-#       points = [{ "points" : user.points , "rank" : rank}]
-          
-#       return Response({"points": points 
-#                       #  ,"data": data
-#                        })
-
-# @api_view(('GET','POST'))   
-# def Login(request):
-#   if request.method=='GET' :
-#         password = request.data.get('password')
-#         esummitId = request.data.get('esummitId')
-#         email = request.data.get('email')
-
-#         if not password:
-#             return Response('Password cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
-#         if not esummitId or not email:
-#             return Response('Esummit Id or email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
-#         if esummitId:
-#             user = CapUsers.objects.all().filter(esummitId=esummitId)
-#         else:
-#             user = CapUsers.objects.all().filter(email=email)
-#         if user:
-#              if password==user[0].password:
-#                return Response({"name": user[0].fullname, "esummitId": user[0].esummitId}, status=status.HTTP_200_OK)
-        
-
-#         return Response({'error_msg': 'check the credentials'}, status=status.HTTP_404_NOT_FOUND)
-  
-
-@api_view(('GET','POST'))   
+@api_view(['GET','POST'])   
 def CapuserInfo(request):
   print("reacged")
   if request.method =='GET' :
@@ -221,7 +174,7 @@ def CapuserInfo(request):
           
       return Response({"points": points} )
 
-@api_view(('GET','POST'))   
+@api_view(['GET','POST'])   
 def Login(request):
   if request.method=='GET' :
         password = request.data.get('password')
@@ -248,3 +201,25 @@ def Login(request):
 
         return Response({'error_msg': 'check the credentials'}, status=status.HTTP_404_NOT_FOUND)
   
+
+@api_view(['GET'])
+def taskStats(request):
+    if request.method =='GET':
+        
+     AuthToken = request.headers['Authorization'].split(' ')[1]
+     user = auth(AuthToken) 
+     if user == None:
+         return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST) 
+
+     else :
+      try:
+          esummitId=user.esummitId
+          taskassigned= TaskStatus.objects.all().filter(esummitId=esummitId)
+          if not taskassigned:
+              data=[{"esummitId":esummitId,"status":"LIVE"}]
+              return Response({"data": data},status=status.HTTP_200_OK)
+          serializer = TaskStatsSerializer(taskassigned)
+         
+          return Response({"data": serializer.data},status=status.HTTP_200_OK)
+      except Error as e:
+            return Response({"Faliure": e}, status=status.HTTP_400_BAD_REQUEST)

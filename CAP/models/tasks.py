@@ -3,14 +3,14 @@ from django.utils import timezone
 from CAP.models.users import CapUsers
 
 class Task(models.Model):  
-    STATUS_CHOICES = [
-        ('LIVE', 'Live'),
-        ('PEND', 'Pending'),
-        ('VERI', 'Verifed'),
-        ('EXPI', 'Expired')
-    ]
+    # STATUS_CHOICES = [
+    #     ('LIVE', 'Live'),
+    #     ('PEND', 'Pending'),
+    #     ('VERI', 'Verifed'),
+    #     ('EXPI', 'Expired')
+    # ]
     
-    status=models.CharField(max_length=200,default='LIVE',choices=STATUS_CHOICES)
+    # status=models.CharField(max_length=200,default='LIVE',choices=STATUS_CHOICES)
     task_id = models.IntegerField(default=0)
     desc = models.CharField(max_length=1000, verbose_name="description", default='null')
     points = models.IntegerField(default=0)
@@ -46,15 +46,16 @@ class Task(models.Model):
         return super(Task, self).save(*args, **kwargs)
 
 class TaskStatus(models.Model): 
-    # STATUS_CHOICES = [
-    #     ('LIVE', 'Live'),
-    #     ('PEND', 'Pending'),
-    #     ('VERI', 'Verifed'),
-    #     ('EXPI', 'Expired')
-    # ]
+    STATUS_CHOICES = [
+        ('LIVE', 'Live'),
+        ('PEND', 'Pending'),
+        ('VERI', 'Verifed'),
+        ('EXPI', 'Expired'),
+        ('NOTACC','Not accepted'),
+    ]
     
     esummitId = models.CharField(max_length=100,verbose_name="EsummitId",default="")
-    # status=models.CharField(max_length=200,default='null',choices=STATUS_CHOICES)
+    status=models.CharField(max_length=200,default='null',choices=STATUS_CHOICES)
     taskId=models.CharField(max_length=100,verbose_name="Esummitid",default="")
     images= models.ImageField(upload_to='Submission/',verbose_name='Submitted Images',null=True)
     check = models.BooleanField(default=False, verbose_name='Team Check')
