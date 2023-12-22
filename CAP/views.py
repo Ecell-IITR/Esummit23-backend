@@ -195,7 +195,9 @@ def Login(request):
                data={"name":user[0].fullname,"esummitId":user[0].esummitId,"studyYear":user[0].studyYear,
                      "email":user[0].email,"gender":user[0].gender,"phoneNumber":user[0].phone_number,
                      "state":user[0].state,"college":user[0].college,"city":user[0].city,"totalpoints":user[0].totalpoints,
-                     "taskCompleted":user[0].taskCompleted,"password":user[0].password}
+                     "taskCompleted":user[0].taskCompleted,
+                    #  "password":user[0].password,
+                     "authToken": user[0].authToken}
                return Response({"data": data}, status=status.HTTP_200_OK)
         
 
