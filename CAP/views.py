@@ -111,8 +111,8 @@ def Submission(request):
         if user is None:
             return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-                data = {"taskId": request.data.get("taskId"), "esummitId": request.data.get(
-            "esummitId"), "images": request.FILES.get("images",False)}
+                data = {"taskId": request.data.get("taskId"), "esummitId": user.esummitId,
+            "images": request.FILES.get("images",False)}
         
         db_entry = SubmissionSerializer(data=data)          
         if db_entry.is_valid():
@@ -176,7 +176,7 @@ def CapuserInfo(request):
 
 @api_view(['GET','POST'])   
 def Login(request):
-  if request.method=='GET' :
+  if request.method=='POST' :
         password = request.data.get('password')
         print(password)
         esummitId = request.data.get('esummitId')
