@@ -117,7 +117,7 @@ def Submission(request):
         db_entry = SubmissionSerializer(data=data)          
         if db_entry.is_valid():
             db_entry.save()
-            return Response(db_entry.data, status=status.HTTP_201_CREATED)
+            return Response({"success":"success"}, status=status.HTTP_201_CREATED)
     
         return Response(db_entry.errors, status=status.HTTP_400_BAD_REQUEST)
 

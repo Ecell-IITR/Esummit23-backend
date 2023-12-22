@@ -56,7 +56,7 @@ class TaskStatus(models.Model):
     
     esummitId = models.CharField(max_length=100,verbose_name="EsummitId",default="")
     status=models.CharField(max_length=200,default='null',choices=STATUS_CHOICES)
-    taskId=models.CharField(max_length=100,verbose_name="Esummitid",default="")
+    taskId=models.CharField(max_length=100,verbose_name="TaskId",default="")
     images= models.ImageField(upload_to='Submission/',verbose_name='Submitted Images',null=True)
     check = models.BooleanField(default=False, verbose_name='Team Check')
     verify = models.BooleanField(default=False, verbose_name='Team Accepted') 
@@ -73,7 +73,7 @@ class TaskStatus(models.Model):
         """
         Meta class for Task
         """
-        verbose_name_plural = "Tasks"
+        verbose_name_plural = "Taskstats"
     def save(self, *args, **kwargs):
         if not self.created:
             self.created = timezone.now()
