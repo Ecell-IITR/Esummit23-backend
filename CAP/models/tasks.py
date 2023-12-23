@@ -1,22 +1,16 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import FileExtensionValidator
 from CAP.models.users import CapUsers
 
+
 class Task(models.Model):  
-    # STATUS_CHOICES = [
-    #     ('LIVE', 'Live'),
-    #     ('PEND', 'Pending'),
-    #     ('VERI', 'Verifed'),
-    #     ('EXPI', 'Expired')
-    # ]
-    
-    # status=models.CharField(max_length=200,default='LIVE',choices=STATUS_CHOICES)
+
     task_id = models.IntegerField(default=0)
     desc = models.CharField(max_length=1000, verbose_name="description", default='null')
     points = models.IntegerField(default=0)
     # format = models.CharField(max_length=50, verbose_name="Submission Format", default='null')
     # url = models.CharField(max_length=200, default='null' )
-    # keywords = models.CharField(max_length=400, default='null')
     deadline=models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
@@ -47,17 +41,17 @@ class Task(models.Model):
 
 class TaskStatus(models.Model): 
     STATUS_CHOICES = [
-        ('LIVE', 'Live'),
-        ('PEND', 'Pending'),
-        ('VERI', 'Verifed'),
-        ('EXPI', 'Expired'),
-        ('NOTACC','Not accepted'),
+        ('None',''),
+        ('Pending', 'Pending'),
+        ('Verified', 'Verifed'),
+        ('Expired', 'Expired'),
+        ('Not Accepted','Not accepted'),
     ]
     
     esummitId = models.CharField(max_length=100,verbose_name="EsummitId",default="")
-    status=models.CharField(max_length=200,default='null',choices=STATUS_CHOICES)
+    status=models.CharField(max_length=200,default='Pending',choices=STATUS_CHOICES)
     taskId=models.CharField(max_length=100,verbose_name="TaskId",default="")
-    images= models.ImageField(upload_to='Submission/',verbose_name='Submitted Images',null=True)
+    images= models.FileField(upload_to='Submission/',verbose_name='Submitted Images',null=True)
     check = models.BooleanField(default=False, verbose_name='Team Check')
     verify = models.BooleanField(default=False, verbose_name='Team Accepted') 
     # inspected=models.CharField(default='no')

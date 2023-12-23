@@ -8,11 +8,11 @@ from django.utils.html import strip_tags
 @shared_task()
 def send_feedback_email_task(email, message, subject):
     if type(email) == list:
-        send_mail(subject,"",'from@example.com',
+        send_mail(subject,"",'no.reply.esummit@gmail.com',
                   email, fail_silently=False, html_message=message)
     else:
         html_message = message
-        msg = MIMEText(strip_tags(html_message), 'html', 'utf-8')
+        # msg = MIMEText(strip_tags(html_message), 'html', 'utf-8')
         send_mail(subject,"",'no.reply.esummit@gmail.com',
                   [email], fail_silently=False,html_message=html_message) 
 
