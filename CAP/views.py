@@ -14,6 +14,7 @@ from django.db.models import Max
 from CAP.models.users import CapUsers
 from user.tasks import send_feedback_email_task
 from django.db import OperationalError,Error
+# import magic
 
 # Create your views here.
 
@@ -31,9 +32,8 @@ def user_registration(request):
                 data = {"college": request.data.get("college"), "state": request.data.get("state"), "city" : request.data.get("city"),
                 "studyYear" : request.data.get("studyYear"),"phone_number" : request.data.get("phoneNumber"), "gender" : request.data.get("gender"),
                 "fullname" : request.data.get("fullname"),"email": request.data.get("email"),"password":request.data.get("password")}
-                print("pass2")
+               
                 db_entry = UserSerializer(data=data)
-                print("pass3")
                 db_entry.is_valid(raise_exception=True)
                 saver = db_entry.save()
                 # message = "Dear "+"<b>"+saver.fullname+"</b>" + \
@@ -113,13 +113,20 @@ def Submission(request):
         else:
                 data = {"taskId": request.data.get("taskId"), "esummitId": user.esummitId,
             "images": request.FILES.get("images",False)}
+        # mime = magic.Magic()
+        # mime_type = mime.from_buffer(data['images'].read(1024))
+        # allowed_mime_types = ['application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/pdf','image/jpeg','image/png']
+        # if mime_type not in allowed_mime_types:
+        #   return Response(mime_type, status=status.HTTP_400_BAD_REQUEST)
+
+
         
         db_entry = SubmissionSerializer(data=data)          
         if db_entry.is_valid():
             db_entry.save()
             return Response({"success":"success"}, status=status.HTTP_201_CREATED)
     
-        return Response(db_entry.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(db_entry.error, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET','POST'])   
@@ -218,10 +225,34 @@ def taskStats(request):
           esummitId=user.esummitId
           taskassigned= TaskStatus.objects.all().filter(esummitId=esummitId)
           if not taskassigned:
-              data=[{"esummitId":esummitId,"status":"LIVE"}]
+              data=[{"status":"LIVE"}]
               return Response({"data": data},status=status.HTTP_200_OK)
           serializer = TaskStatsSerializer(taskassigned)
          
           return Response({"data": serializer.data},status=status.HTTP_200_OK)
       except Error as e:
             return Response({"Faliure": e}, status=status.HTTP_400_BAD_REQUEST)
+      
+
+# @api_view(['GET','POST'])
+# def taskAssigned(request):
+#     if request.method=='GET':
+#           AuthToken = request.headers['Authorization'].split(' ')[1]
+#           user = auth(AuthToken) 
+#           if user == None:
+#              return Response({"error": "Invalid Auth Token"}, status=status.HTTP_400_BAD_REQUEST) 
+
+#           else :
+#             esummitId = user.esummitId
+#             data=[]
+#             tasksassigned = user.taskAssigned.split(',')
+#             for task in tasksassigned:
+#                 taskdetails = Task.objects.filter(task_id = task)
+#                 taskstats= TaskStatus.objects.all().filter(esummitId=esummitId)
+#                 if Task.objects.filter(taskId=task).exists():
+#                   taskdetails['status']=taskstats
+#                 else:
+#                      taskdetails['status']='LIVE'
+#                 data.append(taskdetails)
+#             return Response({"data":data },status=status.HTTP_200_OK)
+            

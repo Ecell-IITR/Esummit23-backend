@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator
+
 import jwt
 from django.contrib.auth.hashers import make_password
 SECRET_KEY = '7o9d=)+(f-chzvhcr#*(dc6k!#8&q2=)w5m4a+d$-$m&)hr4gh'
@@ -30,6 +31,7 @@ class CapUsers(models.Model):
     totalpoints=models.IntegerField(default=0)
     taskCompleted=models.IntegerField(default=0)
     esummitId = models.CharField(max_length=100,verbose_name="EsummitId",default="")
+    taskAssigned=models.CharField(max_length=100,verbose_name="assigned Tasks",default="")
     refferedby = models.CharField(max_length=100,verbose_name="RefferedBy",default="")
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)

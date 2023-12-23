@@ -8,6 +8,7 @@ urlpatterns = [
     path('register/', user_registration, name='user-registration'),
     path('login',Login),
     path('userinfo',CapuserInfo),
-    path('taskstats',taskStats)
+    path('taskstats',taskStats),
+    # path('taskassigned',taskAssigned)
    
 ]
