@@ -8,7 +8,7 @@ class CapAdmin(admin.ModelAdmin):
    exclude=('created', 'updated',)
 
 class TaskstatusAdmin(admin.ModelAdmin):
-   exclude = ('created', 'updated',)
+   exclude = ('created', 'updated')
 
 
 
