@@ -25,6 +25,7 @@ RUN pip install --upgrade pip \
 
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
+
 RUN mkdir /usr/esummit23-backend
 WORKDIR /usr/esummit23-backend
 
