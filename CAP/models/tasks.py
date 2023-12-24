@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from django.core.validators import FileExtensionValidator
+# from django.core.validators import FileExtensionValidator
 from CAP.models.users import CapUsers
 
 
