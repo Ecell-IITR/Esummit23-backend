@@ -5,10 +5,10 @@ from CAP.models.users import CapUsers
 
 
 class CapAdmin(admin.ModelAdmin):
-   exclude=('created', 'updated','taskCompleted','totalpoints')
+   exclude=('created', 'updated',)
 
 class TaskstatusAdmin(admin.ModelAdmin):
-   exclude = ('created', 'updated','taskpoint')
+   exclude = ('created', 'updated',)
 
 
 

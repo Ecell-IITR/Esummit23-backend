@@ -126,7 +126,7 @@ def Submission(request):
             db_entry.save()
             return Response({"success":"success"}, status=status.HTTP_201_CREATED)
     
-        return Response(db_entry.error, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"failure":db_entry.error}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET','POST'])   
