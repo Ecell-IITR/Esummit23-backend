@@ -15,7 +15,7 @@ class Task(models.Model):
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
 
-    def _str_(self):
+    def __str__(self):
         return str(self.task_id)
     
     class Meta:
@@ -60,8 +60,8 @@ class TaskStatus(models.Model):
 
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
-    def _str_(self):
-        return str(self.taskId)
+    def __str__(self):
+        return str(self.esummitId)
     
     class Meta:
         """

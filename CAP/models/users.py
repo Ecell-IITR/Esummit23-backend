@@ -64,7 +64,7 @@ class CapUsers(models.Model):
 
         return super(CapUsers, self).save(*args, **kwargs)
     
-    def _str_(self):
+    def __str__(self):
         return self.fullname
 
     class Meta:
