@@ -176,3 +176,5 @@ cython_debug/
 
 *.rdb
 .esummit/static
+docker-compose.yml
+config.py
