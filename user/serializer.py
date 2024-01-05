@@ -9,15 +9,12 @@ from .models.person import person
 from .models.teams import teams
 from .models.block import BlockMail
 from .models.teamecell import Teamecell
-from .models.Users24.professor import Proff
-from .models.Users24.startup import Startup
-from .models.Users24.student import Student
 from rest_framework.response import Response
 
 class ProffUserLoginSerializer(serializers.ModelSerializer):
     
     class Meta:
-       model = Proff
+       model = ProffUser
        fields = ['email', 'password', 'esummit_id']
 
 class CAUserLoginSerializer(serializers.ModelSerializer):
@@ -29,13 +26,13 @@ class CAUserLoginSerializer(serializers.ModelSerializer):
 class StudentUserLoginSerializer(serializers.ModelSerializer):
     
     class Meta:
-       model = Student
+       model = StudentUser
        fields = ['email', 'password','esummit_id' ]
 
 class StartupUserLoginSerializer(serializers.ModelSerializer):
     
     class Meta:
-       model = Startup
+       model = StartupUser
        fields = ['email', 'password', 'esummit_id' ]
 
 
@@ -93,17 +90,17 @@ class LeaderboardSerializer(serializers.ModelSerializer):
 
 class StudentUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Student
+        model = StudentUser
         exclude=['student_type','payment','esummit_id','created','updated','authToken']
 
 class ProffUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Proff
+        model = ProffUser
         exclude=['payment','esummit_id','created','updated','authToken']
 
 class StartupUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Startup
+        model = StartupUser
         exclude=['payment','esummit_id','created','updated','authToken']
 
 
