@@ -59,3 +59,4 @@ class AbstractProfile(models.Model):
 
     def __str__(self):
         return self.full_name
+

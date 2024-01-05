@@ -1,3 +1,4 @@
+
 from rest_framework.response import Response
 import pyotp
 from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer, TeamecellSerializer,otpSerializer
@@ -16,6 +17,12 @@ from events.models import Services, Event
 from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
 from .models.role.student import StudentUser
+<<<<<<< HEAD
+=======
+from .models.role.ca import CAUser
+from .models.role.proff import ProffUser
+from .models.role.startup import StartupUser
+>>>>>>> 97db731ef501642e84552d439899a14c442e6837
 from .utils.block import block_mail
 from django.views.decorators.csrf import csrf_exempt
 from ticket.models import Ticket, Payment, ReffealCode
@@ -23,18 +30,48 @@ from .models.otp import OTP
 from ticket.constants import Plans
 import csv
 from django.http import HttpResponse
+<<<<<<< HEAD
 import random
 from user.models import otp
 from 
 
 # Create your views here.
+=======
+from .models.abstarct import AbstractProfile
+
+# Create your views here.
+def getproff(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="proff.csv"'
+    students = ProffUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.organisation_name,student.gender,student.industry,student.esummit_id,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+    return response 
+
+def getperson(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="person.csv"'
+    students = person.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.leader_status,student.name,student.email,student.student,student.ca,student.proff,student.created,student.updated,student.otp,student.verified])  
+    return response 
+
+>>>>>>> 97db731ef501642e84552d439899a14c442e6837
 def getfile(request):  
     response = HttpResponse(content_type='text/csv')  
     response['Content-Disposition'] = 'attachment; filename="student.csv"'  
     students = StudentUser.objects.all()  
     writer = csv.writer(response)  
     for student in students:  
+<<<<<<< HEAD
         writer.writerow([student.student_type,student.gender,student.enrollment_no,student.city,student.state,student.collage,student.esummit_id,student.referred_by])  
+=======
+        writer.writerow([student.student_type,student.gender,student.enrollment_no,student.city,student.state,student.collage,student.esummit_id,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+>>>>>>> 97db731ef501642e84552d439899a14c442e6837
     return response  
 def getstartup(request):  
     response = HttpResponse(content_type='text/csv')  
@@ -42,7 +79,12 @@ def getstartup(request):
     students = StartupUser.objects.all()  
     writer = csv.writer(response)  
     for student in students:  
+<<<<<<< HEAD
         writer.writerow([student.startup_name,student.domain,student.category,student.esummit_id,student.referred_by,student.email])  
+=======
+        writer.writerow([student.startup_name,student.email,student.domain,student.category,student.esummit_id,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+>>>>>>> 97db731ef501642e84552d439899a14c442e6837
     return response  
 def getca(request):  
     response = HttpResponse(content_type='text/csv')  
@@ -50,9 +92,17 @@ def getca(request):
     students =CAUser.objects.all()  
     writer = csv.writer(response)  
     for student in students:  
+<<<<<<< HEAD
         writer.writerow([student.collage,student.points,student.year,student.city,student.state,student.gender,student.taskAssigned,student.taskCompleted,student.rank])  
     return response  
 
+=======
+        writer.writerow([student.collage,student.points,student.year,student.city,student.state,student.gender,student.taskAssigned,student.taskCompleted,student.rank,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+    return response  
+
+
+>>>>>>> 97db731ef501642e84552d439899a14c442e6837
 # def getAbstractProfile(request):
 #     response = HttpResponse(content_type='text/csv')  
 #     response['Content-Disposition'] = 'attachment; filename="abstract.csv"'  
@@ -61,6 +111,10 @@ def getca(request):
 #     for student in students:  
 #         writer.writerow([student.full_name,student.email,student.phone_number,student.payment,student.password,student.authtoken,student.referred_by])  
 #     return response  
+<<<<<<< HEAD
+=======
+
+>>>>>>> 97db731ef501642e84552d439899a14c442e6837
 
 
 @csrf_exempt
@@ -318,19 +372,19 @@ def SignupView(request):
         data = request.data["user"]
         userType = request.data.get('UserType')
 
-        # if userType == 'ca':
-        #     try:
-        #         data["referred_by"] = ""
-        #         db_entry = CAUserSerializer(data=data)
-        #         db_entry.is_valid(raise_exception=True)
-        #         db_entry.save()
-        #         data2 = {"email": email, "name": name, "ca": saver.pk}
-        #         db_entry_person = PearsonSerializer(data=data2)
-        #         db_entry_person.is_valid(raise_exception=True)
-        #         db_entry_person.save()
+        if userType == 'ca':
+            try:
+                data["referred_by"] = ""
+                db_entry = CAUserSerializer(data=data)
+                db_entry.is_valid(raise_exception=True)
+                db_entry.save()
+                data2 = {"email": email, "name": name, "ca": saver.pk}
+                db_entry_person = PearsonSerializer(data=data2)
+                db_entry_person.is_valid(raise_exception=True)
+                db_entry_person.save()
 
-        #     except:
-        #         return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
+            except:
+                return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
         if userType in ('stu', "proff", "stp"):
 
             try:
@@ -364,8 +418,13 @@ def SignupView(request):
                 return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
             try:
 
+<<<<<<< HEAD
                 user = CAPUser.objects.filter(esummit_id=data["referred_by"])[0]
                 user.totalpoints = 50+user.totalpoints
+=======
+                user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
+                user.points = 50+user.points
+>>>>>>> 97db731ef501642e84552d439899a14c442e6837
 
                 user.save()
             except:
@@ -870,4 +929,5 @@ def OtpVerifyNew(request):
             else:
                 
              return Response("Wrong Email", status=status.HTTP_400_BAD_REQUEST)
+
 

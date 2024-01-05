@@ -1,5 +1,5 @@
-
 from django.urls import path
+<<<<<<< HEAD
 from .views import QuerryView, LoginApiView,getfile, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView,OtpSignupView, OTPSignupVerify ,send_purchase_confirmation,TeamecellOtpView,TeamecellVerifyView
 
 urlpatterns = [
@@ -8,6 +8,18 @@ urlpatterns = [
     path('getabstract',getAbstractProfile),
     path('getstartup'getstartup),
     path('csv',getfile),
+=======
+from .views import QuerryView, LoginApiView,getfile,getperson,getproff,getca,getstartup, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView,OtpSignupView, OTPSignupVerify ,send_purchase_confirmation,TeamecellOtpView,TeamecellVerifyView
+
+urlpatterns = [
+    path('login', LoginApiView.as_view(), name='Loginview'),
+    path('getfile',getfile),
+    path('getperson',getperson),
+    path('getproff',getproff),
+    path('getca',getca),
+    # path('getabstract',getAbstractProfile),
+    path('getstartup',getstartup),
+>>>>>>> 97db731ef501642e84552d439899a14c442e6837
     path("signup", SignupView, name="SignupView"),
     path('otp', OtpView.as_view()),
     path('otp_signup', OtpSignupView),
