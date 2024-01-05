@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 import pyotp
-from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer, TeamecellSerializer
+from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer, TeamecellSerializer,otpSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -11,19 +11,56 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password, make_password
 from .models.person import person
-from .models.abstarct import CommonDetails
 from .utils.auth import auth
 from events.models import Services, Event
 from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
+from .models.role.student import StudentUser
 from .utils.block import block_mail
 from django.views.decorators.csrf import csrf_exempt
 from ticket.models import Ticket, Payment, ReffealCode
+from .models.otp import OTP
 from ticket.constants import Plans
+import csv
+from django.http import HttpResponse
 import random
-from CAP.models.users import CapUsers
+from user.models import otp
+from 
 
 # Create your views here.
+def getfile(request):  
+    response = HttpResponse(content_type='text/csv')  
+    response['Content-Disposition'] = 'attachment; filename="student.csv"'  
+    students = StudentUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.student_type,student.gender,student.enrollment_no,student.city,student.state,student.collage,student.esummit_id,student.referred_by])  
+    return response  
+def getstartup(request):  
+    response = HttpResponse(content_type='text/csv')  
+    response['Content-Disposition'] = 'attachment; filename="starup.csv"'  
+    students = StartupUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.startup_name,student.domain,student.category,student.esummit_id,student.referred_by,student.email])  
+    return response  
+def getca(request):  
+    response = HttpResponse(content_type='text/csv')  
+    response['Content-Disposition'] = 'attachment; filename="ca.csv"'  
+    students =CAUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.collage,student.points,student.year,student.city,student.state,student.gender,student.taskAssigned,student.taskCompleted,student.rank])  
+    return response  
+
+# def getAbstractProfile(request):
+#     response = HttpResponse(content_type='text/csv')  
+#     response['Content-Disposition'] = 'attachment; filename="abstract.csv"'  
+#     students = AbstractProfile.objects.all()  
+#     writer = csv.writer(response)  
+#     for student in students:  
+#         writer.writerow([student.full_name,student.email,student.phone_number,student.payment,student.password,student.authtoken,student.referred_by])  
+#     return response  
 
 
 @csrf_exempt
@@ -272,12 +309,12 @@ def SignupView(request):
         return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)
         
      else :
-        if CommonDetails.objects.filter(email=email).exists():
+        if person.objects.filter(email=email).exists():
             return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         saver = False
-        # db_entry = ""
+        db_entry = ""
 
-        # db_entry_person = PearsonSerializer
+        db_entry_person = PearsonSerializer
         data = request.data["user"]
         userType = request.data.get('UserType')
 
@@ -327,8 +364,8 @@ def SignupView(request):
                 return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
             try:
 
-                user = CapUsers.objects.filter(esummitId=data["referred_by"])[0]
-                user.totalpoints = 50+user.points
+                user = CAPUser.objects.filter(esummit_id=data["referred_by"])[0]
+                user.totalpoints = 50+user.totalpoints
 
                 user.save()
             except:
@@ -342,7 +379,7 @@ def SignupView(request):
 Your E-Summit ID is:<br>
  <b>"""+saver.esummit_id+"""</b><br>
 <br>
-Visit our website esummit.in and login to register for the E-Summit events.<br>
+Visit our website esummit.in/dashboard and login to register for the E-Summit events.<br>
 <br>
 <br>
 Thanks and Regards<br>
@@ -679,11 +716,7 @@ def OTPSignupVerify(request):
          if not otp:
           return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
          if not email:
-
-
-
             return Response('Email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
-
          else:
             personi = person.objects.filter(email=email)
             if len(personi) == 0:
@@ -747,7 +780,7 @@ class TeamecellOtpView(APIView):
             personi = personi[0]
             personi.Otp = otp
             personi.save()
-          
+
             message = "Your OTP is <b>" + otp + "</b>"
             send_feedback_email_task.delay(
                 mail, message, 'Your OTP is '
@@ -778,10 +811,63 @@ class TeamecellVerifyView(APIView):
                     return Response("True", status=200)
                 else:
                     return Response("Wrong OTP", status=400)
-
-
+    
 @api_view(('GET', 'POST'))
-def OtpSend(request):
+def OtpSendNew(request):
+    if request.method == 'POST':
+        totp = pyotp.TOTP('base32secret3232')
+        otp = totp.now()
+        mail = request.data.get('email', None)
+        if (block_mail(mail,'')):
+              return Response({'error_msg': 'Blocked Credentials'}) 
+
+        if person.objects.filter(email=mail).exists():
+            return Response({"error": "email already registered"}, status=400)
+        else:
+         if OTP.objects.filter(Email=mail).exists():
+             user = OTP.objects.filter(Email=mail)
+             otp = user.Otp
+         
+         try:
+            data={
+                'Email':request.data.get('email'),'OTP':otp
+            }
+            db_entry = otpSerializer(data=data)
+            db_entry.is_valid(raise_exception=True)
+            db_entry.save()
+            
+         except Error as e :
+            return Response({"Faliure": e}, status=status.HTTP_400_BAD_REQUEST)
+         message = "Your OTP is <b>" + otp + "</b>"
+         send_feedback_email_task.delay(
+                mail, message, 'Your OTP is '
+            )
+         return Response("Successful", status=status.HTTP_200_OK)
+         
+
+api_view(('GET', 'POST'))
+def OtpVerifyNew(request):
     if request.method == 'GET':
-        number = random.randint(1111,9999)
-        return Response(number, status=400)
+        data = request.data
+        otp = data.get('otp', None)
+        email = data.get('email', None)
+
+        if block_mail(email,''):
+            return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)  
+        else :
+         if not otp:
+          return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+         if not email:
+            return Response('Email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+         else:
+            if OTP.objects.filter(Email=email).exists():
+             user = OTP.objects.filter(Email=email)
+             newotp=user.Otp
+             if newotp==otp:
+                return Response("verified", status=status.HTTP_200_OK)
+             else:
+                 return Response({"Faliure": "Wrong OTP"}, status=status.HTTP_400_BAD_REQUEST)        
+            else:
+                
+             return Response("Wrong Email", status=status.HTTP_400_BAD_REQUEST)
+
