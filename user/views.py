@@ -1,3 +1,4 @@
+
 from rest_framework.response import Response
 import pyotp
 from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer, TeamecellSerializer
@@ -15,12 +16,76 @@ from .utils.auth import auth
 from events.models import Services, Event
 from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
+from .models.role.student import StudentUser
+from .models.role.ca import CAUser
+from .models.role.proff import ProffUser
+from .models.role.startup import StartupUser
 from .utils.block import block_mail
 from django.views.decorators.csrf import csrf_exempt
 from ticket.models import Ticket, Payment, ReffealCode
 from ticket.constants import Plans
+import csv
+from django.http import HttpResponse
+from .models.abstarct import AbstractProfile
 
 # Create your views here.
+def getproff(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="proff.csv"'
+    students = ProffUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.organisation_name,student.gender,student.industry,student.esummit_id,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+    return response 
+
+def getperson(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="person.csv"'
+    students = person.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.leader_status,student.name,student.email,student.student,student.ca,student.proff,student.created,student.updated,student.otp,student.verified])  
+    return response 
+
+def getfile(request):  
+    response = HttpResponse(content_type='text/csv')  
+    response['Content-Disposition'] = 'attachment; filename="student.csv"'  
+    students = StudentUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.student_type,student.gender,student.enrollment_no,student.city,student.state,student.collage,student.esummit_id,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+    return response  
+def getstartup(request):  
+    response = HttpResponse(content_type='text/csv')  
+    response['Content-Disposition'] = 'attachment; filename="starup.csv"'  
+    students = StartupUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.startup_name,student.email,student.domain,student.category,student.esummit_id,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+    return response  
+def getca(request):  
+    response = HttpResponse(content_type='text/csv')  
+    response['Content-Disposition'] = 'attachment; filename="ca.csv"'  
+    students =CAUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.collage,student.points,student.year,student.city,student.state,student.gender,student.taskAssigned,student.taskCompleted,student.rank,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+    return response  
+
+
+# def getAbstractProfile(request):
+#     response = HttpResponse(content_type='text/csv')  
+#     response['Content-Disposition'] = 'attachment; filename="abstract.csv"'  
+#     students = AbstractProfile.objects.all()  
+#     writer = csv.writer(response)  
+#     for student in students:  
+#         writer.writerow([student.full_name,student.email,student.phone_number,student.payment,student.password,student.authtoken,student.referred_by])  
+#     return response  
+
 
 
 @csrf_exempt
@@ -775,3 +840,4 @@ class TeamecellVerifyView(APIView):
                     return Response("True", status=200)
                 else:
                     return Response("Wrong OTP", status=400)
+

@@ -11,29 +11,36 @@ from .models.block import BlockMail
 from .models.teamecell import Teamecell
 from rest_framework.response import Response
 
+
 class ProffUserLoginSerializer(serializers.ModelSerializer):
-    
+   
     class Meta:
        model = ProffUser
        fields = ['email', 'password', 'esummit_id']
 
+
 class CAUserLoginSerializer(serializers.ModelSerializer):
-    
+   
     class Meta:
        model = CAUser
        fields = ['email', 'password', 'esummit_id' ]
 
+
 class StudentUserLoginSerializer(serializers.ModelSerializer):
-    
+   
     class Meta:
        model = StudentUser
        fields = ['email', 'password','esummit_id' ]
 
+
 class StartupUserLoginSerializer(serializers.ModelSerializer):
-    
+   
     class Meta:
        model = StartupUser
        fields = ['email', 'password', 'esummit_id' ]
+
+
+
 
 
 
@@ -41,6 +48,8 @@ class otpSerializer(serializers.ModelSerializer):
     class Meta:
         model = OTP
         exclude = ["id","date_created" ,"date_expired"]
+
+
 
 
 class QuerrySerializer(serializers.ModelSerializer):
@@ -53,10 +62,14 @@ class QuerrySerializer(serializers.ModelSerializer):
         fields = ["name", "email", "phone_number", "message"]
 
 
+
+
 class EventStartpuUser(serializers.ModelSerializer):
     class Meta:
         model = StartupUser
         fields = ["startup_name", "email", "phone_number", "esummit_id"]
+
+
 
 
 class EventStudentUser(serializers.ModelSerializer):
@@ -65,10 +78,14 @@ class EventStudentUser(serializers.ModelSerializer):
         fields = ["name", "email", "phone_number", "esummit_id"]
 
 
+
+
 class EventProffUser(serializers.ModelSerializer):
     class Meta:
         model = ProffUser
         fields = ["name", "email", "phone_number", "esummit_id"]
+
+
 
 
 class CAUserSerializer(serializers.ModelSerializer):
@@ -78,7 +95,11 @@ class CAUserSerializer(serializers.ModelSerializer):
 
 
 
+
+
+
 class LeaderboardSerializer(serializers.ModelSerializer):
+
 
     class ColorField(serializers.Field):
         def to_representation(self,noOftaskCompleted):
@@ -88,15 +109,18 @@ class LeaderboardSerializer(serializers.ModelSerializer):
          model = CAUser
          fields = ['full_name','collage','points','noOftaskCompleted','rank']
 
+
 class StudentUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentUser
         exclude=['student_type','payment','esummit_id','created','updated','authToken']
 
+
 class ProffUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProffUser
         exclude=['payment','esummit_id','created','updated','authToken']
+
 
 class StartupUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -105,11 +129,15 @@ class StartupUserSerializer(serializers.ModelSerializer):
 
 
 
+
+
+
 class PearsonSerializer(serializers.ModelSerializer):
-    
+   
     class Meta:
         model = person
         fields = ["name", "email", "student" , "ca","proff"]
+
 
 class TeamSerializer(serializers.ModelSerializer):
     name=serializers.CharField(max_length=100)
@@ -119,12 +147,14 @@ class TeamSerializer(serializers.ModelSerializer):
         model = teams
         fields = ["name","leader", "event", "members", "number_of_members", "submission_text", "submission_text2"]
 
+
 class BlockSerializer(serializers.ModelSerializer):
     class Meta:
        model = BlockMail
        fields = ['mail']
-    
+   
 class TeamecellSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teamecell
-        fields = '__all__'       
+        fields = '__all__'      
+
