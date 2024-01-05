@@ -11,7 +11,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password, make_password
 from .models.person import person
-from .models.abstarct import CommonDetails
 from .utils.auth import auth
 from events.models import Services, Event
 from events.serializer import ServiceSerilizer
@@ -20,8 +19,6 @@ from .utils.block import block_mail
 from django.views.decorators.csrf import csrf_exempt
 from ticket.models import Ticket, Payment, ReffealCode
 from ticket.constants import Plans
-import random
-from CAP.models.users import CapUsers
 
 # Create your views here.
 
@@ -272,28 +269,28 @@ def SignupView(request):
         return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)
         
      else :
-        if CommonDetails.objects.filter(email=email).exists():
+        if person.objects.filter(email=email).exists():
             return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         saver = False
-        # db_entry = ""
+        db_entry = ""
 
-        # db_entry_person = PearsonSerializer
+        db_entry_person = PearsonSerializer
         data = request.data["user"]
         userType = request.data.get('UserType')
 
-        # if userType == 'ca':
-        #     try:
-        #         data["referred_by"] = ""
-        #         db_entry = CAUserSerializer(data=data)
-        #         db_entry.is_valid(raise_exception=True)
-        #         db_entry.save()
-        #         data2 = {"email": email, "name": name, "ca": saver.pk}
-        #         db_entry_person = PearsonSerializer(data=data2)
-        #         db_entry_person.is_valid(raise_exception=True)
-        #         db_entry_person.save()
+        if userType == 'ca':
+            try:
+                data["referred_by"] = ""
+                db_entry = CAUserSerializer(data=data)
+                db_entry.is_valid(raise_exception=True)
+                db_entry.save()
+                data2 = {"email": email, "name": name, "ca": saver.pk}
+                db_entry_person = PearsonSerializer(data=data2)
+                db_entry_person.is_valid(raise_exception=True)
+                db_entry_person.save()
 
-        #     except:
-        #         return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
+            except:
+                return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
         if userType in ('stu', "proff", "stp"):
 
             try:
@@ -327,8 +324,8 @@ def SignupView(request):
                 return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
             try:
 
-                user = CapUsers.objects.filter(esummitId=data["referred_by"])[0]
-                user.totalpoints = 50+user.points
+                user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
+                user.points = 50+user.points
 
                 user.save()
             except:
@@ -342,7 +339,7 @@ def SignupView(request):
 Your E-Summit ID is:<br>
  <b>"""+saver.esummit_id+"""</b><br>
 <br>
-Visit our website esummit.in and login to register for the E-Summit events.<br>
+Visit our website esummit.in/dashboard and login to register for the E-Summit events.<br>
 <br>
 <br>
 Thanks and Regards<br>
@@ -778,10 +775,3 @@ class TeamecellVerifyView(APIView):
                     return Response("True", status=200)
                 else:
                     return Response("Wrong OTP", status=400)
-
-
-@api_view(('GET', 'POST'))
-def OtpSend(request):
-    if request.method == 'GET':
-        number = random.randint(1111,9999)
-        return Response(number, status=400)

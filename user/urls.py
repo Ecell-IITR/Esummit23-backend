@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import QuerryView, LoginApiView, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView,OtpSignupView, OTPSignupVerify ,send_purchase_confirmation,TeamecellOtpView,TeamecellVerifyView
+from .views import QuerryView, LoginApiView, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView, OtpSignupView, OTPSignupVerify ,send_purchase_confirmation,TeamecellOtpView,TeamecellVerifyView
 
 urlpatterns = [
     path('login', LoginApiView.as_view(), name='Loginview'),
