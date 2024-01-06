@@ -852,14 +852,13 @@ def OtpSendNew(request):
         data = dict(request.data)
         mail = data["email"]
 
-        print(request.data,mail)
         if (block_mail(mail,'')):
               return Response({'error_msg': 'Blocked Credentials'}) 
 
         if person.objects.filter(email=mail).exists():
             return Response({"error": "email already registered"}, status=400)
         elif OTP.objects.filter(Email=mail).exists():
-                otp_obj = OTP.objects.filter(Email=mail)
+                otp_obj = OTP.objects.get(Email=mail)
                 otp = otp_obj.Otp
 
         else:    
@@ -874,6 +873,7 @@ def OtpSendNew(request):
             
             
         message = "Your OTP is <b>" + otp + "</b>"
+        print(otp,mail)
         send_feedback_email_task.delay(
             mail, message, 'Your OTP is '
         )
@@ -896,9 +896,10 @@ def OtpVerifyNew(request):
             return Response('Email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
          else:
             if OTP.objects.filter(Email=email).exists():
-             otp_obj = OTP.objects.filter(Email=email)
+             otp_obj = OTP.objects.get(Email=email)
              stored_otp=otp_obj.Otp
              if stored_otp==otp:
+                otp_obj.delete()
                 return Response("verified", status=status.HTTP_200_OK)
              else:
                  return Response({"message": "Wrong OTP"}, status=status.HTTP_400_BAD_REQUEST)        

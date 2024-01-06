@@ -22,8 +22,8 @@ urlpatterns = [
     path('teamotpverify',TeamecellVerifyView.as_view()),
     path('teamotp',TeamecellOtpView.as_view()),
     path('login', LoginApiView.as_view(), name='Loginview'),
-    path( 'otp_send_new',  OtpSendNew),
-    path( 'otp_verify_new',  OtpVerifyNew),
+    path( 'otp_send_new/',  OtpSendNew),
+    path( 'otp_verify_new/',  OtpVerifyNew),
     # path('getca',getca),
     
     # path('getstartup',getstartup),
