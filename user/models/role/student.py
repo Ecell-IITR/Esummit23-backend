@@ -14,17 +14,18 @@ class StudentUser(AbstractProfile):
     )
     student_type = models.CharField(
         choices=STUDENT_TYPE, max_length=10, default='NONIITR')
-    enrollment_no = models.CharField(
-        max_length=10,
-        null=True,
-        blank=True,
-        verbose_name="Enrollment Number(If IITR Student)"
-    )
+    # enrollment_no = models.CharField(
+    #     max_length=10,
+    #     null=True,
+    #     blank=True,
+    #     verbose_name="Enrollment Number(If IITR Student)"
+    # )
     gender = models.CharField(max_length=10, blank=True,
                               null=True, verbose_name="Gender")
-    city = models.CharField(max_length=50, null=True, blank=True)
-    state = models.CharField(max_length=50, null=True, blank=True)
-    collage = models.CharField(max_length=200, verbose_name="Collage Name",default="IIT Roorkee")
+    # pincode = models.CharField(max_length=50, null=True, blank=True)
+    # country = models.CharField(max_length=50, null=True, blank=True)
+    # state = models.CharField(max_length=50, null=True, blank=True)
+    collage = models.CharField(max_length=200, verbose_name="College Name",default="IIT Roorkee")
     esummit_id = models.CharField(max_length=40, unique=True, db_index=True)
     referred_by = models.CharField(max_length=40,null=True,blank=True,default="")
 
@@ -42,14 +43,6 @@ class StudentUser(AbstractProfile):
                 unique_value = 0
             self.esummit_id = 'ES23'+professional_tag + \
                 str((unique_value + 1) * 31)
-
-
-
-
-        
-
-
-
-          
+  
         return super(StudentUser, self).save(*args, **kwargs)
     

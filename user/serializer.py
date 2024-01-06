@@ -47,7 +47,7 @@ class StartupUserLoginSerializer(serializers.ModelSerializer):
 class otpSerializer(serializers.ModelSerializer):
     class Meta:
         model = OTP
-        exclude = ["id","date_created" ,"date_expired"]
+        exclude = ["id","date_created" ,"date_expired","Esummit_Id"]
 
 
 

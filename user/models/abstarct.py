@@ -37,6 +37,9 @@ class AbstractProfile(models.Model):
     jwt_secret = SECRET_KEY
     jwt_algorithm = "HS256"
     authToken = models.CharField(max_length=1000, blank=True, null=True)
+    pincode = models.CharField(max_length=50, null=True, blank=True)
+    country = models.CharField(max_length=50, null=True, blank=True)
+    state = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
         abstract = True
