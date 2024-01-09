@@ -31,8 +31,8 @@ class StudentUser(AbstractProfile):
 
     def save(self, *args, **kwargs):
         professional_tag = "STU"
-        if self.enrollment_no!=None:
-            self.student_type="IITR"
+        # if self.enrollment_no!=None:
+        #     self.student_type="IITR"
         if not self.esummit_id:
             
             # getting a non-repeating number
@@ -41,7 +41,7 @@ class StudentUser(AbstractProfile):
                 unique_value = unique_id.id + 1
             else:
                 unique_value = 0
-            self.esummit_id = 'ES23'+professional_tag + \
+            self.esummit_id = 'ES24'+professional_tag + \
                 str((unique_value + 1) * 31)
   
         return super(StudentUser, self).save(*args, **kwargs)

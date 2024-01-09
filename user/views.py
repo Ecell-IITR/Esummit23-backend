@@ -17,7 +17,8 @@ from events.models import Services
 from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
 from .models.role.student import StudentUser
-
+# from CAP.models.users import CapUsers
+from CAP.models.users import CapUsers
 from .models.role.ca import CAUser
 from .models.role.proff import ProffUser
 from .models.role.startup import StartupUser
@@ -333,80 +334,69 @@ def SignupView(request):
     if request.method == 'GET':
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
-     email = request.data["user"]['email']
-     name = request.data["user"]['full_name']
-     if block_mail(email,''):
-        return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)
+        email = request.data["user"]['email']
+        name = request.data["user"]['full_name']
+        print(email,name)
+        if block_mail(email,''):
+            return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)
         
-     else :
-        if person.objects.filter(email=email).exists():
-            return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
-        saver = False
-        db_entry = ""
+        else :
+            if person.objects.filter(email=email).exists():
+                return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            saver = False
+            db_entry = ""
 
-        db_entry_person = PearsonSerializer
-        data = request.data["user"]
-        userType = request.data.get('UserType')
+            db_entry_person = PearsonSerializer
+            data = request.data["user"]
+            userType = request.data.get('UserType')
 
-        if userType == 'ca':
-            try:
-                data["referred_by"] = ""
-                db_entry = CAUserSerializer(data=data)
-                db_entry.is_valid(raise_exception=True)
-                db_entry.save()
-                data2 = {"email": email, "name": name, "ca": saver.pk}
-                db_entry_person = PearsonSerializer(data=data2)
-                db_entry_person.is_valid(raise_exception=True)
-                db_entry_person.save()
+        
+            if userType in ('stu', "proff", "stp"):
 
-            except:
-                return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
-        if userType in ('stu', "proff", "stp"):
+                try:
+                    data["referred_by"] = request.data["referred_by"]
 
-            try:
-                data["referred_by"] = request.data["referred_by"]
+                except:
+                    data["referred_by"] = ""
 
-            except:
-                data["referred_by"] = ""
+                db_entry = StudentUserSerializer(data=data)
 
-            db_entry = StudentUserSerializer(data=data)
-
-            if userType == 'proff':
-                db_entry = ProffUserSerializer(data=data)
-
-            if userType == 'stp':
-
-                db_entry = StartupUserSerializer(data=data)
-
-            if db_entry.is_valid(raise_exception=True):
-                saver = db_entry.save()
-                data2 = {"email": email, "name": name}
-                if userType == 'stu':
-                    data2["student"] = saver.pk
                 if userType == 'proff':
-                    data2["proff"] = saver.pk
-                db_entry_person = PearsonSerializer(data=data2)
+                    db_entry = ProffUserSerializer(data=data)
 
-                db_entry_person.is_valid()
-                db_entry_person.save()
+                if userType == 'stp':
 
-            else:
-                return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
-            try:
+                    db_entry = StartupUserSerializer(data=data)
+
+                if db_entry.is_valid():
+                    saver = db_entry.save()
+                    print(saver)
+                    data2 = {"email": email, "name": name}
+                    if userType == 'stu':
+                        data2["student"] = saver.pk
+                    if userType == 'proff':
+                        data2["proff"] = saver.pk
+                    db_entry_person = PearsonSerializer(data=data2)
+
+                    db_entry_person.is_valid(raise_exception=True)
+                    db_entry_person.save()
+
+                else:
+                    return Response({"Faliure2": db_entry.errors}, status=status.HTTP_400_BAD_REQUEST)
+                try:
 
 
-                user = CAUser.objects.filter(esummit_id=data["referred_by"])[0]
-                user.points = 50+user.points
-
-
-                user.save()
-            except:
-                pass
-        message = "Dear "+"<b>"+saver.full_name+"</b>" + \
-            " account created your esummit id is "+"<b> "+saver.esummit_id+"</b>"
-        # send_mail('esummit account created', "", 'from@example.com', [
-        #           saver.email], fail_silently=False, html_message=message)
-        message = "Congratulations " + "<b>"+saver.full_name+"</b>" + """Your IIT Roorkee E-Summit account has been created successfully.<br>
+                    user = CapUsers.objects.filter(esummit_id=data["referred_by"])[0]
+                    user.totalpoints = 50 + user.totalpoints
+                    user.save()
+                except:
+                    
+                    pass
+        
+        
+                message = ""
+                if saver:
+                    message = "Congratulations " + "<b>"+name+"</b>" + """Your IIT Roorkee E-Summit account has been created successfully.<br>
 <br>
 Your E-Summit ID is:<br>
  <b>"""+saver.esummit_id+"""</b><br>
@@ -417,15 +407,17 @@ Visit our website esummit.in/dashboard and login to register for the E-Summit ev
 Thanks and Regards<br>
 <br>
 Team E-Summit, IIT Roorkee"""
-        mail = saver.email
+                    mail = email
 
-        send_feedback_email_task.delay(
-            mail, message, 'esummit account created'
-        )
-        return Response({"n": saver.full_name, "e_id": saver.esummit_id, "at": saver.authToken}, status=status.HTTP_201_CREATED)
-
-        # return Response(status=status.HTTP_400_BAD_REQUEST)
-    
+                    send_feedback_email_task.delay(
+                mail, message, 'esummit account created'
+            )
+                    return Response({"n": name, "e_id": saver.esummit_id, "at": saver.authToken}, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({"Faliure": db_entry.errors}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"error": "Invalid User Type"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"message":"failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(('GET', 'POST'))
