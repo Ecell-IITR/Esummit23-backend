@@ -396,12 +396,12 @@ def SignupView(request):
         
                 message = ""
                 if saver:
-                    message = "Congratulations " + "<b>"+name+"</b>" + """Your IIT Roorkee E-Summit account has been created successfully.<br>
+                    message = "Congratulations " + "<b>"+name+"</b>" + """ Your IIT Roorkee E-Summit account has been created successfully.<br>
 <br>
 Your E-Summit ID is:<br>
  <b>"""+saver.esummit_id+"""</b><br>
 <br>
-Visit our website esummit.in/dashboard and login to register for the E-Summit events.<br>
+Visit our website esummit.in/register and login to register for the E-Summit events.<br>
 <br>
 <br>
 Thanks and Regards<br>
