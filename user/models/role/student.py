@@ -14,12 +14,13 @@ class StudentUser(AbstractProfile):
     )
     student_type = models.CharField(
         choices=STUDENT_TYPE, max_length=10, default='NONIITR')
-    # enrollment_no = models.CharField(
-    #     max_length=10,
-    #     null=True,
-    #     blank=True,
-    #     verbose_name="Enrollment Number(If IITR Student)"
-    # )
+    enrollment_no = models.CharField(
+        max_length=10,
+        null=True,
+        blank=True,
+        verbose_name="Enrollment Number(If IITR Student)"
+    )
+    year = models.CharField(max_length=20,verbose_name="Year of study",default="1")
     gender = models.CharField(max_length=10, blank=True,
                               null=True, verbose_name="Gender")
     # pincode = models.CharField(max_length=50, null=True, blank=True)
