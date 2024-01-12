@@ -177,7 +177,7 @@ def CapuserInfo(request):
              rank = str("1200+")
              break
 
-      points = [{ "points" : user.totalpoints , "rank" : rank, "taskcompleted":user.taskCompleted}]
+      points = { "points" : user.totalpoints , "rank" : rank, "taskcompleted":user.taskCompleted}
           
       return Response({"points": points} )
 
