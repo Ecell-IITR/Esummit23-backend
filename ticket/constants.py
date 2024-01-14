@@ -5,8 +5,8 @@ class PaymentStatus:
 
 
 class Plans:
-    Plans = { "SSP": {"price": 599, "description": "SSP Description","mail_templete":" whatsapp link for the group "}, "PP": {"price": 2499, "description": "Professional Pass Description","mail_templete":" whatsapp link for the group "}, 
-             "SEPP": {"price": 9999, "description": "Startup Expo Professional Pass Description","mail_templete":" whatsapp link for the group "}, "PSP": {"price": 1799, "description": "Premium Student Pass Description","mail_templete":" whatsapp link for the group "}, 
+    Plans = { "SSP": {"price": 599, "description": "SSP Description","mail_templete":""}, "PP": {"price": 2499, "description": "Professional Pass Description","mail_templete":""}, 
+             "SEPP": {"price": 9999, "description": "Startup Expo Professional Pass Description","mail_templete":""}, "PSP": {"price": 1799, "description": "Premium Student Pass Description","mail_templete":""}, 
              "TTP": {"price": 1, "description": "Tech team Description","mail_templete":" You've successfully enrolled in Emerge! Do join the WhatsApp group using the provided link for further updates and great networking experience. https://chat.whatsapp.com/Gi9DGhmU1mOEOoc4M1qCLv"}}
 
     def plan_quantity(self, cost):

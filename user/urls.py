@@ -1,9 +1,14 @@
-
 from django.urls import path
-from .views import QuerryView, LoginApiView, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView,OtpSignupView, OTPSignupVerify ,send_purchase_confirmation,TeamecellOtpView,TeamecellVerifyView
+
+from .views import OtpSendNew, OtpVerifyNew ,  QuerryView, LoginApiView,getfile, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView,OtpSignupView, OTPSignupVerify ,send_purchase_confirmation,TeamecellOtpView,TeamecellVerifyView
 
 urlpatterns = [
     path('login', LoginApiView.as_view(), name='Loginview'),
+    path('getfile',getfile),
+    # path('getperson',getperson),
+    # path('getproff',getproff),
+    # path('getca',getca),
+    # path('getstartup',getstartup),
     path("signup", SignupView, name="SignupView"),
     path('otp', OtpView.as_view()),
     path('otp_signup', OtpSignupView),
@@ -15,4 +20,12 @@ urlpatterns = [
     path('purchase_confirmation', send_purchase_confirmation),
     path('services', UserServices),
     path('teamotpverify',TeamecellVerifyView.as_view()),
-    path('teamotp',TeamecellOtpView.as_view())]
+    path('teamotp',TeamecellOtpView.as_view()),
+    path('login', LoginApiView.as_view(), name='Loginview'),
+    path( 'otp_send_new/',  OtpSendNew),
+    path( 'otp_verify_new/',  OtpVerifyNew),
+    # path('getca',getca),
+    
+    # path('getstartup',getstartup),
+    path('csv',getfile),
+    ]

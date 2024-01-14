@@ -14,8 +14,8 @@ class ProffUser(AbstractProfile):
         max_length=100, blank=True, null=True, verbose_name="Organisation From")
     gender = models.CharField(max_length=10, blank=True,
                               null=True, verbose_name="Gender")
-    industry = models.CharField(
-        max_length=100, blank=True, null=True, verbose_name="Industry From")
+    position = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="position")
     esummit_id = models.CharField(max_length=40, unique=True, db_index=True)
     referred_by = models.CharField(max_length=40,null=True,blank=True,default="")
 
@@ -29,6 +29,6 @@ class ProffUser(AbstractProfile):
                 unique_value = unique_id.id + 1
             else:
                 unique_value = 0
-            self.esummit_id = 'ES23'+professional_tag + \
+            self.esummit_id = 'ES24'+professional_tag + \
                 str((unique_value + 1) * 31)
         return super(ProffUser, self).save(*args, **kwargs)

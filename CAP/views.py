@@ -143,13 +143,8 @@ def TaskAssigned(request):
               
           taskassigned= Task.objects.all().order_by('-task_id')
           serializer = TaskAssignedSerializer(taskassigned, many=True)
-          data = serializer.data
-          if TaskStatus.objects.filter(taskId=taskassigned.task_id).exists():
-            data["status"] = TaskStatus.status
-          else:
-              data["status"]="LIVE"
          
-          return Response({"data": data},status=status.HTTP_200_OK)
+          return Response({"data": serializer.data},status=status.HTTP_200_OK)
       except Error as e:
           return Response({"data":e},status=status.HTTP_400_BAD_REQUEST)
 
@@ -182,7 +177,7 @@ def CapuserInfo(request):
              rank = str("1200+")
              break
 
-      points = [{ "points" : user.totalpoints , "rank" : rank, "taskcompleted":user.taskCompleted}]
+      points = { "points" : user.totalpoints , "rank" : rank, "taskcompleted":user.taskCompleted}
           
       return Response({"points": points} )
 

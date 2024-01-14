@@ -20,18 +20,20 @@ class StudentUser(AbstractProfile):
         blank=True,
         verbose_name="Enrollment Number(If IITR Student)"
     )
+    year = models.CharField(max_length=20,verbose_name="Year of study",default="1")
     gender = models.CharField(max_length=10, blank=True,
                               null=True, verbose_name="Gender")
-    city = models.CharField(max_length=50, null=True, blank=True)
-    state = models.CharField(max_length=50, null=True, blank=True)
-    collage = models.CharField(max_length=200, verbose_name="Collage Name",default="IIT Roorkee")
+    # pincode = models.CharField(max_length=50, null=True, blank=True)
+    # country = models.CharField(max_length=50, null=True, blank=True)
+    # state = models.CharField(max_length=50, null=True, blank=True)
+    collage = models.CharField(max_length=200, verbose_name="College Name",default="IIT Roorkee")
     esummit_id = models.CharField(max_length=40, unique=True, db_index=True)
     referred_by = models.CharField(max_length=40,null=True,blank=True,default="")
 
     def save(self, *args, **kwargs):
         professional_tag = "STU"
-        if self.enrollment_no!=None:
-            self.student_type="IITR"
+        # if self.enrollment_no!=None:
+        #     self.student_type="IITR"
         if not self.esummit_id:
             
             # getting a non-repeating number
@@ -40,16 +42,8 @@ class StudentUser(AbstractProfile):
                 unique_value = unique_id.id + 1
             else:
                 unique_value = 0
-            self.esummit_id = 'ES23'+professional_tag + \
+            self.esummit_id = 'ES24'+professional_tag + \
                 str((unique_value + 1) * 31)
-
-
-
-
-        
-
-
-
-          
+  
         return super(StudentUser, self).save(*args, **kwargs)
     
