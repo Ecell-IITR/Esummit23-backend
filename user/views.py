@@ -118,13 +118,13 @@ def send_purchase_confirmation(request):
     amount = int(data['payload']["order"]["entity"]['amount'])/100
     reffral_code=False
     try:
-        reffral_code = data['payload']["order"]["entity"]['notes']['reffralcode']
+        reffral_code = data['payload']["order"]["entity"]['notes']['Referralcode']
     except:
         pass
 
     if reffral_code:
         try:    
-                print(reffral_code)
+             
                 if "CAP" not in reffral_code and amount==1499:
                     
                     if ReffealCode.objects.filter(code=reffral_code).exists():
@@ -132,8 +132,8 @@ def send_purchase_confirmation(request):
                         rfc.usage = rfc.usage+1
                         rfc.save()
                     else:
-                        message = """Hi you were found using an unauthorized refferal code. Hence no ticket will be issued."""
-                        send_feedback_email_task.delay(email, message, "Esummit 2024 Unauthorized Reffral Code")
+                        message = """Hi you were found using an unauthorized referral code. Hence no ticket will be issued."""
+                        send_feedback_email_task.delay(email, message, "Esummit 2024 Unauthorized Referral Code")
                         return Response("Successful", status=status.HTTP_200_OK)
 
                 else:
@@ -173,7 +173,7 @@ Your Esummit ID: """ + e_id + """<br>
 No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
 Event Dates: Feb 2 to Feb 4<br>
- """+ str(link)+"""
+ """+ str(link)+"""<br>
 Venue: Campus, IIT Roorkee<br><br>
 All the best for your prep. See you soon!"""
     if case2:
@@ -183,6 +183,7 @@ Your Esummit ID: """ + e_id + """<br>
 No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
 Event Dates: Feb 2 to Feb 4<br>
+ """+ str(link)+"""<br>
 Venue: Campus, IIT Roorkee<br><br>
 your password is esummit@123<br>
 All the best for your prep. See you soon!"""
