@@ -100,7 +100,7 @@ def getca(request):
 def send_purchase_confirmation(request):
     data = request.data
     send_feedback_email_task.delay(
-        ["pranav_a@ece.iitr.ac.in","ishika@ch.iitr.ac.in"], str(data), "Esummit 2023 Ticket Confirmation"
+        ["pranav_a@ece.iitr.ac.in","ishika@ch.iitr.ac.in","d_dev@me.iitr.ac.in"], str(data), "Esummit 2024 Ticket Confirmation"
     )
     email=""
     phone="0000000000"
@@ -118,13 +118,13 @@ def send_purchase_confirmation(request):
     amount = int(data['payload']["order"]["entity"]['amount'])/100
     reffral_code=False
     try:
-        reffral_code = data['payload']["order"]["entity"]['notes']['reffralcode']
+        reffral_code = data['payload']["order"]["entity"]['notes']['Referralcode']
     except:
         pass
 
     if reffral_code:
         try:    
-                print(reffral_code)
+             
                 if "CAP" not in reffral_code and amount==1499:
                     
                     if ReffealCode.objects.filter(code=reffral_code).exists():
@@ -132,12 +132,12 @@ def send_purchase_confirmation(request):
                         rfc.usage = rfc.usage+1
                         rfc.save()
                     else:
-                        message = """Hi you were found using an unauthorized reffral code. Hence no ticket will be issued."""
-                        send_feedback_email_task.delay(email, message, "Esummit 2023 Unauthorized Reffral Code")
+                        message = """Hi you were found using an unauthorized referral code. Hence no ticket will be issued."""
+                        send_feedback_email_task.delay(email, message, "Esummit 2024 Unauthorized Referral Code")
                         return Response("Successful", status=status.HTTP_200_OK)
 
                 else:
-                    user = CAUser.objects.filter(esummit_id=reffral_code)[0]
+                    user = CapUsers.objects.filter(esummitId=reffral_code)[0]
                     user.points = 200+user.points
                     user.save()
         except:
@@ -157,13 +157,13 @@ def send_purchase_confirmation(request):
     payment_obj = Payment.objects.create(
         name=name, amount=amount, payment_id=data['payload']["payment"]["entity"]['id'], provider_order_id=data['payload']["payment"]["entity"]['order_id'])
     payment_obj.save()
-    name, quantity = Plans().plan_quantity(amount)
+    name, quantity,link = Plans().plan_quantity(amount)
     ticket_obj = Ticket.objects.create(
         name=name,Person=person_obj, payment=payment_obj, total_payment=amount, quantity=quantity)
     e_id = ""
-    if person_obj.ca:
-        e_id = person_obj.ca.esummit_id
-    elif person_obj.student:
+    # if person_obj.ca:
+    #     e_id = person_obj.ca.esummit_id
+    if person_obj.student:
         e_id = person_obj.student.esummit_id
     elif person_obj.proff:
         e_id = person_obj.proff.esummit_id
@@ -172,7 +172,8 @@ Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welco
 Your Esummit ID: """ + e_id + """<br>
 No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
-Event Dates: Feb 17 to Feb 19<br>
+Event Dates: Feb 2 to Feb 4<br>
+ """+ str(link)+"""<br>
 Venue: Campus, IIT Roorkee<br><br>
 All the best for your prep. See you soon!"""
     if case2:
@@ -181,7 +182,8 @@ Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welco
 Your Esummit ID: """ + e_id + """<br>
 No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
-Event Dates: Feb 17 to Feb 19<br>
+Event Dates: Feb 2 to Feb 4<br>
+ """+ str(link)+"""<br>
 Venue: Campus, IIT Roorkee<br><br>
 your password is esummit@123<br>
 All the best for your prep. See you soon!"""
@@ -189,7 +191,7 @@ All the best for your prep. See you soon!"""
     ticket_obj.save()
     person_obj.save()
     send_feedback_email_task.delay(
-        email, message, "Esummit 2023 Ticket Confirmation"
+        email, message, "Esummit 2024 Ticket Confirmation"
     )
     return Response("Successful", status=status.HTTP_200_OK)
 
