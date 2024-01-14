@@ -1,6 +1,7 @@
+
 from rest_framework.response import Response
 import pyotp
-from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer, TeamecellSerializer
+from .serializer import QuerrySerializer, CAUserSerializer, StudentUserSerializer, ProffUserSerializer, StartupUserSerializer, PearsonSerializer, TeamSerializer, TeamecellSerializer,otpSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -11,19 +12,86 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password, make_password
 from .models.person import person
-from .models.abstarct import CommonDetails
 from .utils.auth import auth
-from events.models import Services, Event
+from events.models import Services
 from events.serializer import ServiceSerilizer
 from user.tasks import send_feedback_email_task
+from .models.role.student import StudentUser
+# from CAP.models.users import CapUsers
+from CAP.models.users import CapUsers
+from .models.role.ca import CAUser
+from .models.role.proff import ProffUser
+from .models.role.startup import StartupUser
 from .utils.block import block_mail
 from django.views.decorators.csrf import csrf_exempt
 from ticket.models import Ticket, Payment, ReffealCode
+from .models.otp import OTP
 from ticket.constants import Plans
-import random
-from CAP.models.users import CapUsers
+import csv
+from django.http import HttpResponse
+
+
 
 # Create your views here.
+def getproff(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="proff.csv"'
+    students = ProffUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.organisation_name,student.gender,student.industry,student.esummit_id,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+    return response 
+
+def getperson(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="person.csv"'
+    students = person.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.leader_status,student.name,student.email,student.student,student.ca,student.proff,student.created,student.updated,student.otp,student.verified])  
+    return response 
+
+
+def getfile(request):  
+    response = HttpResponse(content_type='text/csv')  
+    response['Content-Disposition'] = 'attachment; filename="student.csv"'  
+    students = StudentUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+
+        writer.writerow([student.student_type,student.gender,student.enrollment_no,student.city,student.state,student.collage,student.esummit_id,student.referred_by])  
+
+        writer.writerow([student.student_type,student.gender,student.enrollment_no,student.city,student.state,student.collage,student.esummit_id,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+
+    return response  
+def getstartup(request):  
+    response = HttpResponse(content_type='text/csv')  
+    response['Content-Disposition'] = 'attachment; filename="starup.csv"'  
+    students = StartupUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+
+        writer.writerow([student.startup_name,student.domain,student.category,student.esummit_id,student.referred_by,student.email])  
+
+        writer.writerow([student.startup_name,student.email,student.domain,student.category,student.esummit_id,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+    return response  
+def getca(request):  
+    response = HttpResponse(content_type='text/csv')  
+    response['Content-Disposition'] = 'attachment; filename="ca.csv"'  
+    students =CAUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+
+ 
+        writer.writerow([student.collage,student.points,student.year,student.city,student.state,student.gender,student.taskAssigned,student.taskCompleted,student.rank,
+                         student.full_name,student.email,student.phone_number,student.payment,student.password,student.authToken,student.referred_by])  
+    return response  
+
+
+
 
 
 @csrf_exempt
@@ -32,7 +100,7 @@ from CAP.models.users import CapUsers
 def send_purchase_confirmation(request):
     data = request.data
     send_feedback_email_task.delay(
-        ["pranav_a@ece.iitr.ac.in","ishika@ch.iitr.ac.in"], str(data), "Esummit 2023 Ticket Confirmation"
+        ["pranav_a@ece.iitr.ac.in","ishika@ch.iitr.ac.in","d_dev@me.iitr.ac.in"], str(data), "Esummit 2024 Ticket Confirmation"
     )
     email=""
     phone="0000000000"
@@ -64,12 +132,12 @@ def send_purchase_confirmation(request):
                         rfc.usage = rfc.usage+1
                         rfc.save()
                     else:
-                        message = """Hi you were found using an unauthorized reffral code. Hence no ticket will be issued."""
-                        send_feedback_email_task.delay(email, message, "Esummit 2023 Unauthorized Reffral Code")
+                        message = """Hi you were found using an unauthorized refferal code. Hence no ticket will be issued."""
+                        send_feedback_email_task.delay(email, message, "Esummit 2024 Unauthorized Reffral Code")
                         return Response("Successful", status=status.HTTP_200_OK)
 
                 else:
-                    user = CAUser.objects.filter(esummit_id=reffral_code)[0]
+                    user = CapUsers.objects.filter(esummitId=reffral_code)[0]
                     user.points = 200+user.points
                     user.save()
         except:
@@ -89,13 +157,13 @@ def send_purchase_confirmation(request):
     payment_obj = Payment.objects.create(
         name=name, amount=amount, payment_id=data['payload']["payment"]["entity"]['id'], provider_order_id=data['payload']["payment"]["entity"]['order_id'])
     payment_obj.save()
-    name, quantity = Plans().plan_quantity(amount)
+    name, quantity,link = Plans().plan_quantity(amount)
     ticket_obj = Ticket.objects.create(
         name=name,Person=person_obj, payment=payment_obj, total_payment=amount, quantity=quantity)
     e_id = ""
-    if person_obj.ca:
-        e_id = person_obj.ca.esummit_id
-    elif person_obj.student:
+    # if person_obj.ca:
+    #     e_id = person_obj.ca.esummit_id
+    if person_obj.student:
         e_id = person_obj.student.esummit_id
     elif person_obj.proff:
         e_id = person_obj.proff.esummit_id
@@ -104,7 +172,8 @@ Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welco
 Your Esummit ID: """ + e_id + """<br>
 No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
-Event Dates: Feb 17 to Feb 19<br>
+Event Dates: Feb 2 to Feb 4<br>
+ """+ str(link)+"""
 Venue: Campus, IIT Roorkee<br><br>
 All the best for your prep. See you soon!"""
     if case2:
@@ -113,7 +182,7 @@ Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welco
 Your Esummit ID: """ + e_id + """<br>
 No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
-Event Dates: Feb 17 to Feb 19<br>
+Event Dates: Feb 2 to Feb 4<br>
 Venue: Campus, IIT Roorkee<br><br>
 your password is esummit@123<br>
 All the best for your prep. See you soon!"""
@@ -121,7 +190,7 @@ All the best for your prep. See you soon!"""
     ticket_obj.save()
     person_obj.save()
     send_feedback_email_task.delay(
-        email, message, "Esummit 2023 Ticket Confirmation"
+        email, message, "Esummit 2024 Ticket Confirmation"
     )
     return Response("Successful", status=status.HTTP_200_OK)
 
@@ -266,97 +335,90 @@ def SignupView(request):
     if request.method == 'GET':
         return Response(status=status.HTTP_200_OK)
     elif request.method == 'POST':
-     email = request.data["user"]['email']
-     name = request.data["user"]['full_name']
-     if block_mail(email,''):
-        return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)
+        email = request.data["user"]['email']
+        name = request.data["user"]['full_name']
+        print(email,name)
+        if block_mail(email,''):
+            return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)
         
-     else :
-        if CommonDetails.objects.filter(email=email).exists():
-            return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
-        saver = False
-        # db_entry = ""
+        else :
+            if person.objects.filter(email=email).exists():
+                return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            saver = False
+            db_entry = ""
 
-        # db_entry_person = PearsonSerializer
-        data = request.data["user"]
-        userType = request.data.get('UserType')
+            db_entry_person = PearsonSerializer
+            data = request.data["user"]
+            userType = request.data.get('UserType')
 
-        # if userType == 'ca':
-        #     try:
-        #         data["referred_by"] = ""
-        #         db_entry = CAUserSerializer(data=data)
-        #         db_entry.is_valid(raise_exception=True)
-        #         db_entry.save()
-        #         data2 = {"email": email, "name": name, "ca": saver.pk}
-        #         db_entry_person = PearsonSerializer(data=data2)
-        #         db_entry_person.is_valid(raise_exception=True)
-        #         db_entry_person.save()
+        
+            if userType in ('stu', "proff", "stp"):
 
-        #     except:
-        #         return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
-        if userType in ('stu', "proff", "stp"):
+                try:
+                    data["referred_by"] = request.data["referred_by"]
 
-            try:
-                data["referred_by"] = request.data["referred_by"]
+                except:
+                    data["referred_by"] = ""
 
-            except:
-                data["referred_by"] = ""
+                db_entry = StudentUserSerializer(data=data)
 
-            db_entry = StudentUserSerializer(data=data)
-
-            if userType == 'proff':
-                db_entry = ProffUserSerializer(data=data)
-
-            if userType == 'stp':
-
-                db_entry = StartupUserSerializer(data=data)
-
-            if db_entry.is_valid(raise_exception=True):
-                saver = db_entry.save()
-                data2 = {"email": email, "name": name}
-                if userType == 'stu':
-                    data2["student"] = saver.pk
                 if userType == 'proff':
-                    data2["proff"] = saver.pk
-                db_entry_person = PearsonSerializer(data=data2)
+                    db_entry = ProffUserSerializer(data=data)
 
-                db_entry_person.is_valid()
-                db_entry_person.save()
+                if userType == 'stp':
 
-            else:
-                return Response({"Faliure": str(db_entry.errors)}, status=status.HTTP_400_BAD_REQUEST)
-            try:
+                    db_entry = StartupUserSerializer(data=data)
 
-                user = CapUsers.objects.filter(esummitId=data["referred_by"])[0]
-                user.totalpoints = 50+user.points
+                if db_entry.is_valid():
+                    saver = db_entry.save()
+                    print(saver)
+                    data2 = {"email": email, "name": name}
+                    if userType == 'stu':
+                        data2["student"] = saver.pk
+                    if userType == 'proff':
+                        data2["proff"] = saver.pk
+                    db_entry_person = PearsonSerializer(data=data2)
 
-                user.save()
-            except:
-                pass
-        message = "Dear "+"<b>"+saver.full_name+"</b>" + \
-            " account created your esummit id is "+"<b> "+saver.esummit_id+"</b>"
-        # send_mail('esummit account created', "", 'from@example.com', [
-        #           saver.email], fail_silently=False, html_message=message)
-        message = "Congratulations " + "<b>"+saver.full_name+"</b>" + """Your IIT Roorkee E-Summit account has been created successfully.<br>
+                    db_entry_person.is_valid(raise_exception=True)
+                    db_entry_person.save()
+
+                else:
+                    return Response({"Faliure2": db_entry.errors}, status=status.HTTP_400_BAD_REQUEST)
+                try:
+
+
+                    user = CapUsers.objects.filter(esummit_id=data["referred_by"])[0]
+                    user.totalpoints = 50 + user.totalpoints
+                    user.save()
+                except:
+                    
+                    pass
+        
+        
+                message = ""
+                if saver:
+                    message = "Congratulations " + "<b>"+name+"</b>" + """ Your IIT Roorkee E-Summit account has been created successfully.<br>
 <br>
 Your E-Summit ID is:<br>
  <b>"""+saver.esummit_id+"""</b><br>
 <br>
-Visit our website esummit.in and login to register for the E-Summit events.<br>
+Visit our website esummit.in/register and login to register for the E-Summit events.<br>
 <br>
 <br>
 Thanks and Regards<br>
 <br>
 Team E-Summit, IIT Roorkee"""
-        mail = saver.email
+                    mail = email
 
-        send_feedback_email_task.delay(
-            mail, message, 'esummit account created'
-        )
-        return Response({"n": saver.full_name, "e_id": saver.esummit_id, "at": saver.authToken}, status=status.HTTP_201_CREATED)
-
-        # return Response(status=status.HTTP_400_BAD_REQUEST)
-    
+                    send_feedback_email_task.delay(
+                mail, message, 'esummit account created'
+            )
+                    return Response({"n": name, "e_id": saver.esummit_id, "at": saver.authToken}, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({"Faliure": db_entry.errors}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"error": "Invalid User Type"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"message":"failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(('GET', 'POST'))
@@ -679,11 +741,7 @@ def OTPSignupVerify(request):
          if not otp:
           return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
          if not email:
-
-
-
             return Response('Email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
-
          else:
             personi = person.objects.filter(email=email)
             if len(personi) == 0:
@@ -747,7 +805,7 @@ class TeamecellOtpView(APIView):
             personi = personi[0]
             personi.Otp = otp
             personi.save()
-          
+
             message = "Your OTP is <b>" + otp + "</b>"
             send_feedback_email_task.delay(
                 mail, message, 'Your OTP is '
@@ -778,10 +836,68 @@ class TeamecellVerifyView(APIView):
                     return Response("True", status=200)
                 else:
                     return Response("Wrong OTP", status=400)
+    
+@api_view(('POST',))
+def OtpSendNew(request):
+    if request.method == 'POST':
+        totp = pyotp.TOTP('base32secret3232')
+        otp = totp.now()
+        data = dict(request.data)
+        mail = data["email"]
+
+        if (block_mail(mail,'')):
+              return Response({'error_msg': 'Blocked Credentials'}) 
+
+        if person.objects.filter(email=mail).exists():
+            return Response({"error": "email already registered"}, status=400)
+        elif OTP.objects.filter(Email=mail).exists():
+                otp_obj = OTP.objects.get(Email=mail)
+                otp = otp_obj.Otp
+
+        else:    
+            
+            data={
+                'Email':mail,'Otp':otp
+            }
+            db_entry = otpSerializer(data=data)
+            db_entry.is_valid(raise_exception=True)
+            db_entry.save()
+        
+            
+            
+        message = "Your OTP is <b>" + otp + "</b>"
+        print(otp,mail)
+        send_feedback_email_task.delay(
+            mail, message, 'Your OTP is '
+        )
+        return Response("Successful", status=status.HTTP_200_OK)
+         
+
+@api_view(( 'POST',))
+def OtpVerifyNew(request):
+    if request.method == 'POST':
+        data = request.data
+        otp = data.get('otp', None)
+        email = data.get('email', None)
+
+        if block_mail(email,''):
+            return Response({'error': 'Unauthorized'},status=status.HTTP_401_UNAUTHORIZED)  
+        else :
+         if not otp:
+          return Response('OTP cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+         if not email:
+            return Response('Email cannot be empty!', status=status.HTTP_400_BAD_REQUEST)
+         else:
+            if OTP.objects.filter(Email=email).exists():
+             otp_obj = OTP.objects.get(Email=email)
+             stored_otp=otp_obj.Otp
+             if stored_otp==otp:
+                otp_obj.delete()
+                return Response("verified", status=status.HTTP_200_OK)
+             else:
+                 return Response({"message": "Wrong OTP"}, status=status.HTTP_400_BAD_REQUEST)        
+            else:
+                
+             return Response("Wrong Email", status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(('GET', 'POST'))
-def OtpSend(request):
-    if request.method == 'GET':
-        number = random.randint(1111,9999)
-        return Response(number, status=400)
