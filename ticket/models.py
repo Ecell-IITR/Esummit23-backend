@@ -53,8 +53,12 @@ class Ticket(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name+"_"+str(self.Person)+"_"
+        return self.name+"_"+str(self.Person)
 
+
+
+    def __str__(self):
+        return self.name+"_"+str(self.Person)
 
 class ReffealCode(models.Model):
     owner = models.CharField(max_length=50, verbose_name="Owner")
