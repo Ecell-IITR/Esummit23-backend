@@ -107,18 +107,19 @@ def send_purchase_confirmation(request):
     name=""
     try:
         email = data['payload']["payment"]["entity"]['notes']['email']
-        phone = data['payload']["order"]["entity"]['notes']['phone']
-        name = data['payload']["order"]["entity"]['notes']['name']
+        phone = data['payload']["payment"]["entity"]['notes']['phone']
+        name = data['payload']["payment"]["entity"]['notes']['name']
     except:
+
         try:
             email = ["payload"]["payment"]["entity"]["email"]
         except:
-            return Response("Successful", status=status.HTTP_200_OK)
+            return Response("RE Successful", status=status.HTTP_200_OK)
     
-    amount = int(data['payload']["order"]["entity"]['amount'])/100
+    amount = int(data['payload']["payment"]["entity"]["amount"])/100
     reffral_code=False
     try:
-        reffral_code = data['payload']["order"]["entity"]['notes']['Referralcode']
+        reffral_code = data['payload']["payment"]["entity"]['notes']['Referralcode']
     except:
         pass
 
@@ -134,7 +135,7 @@ def send_purchase_confirmation(request):
                     else:
                         message = """Hi you were found using an unauthorized referral code. Hence no ticket will be issued."""
                         send_feedback_email_task.delay(email, message, "Esummit 2024 Unauthorized Referral Code")
-                        return Response("Successful", status=status.HTTP_200_OK)
+                        return Response("UN Successful", status=status.HTTP_200_OK)
 
                 else:
                     user = CapUsers.objects.filter(esummitId=reffral_code)[0]
@@ -167,6 +168,7 @@ def send_purchase_confirmation(request):
         e_id = person_obj.student.esummit_id
     elif person_obj.proff:
         e_id = person_obj.proff.esummit_id
+    
     message = """Hi,<br>
 Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
 Your Esummit ID: """ + e_id + """<br>
@@ -187,7 +189,7 @@ Event Dates: Feb 2 to Feb 4<br>
 Venue: Campus, IIT Roorkee<br><br>
 your password is esummit@123<br>
 All the best for your prep. See you soon!"""
-
+ 
     ticket_obj.save()
     person_obj.save()
     send_feedback_email_task.delay(
