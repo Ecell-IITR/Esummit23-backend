@@ -5,10 +5,10 @@ class PaymentStatus:
 
 
 class Plans:
-    Plans = { "SSP": {"price": 599, "description": "SSP Description","mail_template":""}, 
-             "PP": {"price": 2499, "description": "Professional Pass Description","mail_template":""}, 
-             "SEPP": {"price": 9999, "description": "Startup Expo Professional Pass Description","mail_template":""}, 
-             "PSP": {"price": 1799, "description": "Premium Student Pass Description","mail_template":""}, 
+    Plans = { "SSP": {"price": 599, "description": "SSP Description","mail_template":"Venue: Campus, IIT Roorkee"}, 
+             "PP": {"price": 2499, "description": "Professional Pass Description","mail_template":"Venue: Campus, IIT Roorkee"}, 
+             "SEPP": {"price": 9999, "description": "Startup Expo Professional Pass Description","mail_template":"Venue: Campus, IIT Roorkee"}, 
+             "PSP": {"price": 1799, "description": "Premium Student Pass Description","mail_template":"Venue: Campus, IIT Roorkee"}, 
              "EBC":{"price":149,"description":"Emerge Boot Camp Description","mail_template":"You've successfully enrolled in Emerge! Do join the WhatsApp group using the provided link for further updates and great networking experience. https://chat.whatsapp.com/Gi9DGhmU1mOEOoc4M1qCLv"},
              "TTP": {"price": 1, "description": "Tech team Description","mail_template":" You've successfully enrolled in Emerge! Do join the WhatsApp group using the provided link for further updates and great networking experience. https://chat.whatsapp.com/Gi9DGhmU1mOEOoc4M1qCLv"}}
 

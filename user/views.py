@@ -162,8 +162,7 @@ def send_purchase_confirmation(request):
     ticket_obj = Ticket.objects.create(
         name=name,Person=person_obj, payment=payment_obj, total_payment=amount, quantity=quantity)
     e_id = ""
-    # if person_obj.ca:
-    #     e_id = person_obj.ca.esummit_id
+    
     if person_obj.student:
         e_id = person_obj.student.esummit_id
     elif person_obj.proff:
@@ -175,8 +174,8 @@ Your Esummit ID: """ + e_id + """<br>
 No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
 Event Dates: Feb 2 to Feb 4<br>
- """+ str(link)+"""<br>
-Venue: Campus, IIT Roorkee<br><br>
+ """+ str(link)+"""<br><br>
+
 All the best for your prep. See you soon!"""
     if case2:
         message = """Hi,<br>
@@ -185,8 +184,7 @@ Your Esummit ID: """ + e_id + """<br>
 No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
 Event Dates: Feb 2 to Feb 4<br>
- """+ str(link)+"""<br>
-Venue: Campus, IIT Roorkee<br><br>
+ """+ str(link)+"""<br><br>
 your password is esummit@123<br>
 All the best for your prep. See you soon!"""
  
