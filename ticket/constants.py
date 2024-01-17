@@ -10,7 +10,8 @@ class Plans:
              "SEPP": {"price": 9999, "description": "Startup Expo Professional Pass Description","mail_template":"Venue: Campus, IIT Roorkee"}, 
              "PSP": {"price": 1799, "description": "Premium Student Pass Description","mail_template":"Venue: Campus, IIT Roorkee"}, 
              "EBC":{"price":149,"description":"Emerge Boot Camp Description","mail_template":"You've successfully enrolled in Emerge! Do join the WhatsApp group using the provided link for further updates and great networking experience. https://chat.whatsapp.com/Gi9DGhmU1mOEOoc4M1qCLv"},
-             "TTP": {"price": 1, "description": "Tech team Description","mail_template":" You've successfully enrolled in Emerge! Do join the WhatsApp group using the provided link for further updates and great networking experience. https://chat.whatsapp.com/Gi9DGhmU1mOEOoc4M1qCLv"}}
+             "TTP": {"price": 1, "description": "Tech team Description","mail_template":" You've successfully enrolled in Emerge! Do join the WhatsApp group using the provided link for further updates and great networking experience. https://chat.whatsapp.com/Gi9DGhmU1mOEOoc4M1qCLv"},
+             "EDP":{"price":249,"description":"Eduquest Description","mail_template":"You've successfully enrolled in Eduquest! Do join the WhatsApp group using the provided link for further updates and great networking experience.https://chat.whatsapp.com/FWEoMFGCzbTHkZNQsNu6uj "}}
 
     def plan_quantity(self, cost):
         array = list(self.Plans.keys())
