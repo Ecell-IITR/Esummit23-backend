@@ -33,6 +33,7 @@ from django.http import HttpResponse
 
 
 # Create your views here.
+#to export data from models to csv file
 def getproff(request):
     response = HttpResponse(content_type='text/csv')
     response['content-Disposition'] = 'attachment; filename="proff.csv"'
@@ -140,6 +141,7 @@ def send_purchase_confirmation(request):
                 else:
                     user = CapUsers.objects.filter(esummitId=reffral_code)[0]
                     user.points = 200+user.points
+                    user.ticketssold = user.ticketssold+1
                     user.save()
         except:
                 pass

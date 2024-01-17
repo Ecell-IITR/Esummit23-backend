@@ -127,7 +127,7 @@ def import_data(request):
         decoded_file = file.read().decode('utf-8').splitlines()
         desc = request.POST["desc"]
         User = ""
-        print(request.POST["user"])
+        # print(request.POST["user"])
 
         User = request.POST["user"]
 
@@ -137,7 +137,7 @@ def import_data(request):
             # print(row)
             try:
                 data = row.split(",")
-                print(data[0])
+                # print(data[0])
                 per = ""
                 stu = ""
                 if not person.objects.filter(email=data[1]).exists():
@@ -170,7 +170,7 @@ def import_data(request):
 
                 ticket.save()
                 send_feedback_email_task(data[1], "Hi,<br>Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>Your Esummit ID: " +
-                                         stu.esummit_id+"<br>No. of tickets confirmed: 1<br>Payment mode: Online<br>Event Dates: Feb 17 to Feb 19<br>Venue: Campus, IIT Roorkee<br><br>All the best for your prep. See you soon!", "Esummit 2023 Ticket Confirmation")
+                                         stu.esummit_id+"<br>No. of tickets confirmed: 1<br>Payment mode: Online<br>Event Dates: Feb 2 to Feb 4<br>Venue: Campus, IIT Roorkee<br><br>All the best for your prep. See you soon!", "Esummit 2024 Ticket Confirmation")
             except Exception as e:
                 pass
         # if file_format == 'CSV':

@@ -103,3 +103,7 @@ class StatisticsParticipants(models.Model):
         Meta class for StatisticsParticipants
         """
         verbose_name_plural = 'StatisticsParticipant'
+
+
+
+
