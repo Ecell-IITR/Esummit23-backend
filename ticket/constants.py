@@ -25,6 +25,10 @@ class Plans:
              "SEPPDS": {"price": 7949, "description": "Startup Expo Professional Pass Discounted Second","mail_template":"Venue: Campus, IIT Roorkee"},
              "SEPPDT": {"price": 6959, "description": "Startup Expo Professional Pass Discounted Third","mail_template":"Venue: Campus, IIT Roorkee"},
              "SEPPDF": {"price": 5939, "description": "Startup Expo Professional Pass Discounted Fourth","mail_template":"Venue: Campus, IIT Roorkee"},
+             "SEEBD": {"price": 8998, "description": "Startup Expo Professional early bird","mail_template":"Venue: Campus, IIT Roorkee"},
+             "PSEBD": {"price": 1619, "description": "Premium student early Bird pass","mail_template":"Venue: Campus, IIT Roorkee"},
+             "PPEBD": {"price": 2249, "description": "Professional Pass Early bird 10% off","mail_template":"Venue: Campus, IIT Roorkee"},
+             "SSEBD": {"price": 8998, "description": "Student Standard Early Bird disocunt","mail_template":"Venue: Campus, IIT Roorkee"}
              }
 
     def plan_quantity(self, cost):

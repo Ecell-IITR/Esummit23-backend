@@ -127,7 +127,7 @@ def send_purchase_confirmation(request):
     if reffral_code:
         try:    
              
-                if "CAP" not in reffral_code and amount==1499:
+                if "CAP" not in reffral_code and amount==1799:
                     
                     if ReffealCode.objects.filter(code=reffral_code).exists():
                         rfc= ReffealCode.objects.filter(code=reffral_code)[0]
