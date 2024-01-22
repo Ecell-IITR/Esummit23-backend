@@ -36,4 +36,4 @@ class Plans:
         for i in array:
             if cost % self.Plans[i]["price"] == 0 and cost >= self.Plans[i]["price"]:
                 return i, cost//self.Plans[i]["price"],self.Plans[i]["mail_template"]
-        return "TTP", 1,"Venue: Campus, IIT Roorkee"    
+        return "TTP", 1,"You've successfully enrolled in Eduquest! Do join the WhatsApp group using the provided link for further updates and great networking experience.https://chat.whatsapp.com/FWEoMFGCzbTHkZNQsNu6uj"    
