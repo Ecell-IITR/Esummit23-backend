@@ -10,7 +10,6 @@ class Plans:
              "SEPP": {"price": 9999, "description": "Startup Expo Professional Pass Description","mail_template":"Venue: Campus, IIT Roorkee"}, 
              "PSP": {"price": 1799, "description": "Premium Student Pass Description","mail_template":"Venue: Campus, IIT Roorkee"}, 
              "EBC":{"price":149,"description":"Emerge Boot Camp Description","mail_template":"You've successfully enrolled in Emerge! Do join the WhatsApp group using the provided link for further updates and great networking experience. https://chat.whatsapp.com/Gi9DGhmU1mOEOoc4M1qCLv"},
-             "TTP": {"price": 1, "description": "Tech team Description","mail_template":"Venue: Campus, IIT Roorkee"},
              "EDP":{"price":249,"description":"Eduquest Description","mail_template":"You've successfully enrolled in Eduquest! Do join the WhatsApp group using the provided link for further updates and great networking experience.https://chat.whatsapp.com/FWEoMFGCzbTHkZNQsNu6uj "},
              "MUND":{"price":1699,"description":"MUN Discount Page","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSPDF":{"price":599,"description":"Standard Student Pass Description First","mail_template":"Venue: Campus, IIT Roorkee"},
@@ -28,7 +27,11 @@ class Plans:
              "SEEBD": {"price": 8998, "description": "Startup Expo Professional early bird","mail_template":"Venue: Campus, IIT Roorkee"},
              "PSEBD": {"price": 1619, "description": "Premium student early Bird pass","mail_template":"Venue: Campus, IIT Roorkee"},
              "PPEBD": {"price": 2249, "description": "Professional Pass Early bird 10% off","mail_template":"Venue: Campus, IIT Roorkee"},
-             "SSEBD": {"price": 8998, "description": "Student Standard Early Bird disocunt","mail_template":"Venue: Campus, IIT Roorkee"}
+             "SSEBD": {"price": 8998, "description": "Student Standard Early Bird disocunt","mail_template":"Venue: Campus, IIT Roorkee"},
+             "SSEBD": {"price": 997, "description": "Student Standard Pass with  SMFD workshop","mail_template":"Venue: Campus, IIT Roorkee"},
+             "SSEBD": {"price": 3089, "description": "Professional pass with  SMFD workshop","mail_template":"Venue: Campus, IIT Roorkee"},
+             "SSEBD": {"price": 2399, "description": "Premium student pass with  SMFD workshop","mail_template":"Venue: Campus, IIT Roorkee"},
+             "TTP": {"price": 1, "description": "Tech team Description","mail_template":"Venue: Campus, IIT Roorkee"},
              }
 
     def plan_quantity(self, cost):
