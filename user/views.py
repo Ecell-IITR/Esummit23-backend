@@ -170,6 +170,7 @@ def send_purchase_confirmation(request):
     elif person_obj.proff:
         e_id = person_obj.proff.esummit_id
     
+    
     message = """Hi,<br>
 Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
 Your Esummit ID: """ + e_id + """<br>
