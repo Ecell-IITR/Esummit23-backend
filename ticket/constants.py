@@ -35,7 +35,12 @@ class Plans:
              "SSEBD": {"price": 2897, "description": "Professional pass with  SMFD workshop","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSEBD": {"price": 2179, "description": "Premium student pass with  SMFD workshop","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSEBD": {"price": 1879, "description": "Premium student pass with  SMFD workshop Discounted","mail_template":"Venue: Campus, IIT Roorkee"},
-             "TTP": {"price": 1, "description": "Tech team Description","mail_template":"Venue: Campus, IIT Roorkee"},
+             "RDSSP": {"price": 509, "description": "Standard Student Republic Day","mail_template":"<b>HAPPY REPUBLIC DAY !!</b> <br> Venue: Campus, IIT Roorkee"},
+             "RDPC": {"price": 2113, "description": "Professional Republic Day Coupon","mail_template":"<b>HAPPY REPUBLIC DAY !!</b> <br> Venue: Campus, IIT Roorkee"},
+             "RDPPC": {"price": 1523, "description": "Premium Pass Republic Day","mail_template":"<b>HAPPY REPUBLIC DAY !!</b> <br> Venue: Campus, IIT Roorkee"},
+             "RDSEC": {"price": 8467, "description": "Startup Expo Republic Day","mail_template":"<b>HAPPY REPUBLIC DAY !!</b> <br> Venue: Campus, IIT Roorkee"},
+    
+             "TTP": {"price": 1, "description": "Tech team Description","mail_template":"HAPPY REPUBLIC DAY !! \n Venue: Campus, IIT Roorkee"},
              }
 
     def plan_quantity(self, cost):
