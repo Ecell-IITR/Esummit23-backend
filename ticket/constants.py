@@ -29,7 +29,7 @@ class Plans:
              "SEPPDF": {"price": 5939, "description": "Startup Expo Professional Pass Discounted Fourth","mail_template":"Venue: Campus, IIT Roorkee"},
              "SEEBD": {"price": 8999, "description": "Startup Expo Professional early bird","mail_template":"Venue: Campus, IIT Roorkee"},
              "PSEBD": {"price": 1619, "description": "Premium student early Bird pass","mail_template":"Venue: Campus, IIT Roorkee"},
-             "PPEBD": {"price": 2249, "description": "Professional Pass Early bird 10% off","mail_template":"Venue: Campus, IIT Roorkee"},
+             "PPEBD": {"price": 2239, "description": "Professional Pass Early bird 10% off","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSEBD": {"price": 539, "description": "Student Standard Early Bird disocunt","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSEBD": {"price": 997, "description": "Student Standard Pass with  SMFD workshop","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSEBD": {"price": 2897, "description": "Professional pass with  SMFD workshop","mail_template":"Venue: Campus, IIT Roorkee"},
