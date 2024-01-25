@@ -34,6 +34,7 @@ class Plans:
              "SSEBD": {"price": 997, "description": "Student Standard Pass with  SMFD workshop","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSEBD": {"price": 2897, "description": "Professional pass with  SMFD workshop","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSEBD": {"price": 2179, "description": "Premium student pass with  SMFD workshop","mail_template":"Venue: Campus, IIT Roorkee"},
+             "SSEBD": {"price": 1879, "description": "Premium student pass with  SMFD workshop Discounted","mail_template":"Venue: Campus, IIT Roorkee"},
              "TTP": {"price": 1, "description": "Tech team Description","mail_template":"Venue: Campus, IIT Roorkee"},
              }
 
