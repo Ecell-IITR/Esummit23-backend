@@ -169,6 +169,8 @@ def send_purchase_confirmation(request):
         e_id = person_obj.student.esummit_id
     elif person_obj.proff:
         e_id = person_obj.proff.esummit_id
+    elif person_obj.startup:
+        e_id = person_obj.startup.esummit_id
     
     
     message = """Hi,<br>
