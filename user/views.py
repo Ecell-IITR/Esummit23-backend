@@ -20,6 +20,7 @@ from .models.role.student import StudentUser
 # from CAP.models.users import CapUsers
 from CAP.models.users import CapUsers
 from .models.role.ca import CAUser
+from .models.abstarct import AbstractProfile
 from .models.role.proff import ProffUser
 from .models.role.startup import StartupUser
 from .utils.block import block_mail
@@ -53,7 +54,14 @@ def getperson(request):
         writer.writerow([student.leader_status,student.name,student.email,student.student,student.ca,student.proff,student.created,student.updated,student.otp,student.verified])  
     return response 
 
-
+def getabstract(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="abstract.csv"'
+    students = AbstractProfile.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.full_name,student.email,student.db_index,student.phone_number,student.payment,student.pincode,student.country,student.state])  
+    return response 
 def getfile(request):  
     response = HttpResponse(content_type='text/csv')  
     response['Content-Disposition'] = 'attachment; filename="student.csv"'  
