@@ -5,7 +5,7 @@ from .views import OtpSendNew, OtpVerifyNew ,  QuerryView, LoginApiView,getfile,
 urlpatterns = [
     path('login', LoginApiView.as_view(), name='Loginview'),
     path('getfile',getfile),
-    path('getperson',getperson),
+    # path('getperson',getperson),
     # path('getproff',getproff),
     # path('getca',getca),
     # path('getstartup',getstartup),
