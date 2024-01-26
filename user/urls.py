@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import OtpSendNew, OtpVerifyNew ,  QuerryView, LoginApiView,getfile, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView,OtpSignupView, OTPSignupVerify ,send_purchase_confirmation,TeamecellOtpView,TeamecellVerifyView,getperson
+from .views import OtpSendNew, OtpVerifyNew ,  QuerryView, LoginApiView,getfile, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView,OtpSignupView, OTPSignupVerify ,send_purchase_confirmation,TeamecellOtpView,TeamecellVerifyView,getabstract,getperson
 
 urlpatterns = [
     path('login', LoginApiView.as_view(), name='Loginview'),

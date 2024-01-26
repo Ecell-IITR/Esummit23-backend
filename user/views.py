@@ -48,19 +48,19 @@ def getproff(request):
 def getperson(request):
     response = HttpResponse(content_type='text/csv')
     response['content-Disposition'] = 'attachment; filename="person.csv"'
-    students = person.objects.all()  
+    students = StudentUser.objects.all()  
     writer = csv.writer(response)  
     for student in students:  
-        writer.writerow([student.leader_status,student.name,student.email,student.student,student.ca,student.proff,student.created,student.updated,student.otp,student.verified])  
+        writer.writerow([student.full_name,student.email,student.phone_number,student.payment,student.country,student.state])  
     return response 
 
 def getabstract(request):
     response = HttpResponse(content_type='text/csv')
     response['content-Disposition'] = 'attachment; filename="abstract.csv"'
-    students = AbstractProfile.objects.all()  
+    students = person.objects.all()  
     writer = csv.writer(response)  
     for student in students:  
-        writer.writerow([student.full_name,student.email,student.db_index,student.phone_number,student.payment,student.pincode,student.country,student.state])  
+        writer.writerow([student.student.full_name,student.student.email,student.student.phone_number,student.student.payment,student.student.pincode,student.student.country,student.student.state])  
     return response 
 def getfile(request):  
     response = HttpResponse(content_type='text/csv')  
