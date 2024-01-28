@@ -17,7 +17,7 @@ class Reffreal(admin.ModelAdmin):
 
 class TicketsAdmin(admin.ModelAdmin):
     list_display = ('Person', 'name', 'quantity')
-    search_fields = ('Person__email', 'name')
+    search_fields = ('Person__email', 'name','Person__student__esummit_id','Person__startup__esummit_id','Person__proff__esummit_id')
     actions = ['download_csv']
     change_list_template = 'change_list.html'
     def changelist_view(self, request, extra_context=None):

@@ -51,7 +51,7 @@ def getperson(request):
     students = person.objects.all()  
     writer = csv.writer(response)  
     for student in students:  
-        writer.writerow([student.leader_status,student.name,student.email,student.student,student.ca,student.proff,student.created,student.updated,student.otp,student.verified])  
+        writer.writerow([student.leader_status,student.phone_number,student.name,student.email,student.student,student.ca,student.proff,student.created,student.updated,student.otp,student.verified])  
     return response 
 
 def getabstract(request):
