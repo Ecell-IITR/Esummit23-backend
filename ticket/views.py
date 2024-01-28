@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 import os
 import razorpay
 
@@ -264,13 +264,15 @@ def StatsParticipants(request):
             return Response({"Faliure": "failure"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(('GET'))
+@api_view(('GET',))
 def TicketsInfo(request):
     email=request.query_params.get('email')
-    user=""
-    user = person.objects.filter(email=email)
-    if user:
-       print( user.ticket)
-       return Response({"success": "ticket purchased"}, status=status.HTTP_200_OK)
-    else:
-        return Response({"Faliure": "failure"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    user_qs = person.objects.filter(email=email)
+    if(get_object_or_404(user_qs)):
+        user=user_qs.first()
+        if get_object_or_404(user.ticket):
+        
+            return Response({"success": "ticket purchased"}, status=status.HTTP_200_OK)
+        
+    return Response({"Faliure": "failure"}, status=status.HTTP_404_NOT_FOUND)

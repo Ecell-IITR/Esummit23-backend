@@ -7,6 +7,6 @@ urlpatterns = [
     path('import_data', import_data, name='import_data'),
     path('Sent_data', Sent_data),
     path('stats',StatsParticipants, name='Statistics' ),
-    path('add',AddForm, name='add' )
+    path('add',AddForm, name='add' ),
     path('purchaseInfo',TicketsInfo)
 ]
