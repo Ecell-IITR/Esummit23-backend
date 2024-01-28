@@ -262,3 +262,15 @@ def StatsParticipants(request):
 
         except:
             return Response({"Faliure": "failure"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(('GET'))
+def TicketsInfo(request):
+    email=request.query_params.get('email')
+    user=""
+    user = person.objects.filter(email=email)
+    if user:
+       print( user.ticket)
+       return Response({"success": "ticket purchased"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"Faliure": "failure"}, status=status.HTTP_400_BAD_REQUEST)
