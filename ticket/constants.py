@@ -41,8 +41,8 @@ class Plans:
              "RDPC": {"price": 2113, "description": "Professional Republic Day Coupon","mail_template":"<b>HAPPY REPUBLIC DAY !!</b> <br> Venue: Campus, IIT Roorkee"},
              "RDPPC": {"price": 1523, "description": "Premium Pass Republic Day","mail_template":"<b>HAPPY REPUBLIC DAY !!</b> <br> Venue: Campus, IIT Roorkee"},
              "RDSEC": {"price": 8467, "description": "Startup Expo Republic Day","mail_template":"<b>HAPPY REPUBLIC DAY !!</b> <br> Venue: Campus, IIT Roorkee"},
-    
-             "TTP": {"price": 1, "description": "Tech team Description","mail_template":"HAPPY REPUBLIC DAY !! \n Venue: Campus, IIT Roorkee"},
+             "AP": {"price": 4499, "description": "Alum Pass","mail_template":"Venue: Campus, IIT Roorkee"},
+             "TTP": {"price": 1, "description": "Tech team Description","mail_template":"Venue: Campus, IIT Roorkee"},
              }
 
     def plan_quantity(self, cost):
