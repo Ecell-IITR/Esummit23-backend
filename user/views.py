@@ -64,7 +64,7 @@ def getabstract(request):
     return response 
 def getabstractstartupuser(request):
     response = HttpResponse(content_type='text/csv')
-    response['content-Disposition'] = 'attachment; filename="abstract.csv"'
+    response['content-Disposition'] = 'attachment; filename="abstract2.csv"'
     students = person.objects.all()  
     writer = csv.writer(response)  
     for student in students:  
