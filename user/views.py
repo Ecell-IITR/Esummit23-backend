@@ -53,6 +53,14 @@ def getperson(request):
     for student in students:  
         writer.writerow([student.full_name,student.email,student.phone_number,student.payment,student.country,student.state])  
     return response 
+def getstartuser(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="startup.csv"'
+    students = StartupUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.full_name,student.email,student.phone_number,student.payment,student.country,student.state])  
+    return response 
 
 def getabstract(request):
     response = HttpResponse(content_type='text/csv')

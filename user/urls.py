@@ -1,15 +1,15 @@
 from django.urls import path
 
-from .views import OtpSendNew, OtpVerifyNew ,QuerryView, LoginApiView,getfile, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView,OtpSignupView, OTPSignupVerify ,send_purchase_confirmation,TeamecellOtpView,TeamecellVerifyView,getabstract,getperson,getabstractstartupuser
+from .views import OtpSendNew, OtpVerifyNew ,QuerryView, LoginApiView,getfile, SignupView, OtpView, TeamSignupView, UserServices, VerifyView, NewTeamSignupView,OtpSignupView, OTPSignupVerify ,send_purchase_confirmation,TeamecellOtpView,TeamecellVerifyView,getabstract,getperson,getstartuser
 
 urlpatterns = [
     path('login', LoginApiView.as_view(), name='Loginview'),
     # path('getfile',getfile),
-    path('getstartupuser',getabstractstartupuser),
+    path('getstartupuser',getstartuser),
     # path('getperson',getperson),
     # path('getproff',getproff),
     # path('getca',getca),
-    path('getstartup',getabstract),
+    # path('getstartup',getabstract),
     path("signup", SignupView, name="SignupView"),
     path('otp', OtpView.as_view()),
     path('otp_signup', OtpSignupView),
