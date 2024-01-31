@@ -23,7 +23,7 @@ class Plans:
              "PSPDT":{"price":1499,"description":"Premium Student Pass Discounted Third","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSHWD": {"price": 1489, "description": "Hi-Res Student Pass without accomodation","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSHD": {"price": 2579, "description": "Hi-Res Student Pass with accomodation","mail_template":"Venue: Campus, IIT Roorkee"},
-             "SSHWDF":{"price": 1341, "description": "Hi-Res Student Pass with accomodation discount 10 off","mail_template":"Venue: Campus, IIT Roorkee"},
+             "SSHWDF":{"price": 1327, "description": "Hi-Res Student Pass with accomodation discount 10 off","mail_template":"Venue: Campus, IIT Roorkee"},
              "SSHDF":{"price": 2321, "description": "Hi-Res Student Pass with accomodation discount 10 off","mail_template":"Venue: Campus, IIT Roorkee"},
              "SEPPDF": {"price": 8999, "description": "Startup Expo Professional Pass Discounted First","mail_template":"Venue: Campus, IIT Roorkee"},
              "SEPPDS": {"price": 7949, "description": "Startup Expo Professional Pass Discounted Second","mail_template":"Venue: Campus, IIT Roorkee"},
