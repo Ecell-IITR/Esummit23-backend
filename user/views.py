@@ -60,7 +60,7 @@ def getabstract(request):
     students = person.objects.all()  
     writer = csv.writer(response)  
     for student in students:  
-        writer.writerow([student.student.full_name,student.student.email,student.student.phone_number,student.student.payment,student.student.pincode,student.student.country,student.student.state])  
+        writer.writerow([student.student.full_name,student.student.email,student.student.phone_number])  
     return response 
 def getabstractstartupuser(request):
     response = HttpResponse(content_type='text/csv')
