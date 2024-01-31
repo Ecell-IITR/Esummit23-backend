@@ -62,6 +62,14 @@ def getabstract(request):
     for student in students:  
         writer.writerow([student.student.full_name,student.student.email,student.student.phone_number,student.student.payment,student.student.pincode,student.student.country,student.student.state])  
     return response 
+def getabstractstartupuser(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="abstract.csv"'
+    students = person.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.startup.full_name,student.startup.email,student.startup.phone_number,student.startup.payment,student.startup.pincode,student.startup.country,student.startup.state])  
+    return response 
 def getfile(request):  
     response = HttpResponse(content_type='text/csv')  
     response['Content-Disposition'] = 'attachment; filename="student.csv"'  
