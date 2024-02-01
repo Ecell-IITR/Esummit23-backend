@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('user', '0047_person_startup'),
+        
         ('ticket', '0008_auto_20230216_0007'),
     ]
 
