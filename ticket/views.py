@@ -10,7 +10,8 @@ from rest_framework.views import APIView
 from .constants import PaymentStatus
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
-from .models import Payment, Plan, Ticket,App_download
+from .models import Payment, Plan, Ticket
+from design.models import  App_download
 import json
 from user.utils.auth import get_Person
 from user.tasks import send_feedback_email_task

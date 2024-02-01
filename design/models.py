@@ -5,6 +5,10 @@ from django.db import models
 from django.utils import timezone
 
 
+class App_download(models.Model):
+    Type = models.CharField(max_length=50)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
 
 class Colors(models.Model):
