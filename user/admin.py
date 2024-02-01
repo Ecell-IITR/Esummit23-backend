@@ -7,10 +7,13 @@ from user.models.role.proff import ProffUser
 from user.models.otp import OTP
 from user.models.person import person
 from user.models.teams import teams
-from user.models.abstarct import AbstractProfile
 from user.models.block import BlockMail,BlockNumber
 from user.tasks import send_feedback_email_task
 from user.models.teamecell import Teamecell
+from io import StringIO 
+import csv
+from django.http import HttpResponse
+
 # Register your models here.
 
 
@@ -58,9 +61,35 @@ class BlockNumberAdmin(admin.ModelAdmin):
     list_filter = ('blocknumber',)
 
 class StartupUserAdmin(UserAdmin):
-    pass
+    actions = ['download_csv']
+    def download_csv(self, request, queryset):
+    
+
+
+        f = StringIO()
+        writer = csv.writer(f)
+        writer.writerow(["full_name", "email", "startup_name","phone_number"])
+
+        for querry in queryset:
+            phone=""
+            try:
+                if querry.Person.student:
+                    phone=querry.Person.student.phone_number
+                elif querry.Person.ca:
+                    phone=querry.Person.ca.phone_number
+                elif querry.Person.proff:
+                    phone=querry.Person.proff.phone_number
+            except:
+                pass
+            writer.writerow([querry.Person,querry.Person.email,querry.quantity,phone,querry.name,querry.plan])
+
+        f.seek(0)
+        response = HttpResponse(f, content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=stat-info.csv'
+        return response
 
 class StudentUserAdmin(UserAdmin):
+    
     pass
 
 class ProffUserAdmin(UserAdmin):

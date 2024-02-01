@@ -1,15 +1,9 @@
 from django.contrib import admin
-from django.db.models import Count, Sum, Min, Max, DateTimeField
-from user.tasks import send_link_email_task
-from django.shortcuts import render
-
-from .models import Plan, Payment, Ticket,ReffealCode,StatisticsParticipants
+from django.db.models import Count, Sum
+from .models import Plan, Payment, Ticket,ReffealCode,StatisticsParticipants,App_download
 from django.http import HttpResponse
-from django import forms
-
 from io import StringIO 
 import csv
-from django.contrib.admin.helpers import ActionForm
 
 class Reffreal(admin.ModelAdmin):
     exclude = ( 'usage',)
@@ -83,6 +77,7 @@ class TicketsAdmin2(admin.ModelAdmin):
 
 
 admin.site.register(Plan)
+admin.site.register(App_download)
 admin.site.register(Payment)
 admin.site.register(StatisticsParticipants)
 admin.site.register(Ticket, TicketsAdmin2)

@@ -4,6 +4,12 @@ from django.utils.translation import gettext_lazy as _
 from .constants import PaymentStatus
 from django.utils import timezone
 
+class App_download(models.Model):
+    Type = models.CharField(max_length=50)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+
 
 class Plan(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name")

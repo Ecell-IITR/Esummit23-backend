@@ -1,4 +1,4 @@
-from .views import RazorpayPaymentView ,RazorpayCallback, import_data,Sent_data,StatsParticipants,AddForm,TicketsInfo
+from .views import RazorpayPaymentView ,RazorpayCallback, import_data,Sent_data,StatsParticipants,AddForm,TicketsInfo,url_shotner
 from django.urls import path
 
 urlpatterns = [
@@ -8,5 +8,6 @@ urlpatterns = [
     path('Sent_data', Sent_data),
     path('stats',StatsParticipants, name='Statistics' ),
     path('add',AddForm, name='add' ),
-    path('purchaseInfo',TicketsInfo)
+    path('purchaseInfo',TicketsInfo),
+    path("url",url_shotner)
 ]

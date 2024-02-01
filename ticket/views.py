@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 import os
 import razorpay
 
@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from .constants import PaymentStatus
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
-from .models import Payment, Plan, Ticket
+from .models import Payment, Plan, Ticket,App_download
 import json
 from user.utils.auth import get_Person
 from user.tasks import send_feedback_email_task
@@ -26,6 +26,18 @@ RAZOR_KEY_SECRET = os.getenv('RAZORPAY_SECRET_KEY', "RndrTeCVPTxYTJxVt10S7KET")
 razorpay_client = razorpay.Client(auth=(RAZOR_KEY_ID, RAZOR_KEY_SECRET))
 # Create your views here.
 
+
+def url_shotner(request):
+    # typer = request.query_params.get('type')
+    typer=request.GET["type"]
+    print(request.GET["type"])
+
+    obj =  App_download()
+    obj.Type=typer
+    obj.save()
+    if typer=="Android":
+        return redirect("https://play.google.com/store/apps/details?id=in.ndhm.phr")        
+    return redirect("https://apps.apple.com/in/app/abha-abdm/id1630917266")
 
 @api_view(('POST', "GET"))
 @csrf_exempt
