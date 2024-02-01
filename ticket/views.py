@@ -29,7 +29,7 @@ razorpay_client = razorpay.Client(auth=(RAZOR_KEY_ID, RAZOR_KEY_SECRET))
 
 def url_shotner(request):
     # typer = request.query_params.get('type')
-    typer=request.GET["type"]
+    typer=request.GET.get("type")
     print(request.GET["type"])
 
     obj =  App_download()
