@@ -42,7 +42,7 @@ class Ticket(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name")
     quantity = models.IntegerField(default=1, verbose_name="Quantity")
     Person = models.ForeignKey(
-        person, on_delete=models.CASCADE, verbose_name="Person")
+        person, on_delete=models.CASCADE, verbose_name="Person",related_name="ticket")
     plan = models.CharField(max_length=100, verbose_name="Plan", default="")
     total_payment = models.IntegerField(
         default=0, verbose_name="Total Payment")
@@ -53,8 +53,12 @@ class Ticket(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name+"_"+str(self.Person)+"_"
+        return self.name+"_"+str(self.Person)
 
+
+
+    def __str__(self):
+        return self.name+"_"+str(self.Person)
 
 class ReffealCode(models.Model):
     owner = models.CharField(max_length=50, verbose_name="Owner")
@@ -99,3 +103,7 @@ class StatisticsParticipants(models.Model):
         Meta class for StatisticsParticipants
         """
         verbose_name_plural = 'StatisticsParticipant'
+
+
+
+

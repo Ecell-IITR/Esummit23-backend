@@ -36,6 +36,7 @@ class CapUsers(models.Model):
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
     password = models.CharField(max_length=100,verbose_name="password",default="nopassward"+str(esummitId))
+    ticketssold=models.IntegerField(default =0)
     jwt_secret = SECRET_KEY
     jwt_algorithm = "HS256"
     authToken = models.CharField(max_length=1000, blank=True, null=True,default="")
@@ -69,6 +70,6 @@ class CapUsers(models.Model):
 
     class Meta:
         """
-        Meta class for Doctor
+        Meta class for CapUsers
         """
         verbose_name_plural = "Capusers"

@@ -1,5 +1,6 @@
 from django.db import models
 from .role.ca import CAUser
+from .role.startup import StartupUser
 from .role.proff import ProffUser
 from .role.student import StudentUser
 from django.utils import timezone
@@ -11,6 +12,7 @@ class person(models.Model):
     student=models.ForeignKey(StudentUser,on_delete=models.CASCADE,blank=True,null=True)
     ca=models.ForeignKey(CAUser,on_delete=models.CASCADE,blank=True,null=True)
     proff=models.ForeignKey(ProffUser,on_delete=models.CASCADE,blank=True,null=True)
+    startup=models.ForeignKey(StartupUser,on_delete=models.CASCADE,blank=True,null=True)
     created=models.DateTimeField(default=timezone.now)
     updated=models.DateTimeField(auto_now=True)
     otp=models.CharField(max_length=6,blank=True,null=True)

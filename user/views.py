@@ -20,6 +20,7 @@ from .models.role.student import StudentUser
 # from CAP.models.users import CapUsers
 from CAP.models.users import CapUsers
 from .models.role.ca import CAUser
+from .models.abstarct import AbstractProfile
 from .models.role.proff import ProffUser
 from .models.role.startup import StartupUser
 from .utils.block import block_mail
@@ -33,6 +34,7 @@ from django.http import HttpResponse
 
 
 # Create your views here.
+#to export data from models to csv file
 def getproff(request):
     response = HttpResponse(content_type='text/csv')
     response['content-Disposition'] = 'attachment; filename="proff.csv"'
@@ -46,13 +48,36 @@ def getproff(request):
 def getperson(request):
     response = HttpResponse(content_type='text/csv')
     response['content-Disposition'] = 'attachment; filename="person.csv"'
+    students = StudentUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.full_name,student.email,student.phone_number,student.payment,student.country,student.state])  
+    return response 
+def getstartuser(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="startup.csv"'
+    students = StartupUser.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.full_name,student.email,student.phone_number,student.payment,student.country,student.state])  
+    return response 
+
+def getabstract(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="abstract.csv"'
     students = person.objects.all()  
     writer = csv.writer(response)  
     for student in students:  
-        writer.writerow([student.leader_status,student.name,student.email,student.student,student.ca,student.proff,student.created,student.updated,student.otp,student.verified])  
+        writer.writerow([student.student.full_name,student.student.email,student.student.phone_number])  
     return response 
-
-
+def getabstractstartupuser(request):
+    response = HttpResponse(content_type='text/csv')
+    response['content-Disposition'] = 'attachment; filename="abstract2.csv"'
+    students = person.objects.all()  
+    writer = csv.writer(response)  
+    for student in students:  
+        writer.writerow([student.startup.full_name,student.startup.email,student.startup.phone_number,student.startup.payment,student.startup.pincode,student.startup.country,student.startup.state])  
+    return response 
 def getfile(request):  
     response = HttpResponse(content_type='text/csv')  
     response['Content-Disposition'] = 'attachment; filename="student.csv"'  
@@ -107,25 +132,26 @@ def send_purchase_confirmation(request):
     name=""
     try:
         email = data['payload']["payment"]["entity"]['notes']['email']
-        phone = data['payload']["order"]["entity"]['notes']['phone']
-        name = data['payload']["order"]["entity"]['notes']['name']
+        phone = data['payload']["payment"]["entity"]['notes']['phone']
+        name = data['payload']["payment"]["entity"]['notes']['name']
     except:
+
         try:
             email = ["payload"]["payment"]["entity"]["email"]
         except:
-            return Response("Successful", status=status.HTTP_200_OK)
+            return Response("RE Successful", status=status.HTTP_200_OK)
     
-    amount = int(data['payload']["order"]["entity"]['amount'])/100
+    amount = int(data['payload']["payment"]["entity"]["amount"])/100
     reffral_code=False
     try:
-        reffral_code = data['payload']["order"]["entity"]['notes']['Referralcode']
+        reffral_code = data['payload']["payment"]["entity"]['notes']['Referralcode']
     except:
         pass
 
     if reffral_code:
         try:    
              
-                if "CAP" not in reffral_code and amount==1499:
+                if "CAP" not in reffral_code and amount==1799:
                     
                     if ReffealCode.objects.filter(code=reffral_code).exists():
                         rfc= ReffealCode.objects.filter(code=reffral_code)[0]
@@ -134,11 +160,12 @@ def send_purchase_confirmation(request):
                     else:
                         message = """Hi you were found using an unauthorized referral code. Hence no ticket will be issued."""
                         send_feedback_email_task.delay(email, message, "Esummit 2024 Unauthorized Referral Code")
-                        return Response("Successful", status=status.HTTP_200_OK)
+                        return Response("UN Successful", status=status.HTTP_200_OK)
 
                 else:
                     user = CapUsers.objects.filter(esummitId=reffral_code)[0]
                     user.points = 200+user.points
+                    user.ticketssold = user.ticketssold+1
                     user.save()
         except:
                 pass
@@ -161,20 +188,23 @@ def send_purchase_confirmation(request):
     ticket_obj = Ticket.objects.create(
         name=name,Person=person_obj, payment=payment_obj, total_payment=amount, quantity=quantity)
     e_id = ""
-    # if person_obj.ca:
-    #     e_id = person_obj.ca.esummit_id
+    
     if person_obj.student:
         e_id = person_obj.student.esummit_id
     elif person_obj.proff:
         e_id = person_obj.proff.esummit_id
+    elif person_obj.startup:
+        e_id = person_obj.startup.esummit_id
+    
+    
     message = """Hi,<br>
 Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
 Your Esummit ID: """ + e_id + """<br>
 No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
 Event Dates: Feb 2 to Feb 4<br>
- """+ str(link)+"""<br>
-Venue: Campus, IIT Roorkee<br><br>
+ """+ str(link)+"""<br><br>
+
 All the best for your prep. See you soon!"""
     if case2:
         message = """Hi,<br>
@@ -183,11 +213,10 @@ Your Esummit ID: """ + e_id + """<br>
 No. of tickets confirmed: """ + str(quantity) + """<br>
 Payment mode: Online<br>
 Event Dates: Feb 2 to Feb 4<br>
- """+ str(link)+"""<br>
-Venue: Campus, IIT Roorkee<br><br>
+ """+ str(link)+"""<br><br>
 your password is esummit@123<br>
 All the best for your prep. See you soon!"""
-
+ 
     ticket_obj.save()
     person_obj.save()
     send_feedback_email_task.delay(
