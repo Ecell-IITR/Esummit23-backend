@@ -103,17 +103,26 @@ def RazorpayCallback(request, *args, **kwargs):
                 e_id = Person.student.esummit_id
             elif Person.proff:
                 e_id = Person.proff.esummit_id
-            message = """Hi,<br>
-Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
-Your Esummit ID: """ + e_id + """<br>
-No. of tickets confirmed: """ + str(request.data.get('quantity')) + """<br>
-Payment mode: Online<br>
-Event Dates: Feb 17 to Feb 19<br>
-Venue: Campus, IIT Roorkee<br><br>
+#             message = """Hi,<br>
+# Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
+# Your Esummit ID: """ + e_id + """<br>
+# No. of tickets confirmed: """ + str(request.data.get('quantity')) + """<br>
+# Payment mode: Online<br>
+# Event Dates: Feb 17 to Feb 19<br>
+# Venue: Campus, IIT Roorkee<br><br>
 
-All the best for your prep. See you soon!"""
+# All the best for your prep. See you soon!"""
+            message = """Hi,<br>
+ Welcome to TEDX , IIT Roorkee gladly welcomes you to the most remarkable TED talk of North India. Watch out!<br>
+ No. of tickets confirmed: """ + str(request.data.get('quantity')) + """<br>
+ Payment mode: Online<br>
+ Event Dates: Mar 23<br>
+ Venue: Campus, IIT Roorkee<br><br>
+
+ All the best for your prep. See you soon!"""
+            
             send_feedback_email_task.delay(
-                Person.email, "Esummit 2023 Ticket Confirmation", message)
+                Person.email, "TED 24 Ticket Confirmation", message)
             return Response({'status': 'Payment Done'}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'Signature Mismatch!'}, status=status.HTTP_400_BAD_REQUEST)
