@@ -18,7 +18,7 @@ urlpatterns = [
     path('querry', QuerryView.as_view()),
     path('team_signup', TeamSignupView),
     path('team_signup/new', NewTeamSignupView),
-    path('purchase_confirmations', send_purchase_confirmation),
+    path('purchaseconfirmation', send_purchase_confirmation),
     path('services', UserServices),
     path('teamotpverify',TeamecellVerifyView.as_view()),
     path('teamotp',TeamecellOtpView.as_view()),
