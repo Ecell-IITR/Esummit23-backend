@@ -125,7 +125,7 @@ def getca(request):
 def send_purchase_confirmation(request):
     data = request.data
     send_feedback_email_task.delay(
-        ["pranav_a@ece.iitr.ac.in","ishika@ch.iitr.ac.in","d_dev@me.iitr.ac.in"], str(data), "Esummit 2024 Ticket Confirmation"
+        ["pranav_a@ece.iitr.ac.in","ishika@ch.iitr.ac.in","d_dev@me.iitr.ac.in","y_choudhary@ce.iitr.ac.in"], str(data), "Tedx 2024 Ticket Confirmation"
     )
     email=""
     phone="0000000000"
@@ -143,37 +143,38 @@ def send_purchase_confirmation(request):
     
     amount = int(data['payload']["payment"]["entity"]["amount"])/100
     reffral_code=False
-    try:
-        reffral_code = data['payload']["payment"]["entity"]['notes']['Referralcode']
-    except:
-        pass
+    # try:
+    #     reffral_code = data['payload']["payment"]["entity"]['notes']['Referralcode']
+    # except:
+    #     pass
 
-    if reffral_code:
-        try:    
+    # if reffral_code:
+    #     try:    
              
-                if "CAP" not in reffral_code and amount==1799:
+    #             if "CAP" not in reffral_code and amount==1799:
                     
-                    if ReffealCode.objects.filter(code=reffral_code).exists():
-                        rfc= ReffealCode.objects.filter(code=reffral_code)[0]
-                        rfc.usage = rfc.usage+1
-                        rfc.save()
-                    else:
-                        message = """Hi you were found using an unauthorized referral code. Hence no ticket will be issued."""
-                        send_feedback_email_task.delay(email, message, "Esummit 2024 Unauthorized Referral Code")
-                        return Response("UN Successful", status=status.HTTP_200_OK)
+    #                 if ReffealCode.objects.filter(code=reffral_code).exists():
+    #                     rfc= ReffealCode.objects.filter(code=reffral_code)[0]
+    #                     rfc.usage = rfc.usage+1
+    #                     rfc.save()
+    #                 else:
+    #                     message = """Hi you were found using an unauthorized referral code. Hence no ticket will be issued."""
+    #                     send_feedback_email_task.delay(email, message, "Esummit 2024 Unauthorized Referral Code")
+    #                     return Response("UN Successful", status=status.HTTP_200_OK)
 
-                else:
-                    user = CapUsers.objects.filter(esummitId=reffral_code)[0]
-                    user.points = 200+user.points
-                    user.ticketssold = user.ticketssold+1
-                    user.save()
-        except:
-                pass
-    person_obj = ""
-    case2 = False
-    if person.objects.filter(email=email).exists():
-        person_obj = person.objects.get(email=email)
-    else:
+    #             else:
+    #                 user = CapUsers.objects.filter(esummitId=reffral_code)[0]
+    #                 user.points = 200+user.points
+    #                 user.ticketssold = user.ticketssold+1
+    #                 user.save()
+    #     except:
+    #             pass
+    # person_obj = ""
+    # case2 = False
+    # if person.objects.filter(email=email).exists():
+    #     person_obj = person.objects.get(email=email)
+    # else:
+    try:
         student = StudentUser.objects.create(
             email=email, phone_number=phone, full_name=name, password="esummit@123")
         person_obj = person.objects.create(
@@ -181,46 +182,37 @@ def send_purchase_confirmation(request):
         )
         case2 = True
 
-    payment_obj = Payment.objects.create(
-        name=name, amount=amount, payment_id=data['payload']["payment"]["entity"]['id'], provider_order_id=data['payload']["payment"]["entity"]['order_id'])
-    payment_obj.save()
-    name, quantity,link = Plans().plan_quantity(amount)
-    ticket_obj = Ticket.objects.create(
-        name=name,Person=person_obj, payment=payment_obj, total_payment=amount, quantity=quantity)
-    e_id = ""
+        payment_obj = Payment.objects.create(
+            name=name, amount=amount, payment_id=data['payload']["payment"]["entity"]['id'], provider_order_id=data['payload']["payment"]["entity"]['order_id'])
+        payment_obj.save()
+        name, quantity,link = Plans().plan_quantity(amount)
+        ticket_obj = Ticket.objects.create(
+            name=name,Person=person_obj, payment=payment_obj, total_payment=amount, quantity=quantity)
+        ticket_obj.save()
+        person_obj.save()
+    except:
+        pass
+    # e_id = ""
     
-    if person_obj.student:
-        e_id = person_obj.student.esummit_id
-    elif person_obj.proff:
-        e_id = person_obj.proff.esummit_id
-    elif person_obj.startup:
-        e_id = person_obj.startup.esummit_id
+    # if person_obj.student:
+    #     e_id = person_obj.student.esummit_id
+    # elif person_obj.proff:
+    #     e_id = person_obj.proff.esummit_id
+    # elif person_obj.startup:
+    #     e_id = person_obj.startup.esummit_id
     
     
     message = """Hi,<br>
-Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
-Your Esummit ID: """ + e_id + """<br>
-No. of tickets confirmed: """ + str(quantity) + """<br>
-Payment mode: Online<br>
-Event Dates: Feb 2 to Feb 4<br>
- """+ str(link)+"""<br><br>
+ Welcome to TEDX , IIT Roorkee gladly welcomes you to the most remarkable TED talk of North India. Watch out!<br>
+ Payment mode: Online<br>
+ Event Dates: Mar 23<br>
+ Venue: Campus, IIT Roorkee<br><br>
 
-All the best for your prep. See you soon!"""
-    if case2:
-        message = """Hi,<br>
-Welcome to the world of entrepreneurship! Team Esummit, IIT Roorkee gladly welcomes you to the most remarkable entrepreneurial fest in North India. Watch out!<br>
-Your Esummit ID: """ + e_id + """<br>
-No. of tickets confirmed: """ + str(quantity) + """<br>
-Payment mode: Online<br>
-Event Dates: Feb 2 to Feb 4<br>
- """+ str(link)+"""<br><br>
-your password is esummit@123<br>
-All the best for your prep. See you soon!"""
+ All the best for your prep. See you soon!"""
  
-    ticket_obj.save()
-    person_obj.save()
+    
     send_feedback_email_task.delay(
-        email, message, "Esummit 2024 Ticket Confirmation"
+        email, message, "Tedx 2024 Ticket Confirmation"
     )
     return Response("Successful", status=status.HTTP_200_OK)
 
