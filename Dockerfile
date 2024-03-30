@@ -7,9 +7,26 @@ ENV PYTHONBUFFERED 1
 
 # install psycopg2 dependencies for postgres
 RUN apk update \
-  && apk add postgresql-dev gcc python3-dev musl-dev build-base py-pip jpeg-dev zlib-dev xvfb fontconfig ttf-freefont ffmpeg libwebp libwebp-tools libwebp-dev
-
-RUN apk add gcc musl-dev python3-dev libffi-dev openssl-dev
+    && apk add --no-cache \
+        gcc \
+        musl-dev \
+        python3-dev \
+        libffi-dev \
+        openssl-dev \
+        jpeg-dev \
+        zlib-dev \
+        freetype-dev \
+        lcms2-dev \
+        openjpeg-dev \
+        tiff-dev \
+        tk-dev \
+        tcl-dev \
+        harfbuzz-dev \
+        fribidi-dev \
+        libpng-dev \
+        libwebp-dev \
+        postgresql-dev \
+    && rm -rf /var/cache/apk/*
 
 
 
@@ -31,4 +48,4 @@ WORKDIR /usr/esummit23-backend
 
 COPY . .
 
-CMD ["sh", "-c", "python manage.py collectstatic --no-input;python manage.py makemigrations;python manage.py migrate;gunicorn esummit.wsgi:application -b 0.0.0.0:9006 --timeout 60000 -c config.py  "]
+CMD ["sh", "-c", "python manage.py collectstatic --no-input;python manage.py migrate;gunicorn esummit.wsgi:application -b 0.0.0.0:9006 --timeout 60000 -c config.py  "]
