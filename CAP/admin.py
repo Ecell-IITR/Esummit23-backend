@@ -2,6 +2,7 @@ from django.contrib import admin,messages
 # from CAP.models.submission import Submission
 from CAP.models.tasks import Task,TaskStatus
 from CAP.models.users import CapUsers
+from CAP.models.referral import Referral
 
 
 class CapAdmin(admin.ModelAdmin):
@@ -14,7 +15,8 @@ class TaskstatusAdmin(admin.ModelAdmin):
 
 admin.site.register(CapUsers,CapAdmin)
 admin.site.register(Task)           
-admin.site.register(TaskStatus,TaskstatusAdmin)         
+admin.site.register(TaskStatus,TaskstatusAdmin)    
+admin.site.register(Referral)     
 # class SubmissionAdmin(admin.ModelAdmin):
 #   exclude=('points','created')
 

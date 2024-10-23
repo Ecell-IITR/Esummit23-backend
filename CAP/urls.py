@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import Leaderboard, Submission, TaskAssigned,user_registration,Login,CapuserInfo,taskStats
+from .views import Leaderboard, Submission, TaskAssigned,user_registration,Login,CapuserInfo,taskStats,track_referral_click,view_referrals
 
 urlpatterns = [
     path('leaderboard', Leaderboard), 
@@ -9,6 +9,8 @@ urlpatterns = [
     path('login',Login),
     path('userinfo',CapuserInfo),
     path('taskstats',taskStats),
+    path('track-referral/',track_referral_click,name='track-referral'),
+    path('referrals/',view_referrals,name='view_referrals'),
     # path('taskassigned',taskAssigned)
    
 ]

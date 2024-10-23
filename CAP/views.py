@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from rest_framework.response import Response
 from user.serializer import LeaderboardSerializer
 from .serializer import SubmissionSerializer, TaskAssignedSerializer,UserSerializer,TaskStatusSerializer,TaskSerializer,LeaderboardSerializer,TaskStatsSerializer
@@ -12,11 +12,36 @@ from user.utils.auth import auth
 from rest_framework import status
 from django.db.models import Max
 from CAP.models.users import CapUsers
+from CAP.models.referral import Referral
 from user.tasks import send_feedback_email_task
 from django.db import OperationalError,Error
+import uuid
 # import magic
 
 # Create your views here.
+
+def view_referrals(request):
+    user = request.user
+    referral = Referral.objects.get(referrer=user)
+    return Response({"clicks": referral.link_clicks, "code": referral.referral_code})
+
+def track_referral_click(request):
+  referral_code=request.GET.get('ref')
+  if referral_code:
+    try:
+      referral=Referral.objects.get(referral_code=referral_code)
+      referral.link_clicks+=1
+      referral.save()
+      # return redirect('https://www.google.com/')
+    except Referral.DoesNotExist:
+      pass
+      # return redirect('https://www.facebook.com/')
+    
+  return redirect('https://www.instagram.com/yuktalol/')
+
+def generate_referral_code():
+  return str(uuid.uuid4())[:8].upper()  
+
 
 @api_view(["POST"])
 def user_registration(request):
@@ -36,6 +61,15 @@ def user_registration(request):
                 db_entry = UserSerializer(data=data)
                 db_entry.is_valid(raise_exception=True)
                 saver = db_entry.save()
+                
+                referral_code = generate_referral_code()
+                
+                saver.referral_code=referral_code
+                saver.save()
+                
+                
+                referral = Referral.objects.create(referrer=saver, referral_code=referral_code, link_clicks=0)
+                referral.save()
                 # message = "Dear "+"<b>"+saver.fullname+"</b>" + \
                 # " account created your esummit id is "+"<b> "+saver.esummitId+"</b>"
                 message = "Dear "+"<b>"+saver.fullname+"</b>" + \
@@ -58,7 +92,7 @@ Team E-Summit, IIT Roorkee"""
                 send_feedback_email_task.delay(
                 mail, message, 'esummit account created'
                 )
-                return Response({"n": saver.fullname, "e_id": saver.esummitId, "at": saver.authToken}, status=status.HTTP_201_CREATED)
+                return Response({"n": saver.fullname, "e_id": saver.esummitId,"referral_code":saver.referral_code, "at": saver.authToken}, status=status.HTTP_201_CREATED)
 
 
                 # return Response(data={"success":"data submitted"}, status=status.HTTP_200_OK) 
